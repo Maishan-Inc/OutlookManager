@@ -30,7 +30,7 @@ from typing import Any, AsyncGenerator, List, Optional
 
 import httpx
 from email.header import decode_header
-from email.utils import parsedate_to_datetime
+from email.utils import parseaddr, parsedate_to_datetime
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -112,6 +112,7 @@ class EmailItem(BaseModel):
     is_read: bool = False
     has_attachments: bool = False
     sender_initial: str = "?"
+    sender_avatar_url: Optional[str] = None
 
     class Config:
         schema_extra = {
@@ -123,7 +124,8 @@ class EmailItem(BaseModel):
                 "date": "2024-01-01T12:00:00",
                 "is_read": False,
                 "has_attachments": False,
-                "sender_initial": "A"
+                "sender_initial": "A",
+                "sender_avatar_url": "https://www.gravatar.com/avatar/..."
             }
         }
 
@@ -154,6 +156,7 @@ class EmailDetailsResponse(BaseModel):
     from_email: str
     to_email: str
     date: str
+    sender_avatar_url: Optional[str] = None
     body_plain: Optional[str] = None
     body_html: Optional[str] = None
 
@@ -498,6 +501,21 @@ def decode_header_value(header_value: str) -> str:
     except Exception as e:
         logger.warning(f"Failed to decode header value '{header_value}': {e}")
         return str(header_value) if header_value else ""
+
+
+def extract_sender_email_address(from_value: str) -> str:
+    """从发件人字段中提取邮箱地址"""
+    _display_name, email_address = parseaddr(from_value or "")
+    return (email_address or "").strip().lower()
+
+
+def build_sender_avatar_url(from_value: str, size: int = 128) -> Optional[str]:
+    """构建发件人头像 URL，优先使用 Gravatar 的公开头像"""
+    email_address = extract_sender_email_address(from_value)
+    if not email_address:
+        return None
+    email_hash = hashlib.md5(email_address.encode("utf-8")).hexdigest()
+    return f"https://www.gravatar.com/avatar/{email_hash}?d=404&s={size}"
 
 
 def extract_email_content(email_message: email.message.EmailMessage) -> tuple[str, str]:
@@ -1221,7 +1239,8 @@ async def list_emails(credentials: AccountCredentials, folder: str, page: int, p
                             date=formatted_date,
                             is_read=False,  # 简化处理，实际可通过IMAP flags判断
                             has_attachments=False,  # 简化处理，实际需要检查邮件结构
-                            sender_initial=sender_initial
+                            sender_initial=sender_initial,
+                            sender_avatar_url=build_sender_avatar_url(from_email)
                         )
                         email_items.append(email_item)
 
@@ -1328,6 +1347,7 @@ async def get_email_details(credentials: AccountCredentials, message_id: str) ->
                 from_email=from_email,
                 to_email=to_email,
                 date=formatted_date,
+                sender_avatar_url=build_sender_avatar_url(from_email, size=256),
                 body_plain=body_plain if body_plain else None,
                 body_html=body_html if body_html else None
             )

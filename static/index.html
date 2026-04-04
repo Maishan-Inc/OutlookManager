@@ -1517,7 +1517,7 @@
 
         .sidebar-title-stack h1 {
             display: block;
-            font-size: 1.18rem;
+            font-size: 1.28rem;
             line-height: 1.15;
             letter-spacing: -0.03em;
             color: #f8fafc;
@@ -1617,16 +1617,16 @@
 
         .sidebar-utility,
         .sidebar-toggle {
-            width: 46px;
-            min-width: 46px;
+            width: 100%;
+            min-width: 0;
             height: 46px;
             min-height: 46px;
             border-radius: 16px;
             display: flex;
             align-items: center;
-            gap: 0;
-            padding: 0;
-            justify-content: center;
+            gap: 10px;
+            padding: 0 10px;
+            justify-content: flex-start;
             background: rgba(255, 255, 255, 0.06);
             color: rgba(241, 245, 249, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1639,22 +1639,6 @@
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.16);
             color: #ffffff;
-        }
-
-        .sidebar-back-item {
-            background: transparent;
-            color: rgba(226, 232, 240, 0.74);
-            border: none;
-            box-shadow: none;
-        }
-
-        .sidebar-back-item:hover {
-            background: transparent;
-            color: rgba(226, 232, 240, 0.74);
-        }
-
-        .sidebar-back-item::before {
-            display: none;
         }
 
         .sidebar-utility .ui-icon,
@@ -1679,7 +1663,7 @@
 
         .sidebar-utility-label {
             white-space: nowrap;
-            display: none;
+            display: inline;
         }
 
         .nav-item-text {
@@ -1690,7 +1674,7 @@
         }
 
         .sidebar-toggle {
-            width: 46px;
+            width: 100%;
             margin-top: 0;
         }
 
@@ -1998,6 +1982,8 @@
         .email-search-toggle {
             border: none;
             cursor: pointer;
+            background: transparent;
+            box-shadow: none;
             transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease, color 0.2s ease;
         }
 
@@ -2024,6 +2010,10 @@
             opacity: 1;
             transform: translateX(0);
             transition-delay: 0.12s, 0.12s, 0.12s;
+        }
+
+        #emailsPage .search-container .search-input {
+            text-align: center;
         }
 
         #emailsPage .search-container .search-input::placeholder {
@@ -2098,9 +2088,13 @@
         }
 
         .filter-actions {
-            min-width: 136px;
+            width: 152px;
+            min-width: 152px;
+            flex: 0 0 152px;
             display: flex;
             align-items: flex-end;
+            justify-content: center;
+            margin-inline: auto;
         }
 
         .filter-actions .btn {
@@ -2287,6 +2281,24 @@
             word-break: break-all;
         }
 
+        .avatar-fallback {
+            width: 100%;
+            height: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: inherit;
+        }
+
+        .email-avatar img,
+        .email-detail-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: inherit;
+        }
+
         .email-meta-icon {
             color: var(--ui-brand-strong);
         }
@@ -2308,20 +2320,10 @@
             flex-wrap: wrap;
         }
 
-        .email-account-pill {
-            display: inline-flex;
-            align-items: center;
-            min-height: 38px;
-            padding: 0 14px;
-            border-radius: 999px;
-            background: rgba(37, 99, 235, 0.08);
-            color: #2563eb !important;
-        }
-
         .email-account-switcher {
             display: grid;
             gap: 8px;
-            max-width: 360px;
+            max-width: 460px;
         }
 
         .email-account-switcher-label {
@@ -2334,6 +2336,12 @@
 
         .email-account-select {
             min-height: 42px;
+            flex: 1;
+        }
+
+        .email-account-copy-btn {
+            border: none;
+            cursor: pointer;
         }
 
         .pagination {
@@ -2506,7 +2514,7 @@
             height: 58px;
             margin-right: 0;
             border-radius: 18px;
-            background: rgba(255, 255, 255, 0.08);
+            background: transparent;
             color: inherit;
             position: relative;
             display: inline-flex;
@@ -2516,20 +2524,7 @@
         }
 
         .nav-item.active .icon {
-            background: rgba(255, 255, 255, 0.16);
-        }
-
-        .sidebar-back-item .icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 14px;
             background: transparent;
-        }
-
-        .sidebar-back-item:focus,
-        .sidebar-back-item:focus-visible {
-            outline: none;
-            box-shadow: none;
         }
 
         .mobile-nav-item {
@@ -3393,16 +3388,11 @@
                         </div>
                         <div class="sidebar-title-stack">
                             <h1>OutlookManager</h1>
-                            <p>Outlook账户与邮件后台</p>
                         </div>
                     </div>
                 </div>
             </div>
             <nav class="sidebar-nav">
-                <button id="sidebarBackBtn" class="nav-item sidebar-back-item hidden" type="button" onclick="backToAccounts()" data-tooltip="返回上一页" aria-label="返回上一页">
-                    <span class="icon"></span>
-                    <span class="nav-item-text">返回上一页</span>
-                </button>
                 <button id="accountsNav" class="nav-item active" type="button" data-page="accounts" onclick="showPage('accounts', this)">
                     <span class="icon"></span>
                     <span class="nav-item-text">邮箱账户管理</span>
@@ -3435,7 +3425,7 @@
             <div class="sidebar-footer">
                 <button id="sidebarToggle" class="sidebar-toggle" type="button" onclick="toggleSidebar()" data-tooltip="收起侧栏" aria-label="收起侧栏">
                     <span></span>
-                    <span class="sidebar-utility-label">展开 / 收起</span>
+                    <span class="sidebar-utility-label">收起</span>
                 </button>
                 <div class="sidebar-footer-divider"></div>
                 <button id="logoutBtn" class="sidebar-utility sidebar-logout" type="button" onclick="logout()" data-tooltip="退出登录" aria-label="退出登录">
@@ -4034,20 +4024,16 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                         <div class="flex items-center justify-between mb-4">
                             <div class="email-account-header">
                                 <h3 class="font-semibold">当前账户</h3>
-                                <div class="email-account-toolbar">
-                                    <span id="currentAccountEmail"
-                                          class="text-sm font-medium email-copyable email-account-pill"
-                                          onclick="copyEmailAddress(this.textContent)"
-                                          title="点击复制邮箱地址">
-                                    </span>
-                                    <span class="copy-icon" style="margin-left: 6px; opacity: 0.6; font-size: 0.8em;">馃搵</span>
-                                </div>
                                 <div class="email-account-switcher">
-                                    <label class="email-account-switcher-label" for="currentAccountSelect">快速切换账户</label>
-                                    <select id="currentAccountSelect" class="form-input email-account-select" onchange="switchCurrentAccount(this.value)">
-                                        <option value="">请选择账户</option>
-                                    </select>
+                                    <label class="email-account-switcher-label" for="currentAccountSelect">当前账户 / 快速切换 / 复制</label>
+                                    <div class="email-account-toolbar">
+                                        <select id="currentAccountSelect" class="form-input email-account-select" onchange="switchCurrentAccount(this.value)">
+                                            <option value="">请选择账户</option>
+                                        </select>
+                                        <button type="button" class="copy-icon email-account-copy-btn" onclick="copyEmailAddress(document.getElementById('currentAccountSelect').value)" title="复制当前账户">馃搵</button>
+                                    </div>
                                 </div>
+                                <span id="currentAccountEmail" class="hidden"></span>
                                 <p class="text-sm" style="color: #64748b;">最后更新：<span id="lastUpdateTime">-</span></p>
                             </div>
                             <div class="flex gap-2">
@@ -4329,8 +4315,23 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             };
         }
 
+        function renderSenderAvatar(initial, avatarUrl, className = 'email-avatar') {
+            const safeInitial = escapeHtml(initial || '?');
+            const safeUrl = avatarUrl ? escapeHtml(avatarUrl) : '';
+            const fallbackClass = avatarUrl ? 'avatar-fallback hidden' : 'avatar-fallback';
+            const imageMarkup = avatarUrl
+                ? `<img src="${safeUrl}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove(); const fallback = this.parentElement.querySelector('.avatar-fallback'); if (fallback) fallback.classList.remove('hidden');">`
+                : '';
+
+            return `
+                <div class="${className}">
+                    ${imageMarkup}
+                    <span class="${fallbackClass}">${safeInitial}</span>
+                </div>
+            `;
+        }
+
         function syncSidebarContext(pageName) {
-            const backButton = document.getElementById('sidebarBackBtn');
             const navButtons = document.querySelectorAll('.sidebar .nav-item[data-page]');
             navButtons.forEach(button => button.classList.remove('active'));
 
@@ -4338,10 +4339,6 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             const activeButton = document.querySelector(`.sidebar .nav-item[data-page="${activePage}"]`);
             if (activeButton) {
                 activeButton.classList.add('active');
-            }
-
-            if (backButton) {
-                backButton.classList.toggle('hidden', pageName !== 'emails');
             }
 
             if (window.innerWidth <= 768) {
@@ -4629,6 +4626,10 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             const nextLabel = collapsed ? '展开侧栏' : '收起侧栏';
             toggleButton.dataset.tooltip = nextLabel;
             toggleButton.setAttribute('aria-label', nextLabel);
+            const toggleText = toggleButton.querySelector('.sidebar-utility-label');
+            if (toggleText) {
+                toggleText.textContent = collapsed ? '展开' : '收起';
+            }
         }
 
         function toggleSidebar() {
@@ -4659,11 +4660,6 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                 button.setAttribute('aria-label', label);
                 button.setAttribute('title', label);
             });
-
-            const backButton = document.getElementById('sidebarBackBtn');
-            if (backButton) {
-                setButtonIcon(backButton, 'arrow-left', true);
-            }
 
             setButtonIcon(document.getElementById('mobileLogoutBtn'), 'logout', true);
 
@@ -4714,10 +4710,9 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                 searchToggle.innerHTML = icon('search');
             }
 
-            const copyIcon = document.querySelector('.copy-icon');
-            if (copyIcon) {
+            document.querySelectorAll('.copy-icon').forEach(copyIcon => {
                 copyIcon.innerHTML = icon('copy');
-            }
+            });
 
             const contextItems = document.querySelectorAll('#contextMenu .context-menu-item');
             ['open', 'copy', 'tags', 'clear'].forEach((name, index) => {
@@ -6031,7 +6026,7 @@ Authorization: Bearer om_your_api_key
 
             return `
                 <div class="email-item ${unreadClass}" onclick="showEmailDetail('${email.message_id}')">
-                    <div class="email-avatar">${escapeHtml(email.sender_initial || sender.initial)}</div>
+                    ${renderSenderAvatar(email.sender_initial || sender.initial, email.sender_avatar_url, 'email-avatar')}
                     <div class="email-content">
                         <div class="email-header">
                             <div class="email-subject">${escapeHtml(email.subject || '(无主题)')}</div>
@@ -6056,7 +6051,7 @@ Authorization: Bearer om_your_api_key
                 document.getElementById('emailModalTitle').textContent = data.subject || '(无主题)';
                 document.getElementById('emailModalContent').innerHTML = `
                     <div class="email-detail-hero">
-                        <div class="email-detail-avatar">${escapeHtml(sender.initial)}</div>
+                        ${renderSenderAvatar(sender.initial, data.sender_avatar_url, 'email-detail-avatar')}
                         <div class="email-detail-hero-copy">
                             <div class="email-detail-hero-label">发件人头像</div>
                             <div class="email-detail-hero-name">${escapeHtml(sender.displayName)}</div>

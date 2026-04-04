@@ -22,7 +22,7 @@ import socket
 import threading
 import time
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from itertools import groupby
 from pathlib import Path
 from queue import Empty, Queue
@@ -49,9 +49,12 @@ DATA_DIR = Path(os.getenv("DATA_DIR", str(BASE_DIR / "data")))
 ACCOUNTS_FILE = Path(os.getenv("ACCOUNTS_FILE", str(DATA_DIR / "accounts.json")))
 AUTH_FILE = Path(os.getenv("AUTH_FILE", str(DATA_DIR / "auth.json")))
 SESSIONS_FILE = Path(os.getenv("SESSIONS_FILE", str(DATA_DIR / "sessions.json")))
+API_KEYS_FILE = Path(os.getenv("API_KEYS_FILE", str(DATA_DIR / "api_keys.json")))
 STATIC_DIR = BASE_DIR / "static"
 SESSION_COOKIE = "outlookmanager_session"
 SESSION_TTL_HOURS = max(1, int(os.getenv("SESSION_TTL_HOURS", "24")))
+API_KEY_PREFIX = "om_"
+API_KEY_USAGE_LOG_LIMIT = 500
 
 # OAuth2配置
 TOKEN_URL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
@@ -188,6 +191,14 @@ class PasswordPayload(BaseModel):
 
 class SetupPayload(PasswordPayload):
     agreed_terms: bool = Field(default=False)
+
+
+class ApiKeyCreatePayload(BaseModel):
+    name: str = Field(min_length=1, max_length=80)
+    expires_mode: str = Field(default="never")
+    expires_at: Optional[datetime] = None
+    request_mode: str = Field(default="unlimited")
+    max_requests: Optional[int] = Field(default=None, ge=1)
 
 # ============================================================================
 # IMAP连接池管理
@@ -780,6 +791,28 @@ def save_sessions(data: dict[str, Any]) -> None:
         _write_json_file(SESSIONS_FILE, {"sessions": data.get("sessions", {})})
 
 
+def load_api_keys_data() -> dict[str, Any]:
+    with auth_lock:
+        data = _read_json_file(API_KEYS_FILE, {"keys": {}, "usage_logs": []})
+        keys = data.get("keys")
+        usage_logs = data.get("usage_logs")
+        return {
+            "keys": keys if isinstance(keys, dict) else {},
+            "usage_logs": usage_logs if isinstance(usage_logs, list) else [],
+        }
+
+
+def save_api_keys_data(data: dict[str, Any]) -> None:
+    with auth_lock:
+        _write_json_file(
+            API_KEYS_FILE,
+            {
+                "keys": data.get("keys", {}),
+                "usage_logs": data.get("usage_logs", [])[-API_KEY_USAGE_LOG_LIMIT:],
+            },
+        )
+
+
 def hash_password(password: str, salt_hex: str | None = None) -> str:
     salt = bytes.fromhex(salt_hex) if salt_hex else secrets.token_bytes(16)
     digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 200_000)
@@ -792,6 +825,135 @@ def verify_password(password: str, stored: str | None) -> bool:
     salt_hex, expected = stored.split("$", 1)
     actual = hash_password(password, salt_hex).split("$", 1)[1]
     return hmac.compare_digest(actual, expected)
+
+
+def hash_api_key(raw_key: str) -> str:
+    return hashlib.sha256(raw_key.encode("utf-8")).hexdigest()
+
+
+def normalize_utc_datetime(value: datetime) -> datetime:
+    if value.tzinfo is None:
+        return value
+    return value.astimezone(timezone.utc).replace(tzinfo=None)
+
+
+def parse_stored_datetime(value: Any) -> datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(str(value))
+    except ValueError:
+        return None
+    return normalize_utc_datetime(parsed) if parsed.tzinfo else parsed
+
+
+def get_request_ip(request: Request) -> str:
+    forwarded_for = request.headers.get("X-Forwarded-For", "")
+    if forwarded_for:
+        return forwarded_for.split(",")[0].strip()
+    if request.client and request.client.host:
+        return request.client.host
+    return ""
+
+
+def extract_api_key_from_request(request: Request) -> str | None:
+    authorization = request.headers.get("Authorization", "")
+    if authorization.lower().startswith("bearer "):
+        token = authorization[7:].strip()
+        if token:
+            return token
+    header_token = request.headers.get("X-API-Key", "").strip()
+    return header_token or None
+
+
+def build_api_key_public_record(key_id: str, meta: dict[str, Any]) -> dict[str, Any]:
+    now = datetime.utcnow()
+    expires_at = parse_stored_datetime(meta.get("expires_at"))
+    max_requests = meta.get("max_requests")
+    used_requests = int(meta.get("used_requests", 0) or 0)
+    unlimited_requests = bool(meta.get("unlimited_requests", False))
+    revoked_at = meta.get("revoked_at")
+    remaining_requests = None
+    if not unlimited_requests and max_requests is not None:
+        remaining_requests = max(int(max_requests) - used_requests, 0)
+
+    status = "active"
+    if revoked_at:
+        status = "revoked"
+    elif expires_at and expires_at <= now:
+        status = "expired"
+    elif remaining_requests == 0 and not unlimited_requests:
+        status = "exhausted"
+
+    return {
+        "id": key_id,
+        "name": meta.get("name", ""),
+        "prefix": meta.get("prefix", ""),
+        "created_at": meta.get("created_at"),
+        "expires_at": meta.get("expires_at"),
+        "never_expires": bool(meta.get("never_expires", False)),
+        "request_mode": "unlimited" if unlimited_requests else "fixed",
+        "max_requests": max_requests,
+        "used_requests": used_requests,
+        "remaining_requests": remaining_requests,
+        "last_used_at": meta.get("last_used_at"),
+        "status": status,
+        "revoked_at": revoked_at,
+    }
+
+
+def authenticate_api_key(request: Request, consume: bool = True) -> dict[str, Any]:
+    raw_key = extract_api_key_from_request(request)
+    if not raw_key:
+        raise HTTPException(status_code=401, detail="API key required")
+
+    key_hash = hash_api_key(raw_key)
+    now = datetime.utcnow()
+    data = load_api_keys_data()
+    keys = data.get("keys", {})
+
+    for key_id, meta in keys.items():
+        if not isinstance(meta, dict) or meta.get("key_hash") != key_hash:
+            continue
+
+        public_record = build_api_key_public_record(key_id, meta)
+        if public_record["status"] == "revoked":
+            raise HTTPException(status_code=401, detail="API key has been revoked")
+        if public_record["status"] == "expired":
+            raise HTTPException(status_code=401, detail="API key has expired")
+        if public_record["status"] == "exhausted":
+            raise HTTPException(status_code=429, detail="API key request limit reached")
+
+        if consume:
+            meta["used_requests"] = int(meta.get("used_requests", 0) or 0) + 1
+            meta["last_used_at"] = now.isoformat()
+            keys[key_id] = meta
+            usage_logs = data.get("usage_logs", [])
+            usage_logs.append(
+                {
+                    "id": secrets.token_hex(8),
+                    "key_id": key_id,
+                    "key_name": meta.get("name", ""),
+                    "path": request.url.path,
+                    "method": request.method,
+                    "used_at": now.isoformat(),
+                    "ip": get_request_ip(request),
+                    "remaining_requests": None
+                    if bool(meta.get("unlimited_requests", False))
+                    else max(int(meta.get("max_requests", 0) or 0) - int(meta.get("used_requests", 0) or 0), 0),
+                }
+            )
+            data["keys"] = keys
+            data["usage_logs"] = usage_logs
+            save_api_keys_data(data)
+
+        return {
+            "auth_type": "api_key",
+            "key_id": key_id,
+            "key_name": meta.get("name", ""),
+        }
+
+    raise HTTPException(status_code=401, detail="Invalid API key")
 
 
 def auth_is_configured() -> bool:
@@ -849,11 +1011,16 @@ def is_authenticated_request(request: Request) -> bool:
     return float(meta.get("expires_at_ts", 0)) > time.time()
 
 
-def require_authenticated(request: Request) -> None:
+def require_authenticated(request: Request, allow_api_key: bool = False) -> dict[str, Any]:
     if not auth_is_configured():
         raise HTTPException(status_code=403, detail="Admin password is not configured yet")
     if not is_authenticated_request(request):
+        if allow_api_key and extract_api_key_from_request(request):
+            return authenticate_api_key(request, consume=True)
+        if allow_api_key:
+            raise HTTPException(status_code=401, detail="Login required or use API key")
         raise HTTPException(status_code=401, detail="Login required")
+    return {"auth_type": "session"}
 
 
 def make_session_response(payload: dict[str, Any], raw_token: str | None = None, expires_at: str | None = None) -> JSONResponse:
@@ -1218,6 +1385,10 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
         raise RuntimeError(f"Sessions path is a directory, expected a file: {SESSIONS_FILE}")
     if not SESSIONS_FILE.exists():
         _write_json_file(SESSIONS_FILE, {"sessions": {}})
+    if API_KEYS_FILE.exists() and API_KEYS_FILE.is_dir():
+        raise RuntimeError(f"API keys path is a directory, expected a file: {API_KEYS_FILE}")
+    if not API_KEYS_FILE.exists():
+        _write_json_file(API_KEYS_FILE, {"keys": {}, "usage_logs": []})
     cleanup_expired_sessions()
 
     yield
@@ -1300,6 +1471,104 @@ async def auth_logout(request: Request):
     return response
 
 
+@app.get("/api/api-keys")
+async def list_api_keys(request: Request):
+    require_authenticated(request)
+    data = load_api_keys_data()
+    keys = [
+        build_api_key_public_record(key_id, meta)
+        for key_id, meta in data.get("keys", {}).items()
+        if isinstance(meta, dict)
+    ]
+    keys.sort(key=lambda item: item.get("created_at") or "", reverse=True)
+
+    usage_logs = data.get("usage_logs", [])
+    usage_logs = [log for log in usage_logs if isinstance(log, dict)]
+    usage_logs.sort(key=lambda item: item.get("used_at") or "", reverse=True)
+
+    return {
+        "keys": keys,
+        "usage_logs": usage_logs[:120],
+    }
+
+
+@app.post("/api/api-keys")
+async def create_api_key(payload: ApiKeyCreatePayload, request: Request):
+    require_authenticated(request)
+
+    now = datetime.utcnow()
+    expires_mode = (payload.expires_mode or "never").strip().lower()
+    request_mode = (payload.request_mode or "unlimited").strip().lower()
+
+    if expires_mode not in {"never", "fixed"}:
+        raise HTTPException(status_code=400, detail="expires_mode must be never or fixed")
+    if request_mode not in {"unlimited", "fixed"}:
+        raise HTTPException(status_code=400, detail="request_mode must be unlimited or fixed")
+
+    expires_at: datetime | None = None
+    if expires_mode == "fixed":
+        if payload.expires_at is None:
+            raise HTTPException(status_code=400, detail="expires_at is required when expires_mode=fixed")
+        expires_at = normalize_utc_datetime(payload.expires_at)
+        if expires_at <= now:
+            raise HTTPException(status_code=400, detail="expires_at must be later than now")
+
+    max_requests: int | None = None
+    if request_mode == "fixed":
+        if payload.max_requests is None:
+            raise HTTPException(status_code=400, detail="max_requests is required when request_mode=fixed")
+        max_requests = int(payload.max_requests)
+        if max_requests < 1:
+            raise HTTPException(status_code=400, detail="max_requests must be at least 1")
+
+    raw_key = f"{API_KEY_PREFIX}{secrets.token_urlsafe(32)}"
+    key_id = secrets.token_hex(8)
+    prefix = f"{raw_key[:12]}..."
+
+    data = load_api_keys_data()
+    data.setdefault("keys", {})[key_id] = {
+        "name": payload.name.strip(),
+        "prefix": prefix,
+        "key_hash": hash_api_key(raw_key),
+        "created_at": now.isoformat(),
+        "expires_at": expires_at.isoformat() if expires_at else None,
+        "never_expires": expires_mode == "never",
+        "unlimited_requests": request_mode == "unlimited",
+        "max_requests": max_requests,
+        "used_requests": 0,
+        "last_used_at": None,
+        "revoked_at": None,
+    }
+    save_api_keys_data(data)
+
+    return {
+        "api_key": raw_key,
+        "key": build_api_key_public_record(key_id, data["keys"][key_id]),
+        "message": "API Key created successfully. This key is shown only once.",
+    }
+
+
+@app.delete("/api/api-keys/{key_id}")
+async def revoke_api_key(key_id: str, request: Request):
+    require_authenticated(request)
+    data = load_api_keys_data()
+    keys = data.get("keys", {})
+    meta = keys.get(key_id)
+    if not isinstance(meta, dict):
+        raise HTTPException(status_code=404, detail="API key not found")
+
+    meta["revoked_at"] = datetime.utcnow().isoformat()
+    keys[key_id] = meta
+    data["keys"] = keys
+    save_api_keys_data(data)
+
+    return {
+        "ok": True,
+        "key": build_api_key_public_record(key_id, meta),
+        "message": "API key revoked successfully.",
+    }
+
+
 @app.get("/accounts", response_model=AccountListResponse)
 async def get_accounts(
     request: Request,
@@ -1309,14 +1578,14 @@ async def get_accounts(
     tag_search: Optional[str] = Query(None, description="标签模糊搜索")
 ):
     """获取所有已加载的邮箱账户列表，支持分页和搜索"""
-    require_authenticated(request)
+    require_authenticated(request, allow_api_key=True)
     return await get_all_accounts(page, page_size, email_search, tag_search)
 
 
 @app.post("/accounts", response_model=AccountResponse)
 async def register_account(credentials: AccountCredentials, request: Request):
     """注册或更新邮箱账户"""
-    require_authenticated(request)
+    require_authenticated(request, allow_api_key=True)
     try:
         # 验证凭证有效性
         await get_access_token(credentials)
@@ -1346,7 +1615,7 @@ async def get_emails(
     refresh: bool = Query(False, description="强制刷新缓存")
 ):
     """获取邮件列表"""
-    require_authenticated(request)
+    require_authenticated(request, allow_api_key=True)
     credentials = await get_account_credentials(email_id)
     print('credentials:' + str(credentials))
     return await list_emails(credentials, folder, page, page_size, refresh)
@@ -1360,7 +1629,7 @@ async def get_dual_view_emails(
     junk_page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100)
 ):
-    require_authenticated(request)
+    require_authenticated(request, allow_api_key=True)
     """获取双栏视图邮件（收件箱和垃圾箱）"""
     credentials = await get_account_credentials(email_id)
     
@@ -1380,7 +1649,7 @@ async def get_dual_view_emails(
 @app.put("/accounts/{email_id}/tags", response_model=AccountResponse)
 async def update_account_tags(email_id: str, payload: UpdateTagsRequest, request: Request):
     """更新账户标签"""
-    require_authenticated(request)
+    require_authenticated(request, allow_api_key=True)
     try:
         # 检查账户是否存在
         credentials = await get_account_credentials(email_id)
@@ -1403,7 +1672,7 @@ async def update_account_tags(email_id: str, payload: UpdateTagsRequest, request
 
 @app.get("/emails/{email_id}/{message_id}", response_model=EmailDetailsResponse)
 async def get_email_detail(email_id: str, message_id: str, request: Request):
-    require_authenticated(request)
+    require_authenticated(request, allow_api_key=True)
     """获取邮件详细内容"""
     credentials = await get_account_credentials(email_id)
     return await get_email_details(credentials, message_id)
@@ -1411,7 +1680,7 @@ async def get_email_detail(email_id: str, message_id: str, request: Request):
 @app.delete("/accounts/{email_id}", response_model=AccountResponse)
 async def delete_account(email_id: str, request: Request):
     """删除邮箱账户"""
-    require_authenticated(request)
+    require_authenticated(request, allow_api_key=True)
     try:
         # 检查账户是否存在
         await get_account_credentials(email_id)
@@ -1451,29 +1720,39 @@ async def root():
 @app.delete("/cache/{email_id}")
 async def clear_cache(email_id: str, request: Request):
     """清除指定邮箱的缓存"""
-    require_authenticated(request)
+    require_authenticated(request, allow_api_key=True)
     clear_email_cache(email_id)
     return {"message": f"Cache cleared for {email_id}"}
 
 @app.delete("/cache")
 async def clear_all_cache(request: Request):
     """清除所有缓存"""
-    require_authenticated(request)
+    require_authenticated(request, allow_api_key=True)
     clear_email_cache()
     return {"message": "All cache cleared"}
 
 @app.get("/api")
 async def api_status(request: Request):
-    require_authenticated(request)
+    auth_context = require_authenticated(request, allow_api_key=True)
     """API状态检查"""
     return {
         "message": "Outlook邮件API服务正在运行",
         "version": "1.0.0",
+        "authentication": {
+            "type": auth_context.get("auth_type"),
+            "supports_session_cookie": True,
+            "supports_api_key": True,
+            "header_authorization": "Authorization: Bearer <API_KEY>",
+            "header_alt": "X-API-Key: <API_KEY>",
+        },
         "endpoints": {
             "auth_state": "GET /api/auth/state",
             "auth_setup": "POST /api/auth/setup",
             "auth_login": "POST /api/auth/login",
             "auth_logout": "POST /api/auth/logout",
+            "list_api_keys": "GET /api/api-keys",
+            "create_api_key": "POST /api/api-keys",
+            "revoke_api_key": "DELETE /api/api-keys/{key_id}",
             "get_accounts": "GET /accounts",
             "register_account": "POST /accounts",
             "get_emails": "GET /emails/{email_id}?refresh=true",

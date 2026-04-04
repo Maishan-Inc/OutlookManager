@@ -2537,6 +2537,230 @@
             font-size: 0.9rem;
         }
 
+        .auth-screen {
+            width: min(760px, 100%);
+            display: block;
+        }
+
+        .auth-hero {
+            display: none !important;
+        }
+
+        .auth-panel {
+            width: min(760px, 100%);
+            margin: 0 auto;
+            padding: 40px 40px 36px;
+            border-radius: 32px;
+            background: rgba(255, 255, 255, 0.94);
+        }
+
+        .auth-panel-header {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .auth-panel-header .auth-brand {
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+
+        .auth-stage {
+            display: grid;
+            gap: 18px;
+        }
+
+        .auth-stage-header {
+            text-align: center;
+        }
+
+        .auth-stage-header p {
+            margin-bottom: 0;
+        }
+
+        .auth-agreement-scroll {
+            max-height: 320px;
+            overflow: auto;
+            padding: 22px 20px;
+            border-radius: 22px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            background: linear-gradient(180deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.9));
+            color: #475569;
+            line-height: 1.82;
+            font-size: 0.96rem;
+            scroll-behavior: smooth;
+        }
+
+        .auth-agreement-scroll p + p {
+            margin-top: 12px;
+        }
+
+        .auth-scroll-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 22px;
+            color: #64748b;
+            font-size: 0.92rem;
+        }
+
+        .auth-step-note {
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(37, 99, 235, 0.08);
+            color: #1d4ed8;
+            font-size: 0.92rem;
+            line-height: 1.65;
+        }
+
+        .auth-actions.center {
+            justify-content: center;
+        }
+
+        .auth-actions.full-width .btn {
+            min-width: 180px;
+        }
+
+        .auth-form .form-input {
+            min-height: 48px;
+        }
+
+        .api-key-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+            gap: 20px;
+        }
+
+        .api-key-panel {
+            position: relative;
+            border-radius: 22px;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            background: rgba(248, 250, 252, 0.72);
+            padding: 22px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+        }
+
+        .api-key-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .api-key-form-grid .form-group:first-child {
+            grid-column: 1 / -1;
+        }
+
+        .api-key-result {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 18px;
+            border: 1px solid rgba(37, 99, 235, 0.16);
+            background: rgba(219, 234, 254, 0.52);
+        }
+
+        .api-key-secret {
+            margin-top: 10px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: "IBM Plex Mono", Consolas, monospace;
+            word-break: break-all;
+            letter-spacing: 0.02em;
+        }
+
+        .api-key-list,
+        .api-log-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .api-key-item,
+        .api-log-item {
+            border-radius: 20px;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            background: rgba(255, 255, 255, 0.92);
+            padding: 18px;
+            box-shadow: 0 14px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .api-key-item-header,
+        .api-log-item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .api-key-meta,
+        .api-log-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .api-key-badge,
+        .api-log-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.08);
+            color: #1d4ed8;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .api-key-badge.warn {
+            background: rgba(245, 158, 11, 0.12);
+            color: #b45309;
+        }
+
+        .api-key-badge.danger {
+            background: rgba(239, 68, 68, 0.12);
+            color: #b91c1c;
+        }
+
+        .api-key-badge.muted,
+        .api-log-badge {
+            background: rgba(148, 163, 184, 0.12);
+            color: #475569;
+        }
+
+        .api-key-code,
+        .api-docs-code {
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: "IBM Plex Mono", Consolas, monospace;
+            font-size: 0.88rem;
+            word-break: break-all;
+        }
+
+        .api-key-empty {
+            padding: 24px;
+            border-radius: 18px;
+            border: 1px dashed rgba(148, 163, 184, 0.3);
+            color: #64748b;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        .api-docs-auth-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .api-docs-auth-box {
+            border-radius: 18px;
+            padding: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            background: rgba(248, 250, 252, 0.72);
+        }
+
         @media (max-width: 960px) {
             .auth-screen {
                 grid-template-columns: 1fr;
@@ -2545,14 +2769,20 @@
             .auth-hero {
                 min-height: auto;
             }
+
+            .api-key-grid,
+            .api-docs-auth-grid,
+            .api-key-form-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div id="authShell" class="auth-shell">
         <div class="auth-screen">
-            <section class="auth-hero">
-                <div>
+            <section class="auth-panel">
+                <div class="auth-panel-header">
                     <div class="auth-brand">
                         <span class="auth-brand-mark">OM</span>
                         <div class="auth-brand-copy">
@@ -2560,53 +2790,44 @@
                             <p>Outlook 账户、邮件与接口后台</p>
                         </div>
                     </div>
-                    <h2>先完成初始化或登录，再进入后台。</h2>
-                    <p>当前项目已经加入密码保护流程。首次部署需要阅读并勾选协议，然后设置管理员密码；后续访问需要先登录才能查看账户、邮件和接口页面。</p>
                 </div>
-                <div class="auth-feature-list">
-                    <div class="auth-feature">
-                        <div>
-                            <strong>首次初始化</strong>
-                            <span>设置管理员密码并确认使用协议后，系统才会开放后台。</span>
-                        </div>
-                    </div>
-                    <div class="auth-feature">
-                        <div>
-                            <strong>登录会话</strong>
-                            <span>登录成功后会写入本地 Cookie，会话过期后需要重新登录。</span>
-                        </div>
-                    </div>
-                    <div class="auth-feature">
-                        <div>
-                            <strong>后端鉴权</strong>
-                            <span>不仅页面受保护，账户、邮件和缓存接口也会要求已登录状态。</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="auth-panel">
                 <div id="authSetupView">
-                    <h3>首次设置管理员密码</h3>
-                    <p>请先阅读使用协议，勾选确认后设置管理员密码。密码只会保存为本地哈希值。</p>
-                    <form id="authSetupForm" class="auth-form">
-                        <div class="auth-agreement">
+                    <div id="authSetupAgreementStep" class="auth-stage">
+                        <div class="auth-stage-header">
+                            <h3>阅读并同意使用协议</h3>
+                            <p>请先把协议完整滑动到底部，随后才能点击同意并继续。</p>
+                        </div>
+                        <div id="authAgreementScroll" class="auth-agreement-scroll">
                             <h4>OutlookManager 使用协议</h4>
-                            <p>1. 仅可在合法、授权和合规场景下使用本系统，不得用于未获授权的邮箱访问、数据滥用或其他违法行为。</p>
-                            <p>2. 你应自行保管管理员密码、Refresh Token、Client ID 等敏感信息，并对所有操作结果负责。</p>
-                            <p>3. 本项目当前仅提供初始化与登录流程示例，部署者应自行补充完整的运维、审计和合规措施。</p>
+                            <p>1. 本系统仅可在合法、授权和合规场景下使用，不得用于未获授权的邮箱访问、数据收集、数据滥用或其他违法违规操作。</p>
+                            <p>2. 你应自行保管管理员密码、Refresh Token、Client ID、API Key 等敏感信息，并对全部调用、管理与导出行为负责。</p>
+                            <p>3. 若你将本系统暴露在公网环境中，应自行完成 HTTPS、网络访问控制、审计日志、备份和最小权限等安全措施。</p>
+                            <p>4. API Key 功能用于程序化调用接口。部署者应只向可信系统发放密钥，并及时回收失效、泄露或超期的密钥。</p>
+                            <p>5. 任何因部署不当、密钥泄露、权限管理缺失、第三方滥用或违规接入造成的数据泄露、账号封禁、业务损失或法律风险，均由部署者自行承担。</p>
+                            <p>6. 继续使用即表示你已阅读、理解并接受以上条款，并确认你有权管理当前部署环境及相关 Outlook 数据。</p>
                         </div>
-                        <label class="auth-check">
-                            <input type="checkbox" id="authAgreeTerms">
-                            <span>我已阅读并同意以上使用协议</span>
-                        </label>
-                        <input type="password" id="authSetupPassword" class="form-input" placeholder="设置管理员密码，至少 8 位" autocomplete="new-password">
-                        <input type="password" id="authSetupPasswordConfirm" class="form-input" placeholder="再次输入管理员密码" autocomplete="new-password">
-                        <div id="authSetupError" class="auth-error"></div>
-                        <div class="auth-actions">
-                            <button type="submit" id="authSetupSubmit" class="btn btn-primary">保存并进入后台</button>
+                        <div id="authAgreementStatus" class="auth-scroll-status">请先滚动到协议底部</div>
+                        <div class="auth-actions center full-width">
+                            <button type="button" id="authAgreementContinue" class="btn btn-primary" onclick="goToSetupPasswordStep()" disabled>同意并继续</button>
                         </div>
-                    </form>
+                    </div>
+
+                    <div id="authSetupPasswordStep" class="auth-stage hidden">
+                        <div class="auth-stage-header">
+                            <h3>设置管理员密码</h3>
+                            <p>协议已确认。现在设置管理员密码，完成后将直接进入后台。</p>
+                        </div>
+                        <div class="auth-step-note">密码只会保存为本地哈希值，长度至少 8 位。请妥善保管，后续登录需要使用该密码。</div>
+                        <form id="authSetupForm" class="auth-form">
+                            <input type="password" id="authSetupPassword" class="form-input" placeholder="设置管理员密码，至少 8 位" autocomplete="new-password">
+                            <input type="password" id="authSetupPasswordConfirm" class="form-input" placeholder="再次输入管理员密码" autocomplete="new-password">
+                            <div id="authSetupError" class="auth-error"></div>
+                            <div class="auth-actions">
+                                <button type="button" class="btn btn-secondary" onclick="backToAgreementStep()">返回协议</button>
+                                <button type="submit" id="authSetupSubmit" class="btn btn-primary">完成初始化</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
                 <div id="authLoginView" class="hidden">
@@ -2656,6 +2877,10 @@
                 <button class="nav-item" onclick="showPage('batchAdd', this)">
                     <span class="icon">馃摝</span>
                     批量添加
+                </button>
+                <button class="nav-item" onclick="showPage('apiKeys', this)">
+                    <span class="icon">馃攽</span>
+                    API 密钥
                 </button>
                 <button class="nav-item" onclick="showPage('apiDocs', this)">
                     <span class="icon">馃摉</span>
@@ -2908,6 +3133,93 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                     </div>
                 </div>
 
+                <div id="apiKeysPage" class="page hidden">
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="font-semibold">API 密钥</h3>
+                                <p class="text-sm" style="color: #64748b;">创建并管理用于接口调用的 API Key，支持永不过期、固定到期时间、无限请求和固定调用次数。</p>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" onclick="loadApiKeys()">
+                                <span></span>
+                                刷新密钥列表
+                            </button>
+                        </div>
+
+                        <div class="api-key-grid">
+                            <div class="api-key-panel">
+                                <h4 style="margin: 0 0 8px; color: #0f172a;">创建新 API Key</h4>
+                                <p class="text-sm" style="color: #64748b; margin-bottom: 18px;">创建后会返回一次完整密钥，请立即保存。后续页面只显示前缀和使用统计，不会再次显示完整值。</p>
+                                <div class="api-key-form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">名称</label>
+                                        <input type="text" id="apiKeyName" class="form-input" placeholder="例如：生产环境-自动同步">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">到期方式</label>
+                                        <select id="apiKeyExpiresMode" class="form-input" onchange="toggleApiKeyExpiryMode()">
+                                            <option value="never">永不过期</option>
+                                            <option value="fixed">固定时间</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group hidden" id="apiKeyExpiresAtGroup">
+                                        <label class="form-label">到期时间</label>
+                                        <input type="datetime-local" id="apiKeyExpiresAt" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">请求限制</label>
+                                        <select id="apiKeyRequestMode" class="form-input" onchange="toggleApiKeyRequestMode()">
+                                            <option value="unlimited">无限请求</option>
+                                            <option value="fixed">固定调用次数</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group hidden" id="apiKeyMaxRequestsGroup">
+                                        <label class="form-label">最大调用次数</label>
+                                        <input type="number" id="apiKeyMaxRequests" class="form-input" min="1" placeholder="例如：1000">
+                                    </div>
+                                </div>
+                                <div class="auth-actions" style="margin-top: 18px;">
+                                    <button class="btn btn-primary" id="createApiKeyBtn" onclick="createApiKey()">
+                                        <span></span>
+                                        创建 API Key
+                                    </button>
+                                </div>
+                                <div id="apiKeyCreateResult" class="api-key-result hidden"></div>
+                            </div>
+
+                            <div class="api-key-panel">
+                                <h4 style="margin: 0 0 8px; color: #0f172a;">认证方式</h4>
+                                <p class="text-sm" style="color: #64748b; margin-bottom: 14px;">接口支持以下任一请求头携带 API Key。</p>
+                                <div class="api-docs-code" id="apiKeyAuthHeaderExample">Authorization: Bearer om_your_api_key</div>
+                                <div class="api-docs-code" style="margin-top: 12px;">X-API-Key: om_your_api_key</div>
+                                <p class="text-sm" style="color: #64748b; margin: 14px 0 0;">每次通过 API Key 的接口请求都会记录一次调用，并从剩余额度中扣除 1 次。</p>
+                            </div>
+                        </div>
+
+                        <div class="api-key-grid" style="margin-top: 20px;">
+                            <div class="api-key-panel">
+                                <div class="api-key-item-header">
+                                    <h4 style="margin: 0; color: #0f172a;">已创建的 API Key</h4>
+                                    <span class="api-key-badge muted" id="apiKeyCountBadge">0 个密钥</span>
+                                </div>
+                                <div id="apiKeysList" class="api-key-list">
+                                    <div class="api-key-empty">暂无 API Key，请先创建。</div>
+                                </div>
+                            </div>
+
+                            <div class="api-key-panel">
+                                <div class="api-key-item-header">
+                                    <h4 style="margin: 0; color: #0f172a;">调用记录</h4>
+                                    <span class="api-key-badge muted">按时间倒序</span>
+                                </div>
+                                <div id="apiKeyUsageLogs" class="api-log-list">
+                                    <div class="api-key-empty">暂无调用记录。</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- API鏂囨。椤甸潰 -->
                 <div id="apiDocsPage" class="page hidden">
                     <div class="card">
@@ -2943,11 +3255,25 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                                     </div>
                                     <div class="api-section">
                                         <h4>认证方式</h4>
-                                        <p class="api-description">当前版本无需认证，可直接调用接口。</p>
+                                        <div class="api-docs-auth-grid">
+                                            <div class="api-docs-auth-box">
+                                                <p class="api-description" style="margin-bottom: 10px;">推荐请求头</p>
+                                                <div class="api-docs-code" id="apiDocsBearerExample">Authorization: Bearer om_your_api_key</div>
+                                            </div>
+                                            <div class="api-docs-auth-box">
+                                                <p class="api-description" style="margin-bottom: 10px;">兼容请求头</p>
+                                                <div class="api-docs-code">X-API-Key: om_your_api_key</div>
+                                            </div>
+                                        </div>
+                                        <p class="api-description" style="margin-top: 12px;">可在后台左侧的“API 密钥”页面创建 Key。每次使用 API Key 调用一次接口，都会扣减一次请求额度并留下调用记录。</p>
                                     </div>
                                     <div class="api-section">
                                         <h4>响应格式</h4>
                                         <p class="api-description">所有接口均返回 JSON 数据，并通过 HTTP 状态码表示请求结果。</p>
+                                    </div>
+                                    <div class="api-section">
+                                        <h4>调试用 API Key</h4>
+                                        <input type="text" id="apiDocsAuthKey" class="form-input" placeholder="粘贴 API Key 后，试用接口会自动带上 Authorization 请求头">
                                     </div>
                                 </div>
                             </div>
@@ -3346,6 +3672,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             batch: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="7" rx="2"></rect><rect x="14" y="4" width="7" height="7" rx="2"></rect><rect x="14" y="15" width="7" height="7" rx="2"></rect><rect x="3" y="15" width="7" height="7" rx="2"></rect></svg>',
             api: '<svg viewBox="0 0 24 24"><path d="M8 9l-4 3 4 3"></path><path d="M16 9l4 3-4 3"></path><path d="M14 4l-4 16"></path></svg>',
             mail: '<svg viewBox="0 0 24 24"><path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"></path><path d="M22 7l-10 7L2 7"></path></svg>',
+            key: '<svg viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"></circle><path d="M12 15.5h9"></path><path d="M18 12.5v6"></path><path d="M21 13.5v4"></path></svg>',
             search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.35-4.35"></path></svg>',
             clear: '<svg viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>',
             refresh: '<svg viewBox="0 0 24 24"><path d="M21 2v6h-6"></path><path d="M3 22v-6h6"></path><path d="M20 8a9 9 0 0 0-15.5-3.5L3 8"></path><path d="M4 16a9 9 0 0 0 15.5 3.5L21 16"></path></svg>',
@@ -3380,6 +3707,8 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
         let currentTagSearch = '';
         let authState = null;
         let appBootstrapped = false;
+        let setupAgreementComplete = false;
+        let latestCreatedApiKey = '';
         const SIDEBAR_STORAGE_KEY = 'outlookmanager-sidebar-collapsed';
 
         // 鍏ㄥ眬鍙橀噺锛岀敤浜庡瓨鍌ㄥ綋鍓嶇紪杈戠殑璐︽埛淇℃伅
@@ -3426,11 +3755,76 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             button.textContent = pending ? busyText : idleText;
         }
 
+        function resetSetupFlow() {
+            setupAgreementComplete = false;
+            const setupPassword = document.getElementById('authSetupPassword');
+            const setupPasswordConfirm = document.getElementById('authSetupPasswordConfirm');
+            const agreementStep = document.getElementById('authSetupAgreementStep');
+            const passwordStep = document.getElementById('authSetupPasswordStep');
+            if (setupPassword) setupPassword.value = '';
+            if (setupPasswordConfirm) setupPasswordConfirm.value = '';
+            if (agreementStep) agreementStep.classList.remove('hidden');
+            if (passwordStep) passwordStep.classList.add('hidden');
+
+            const agreementScroll = document.getElementById('authAgreementScroll');
+            const continueButton = document.getElementById('authAgreementContinue');
+            const status = document.getElementById('authAgreementStatus');
+
+            if (agreementScroll) {
+                agreementScroll.scrollTop = 0;
+            }
+            if (continueButton) {
+                continueButton.disabled = true;
+            }
+            if (status) {
+                status.textContent = '请先滚动到协议底部';
+            }
+            requestAnimationFrame(handleAgreementScroll);
+        }
+
+        function handleAgreementScroll() {
+            const agreementScroll = document.getElementById('authAgreementScroll');
+            const continueButton = document.getElementById('authAgreementContinue');
+            const status = document.getElementById('authAgreementStatus');
+            if (!agreementScroll || !continueButton || !status) return;
+
+            const reachedBottom = agreementScroll.scrollTop + agreementScroll.clientHeight >= agreementScroll.scrollHeight - 8;
+            continueButton.disabled = !reachedBottom;
+            status.textContent = reachedBottom ? '已到达协议底部，可以继续' : '请先滚动到协议底部';
+        }
+
+        function goToSetupPasswordStep() {
+            const continueButton = document.getElementById('authAgreementContinue');
+            if (continueButton && continueButton.disabled) {
+                showAuthError('setup', '请先完整滑动阅读协议');
+                return;
+            }
+
+            setupAgreementComplete = true;
+            showAuthError('setup', '');
+            const agreementStep = document.getElementById('authSetupAgreementStep');
+            const passwordStep = document.getElementById('authSetupPasswordStep');
+            if (agreementStep) agreementStep.classList.add('hidden');
+            if (passwordStep) passwordStep.classList.remove('hidden');
+        }
+
+        function backToAgreementStep() {
+            setupAgreementComplete = false;
+            showAuthError('setup', '');
+            const agreementStep = document.getElementById('authSetupAgreementStep');
+            const passwordStep = document.getElementById('authSetupPasswordStep');
+            if (agreementStep) agreementStep.classList.remove('hidden');
+            if (passwordStep) passwordStep.classList.add('hidden');
+        }
+
         function showAuthScreen(mode, message = '') {
             document.getElementById('authShell').classList.remove('hidden');
             document.getElementById('appShell').classList.add('hidden');
             document.getElementById('authSetupView').classList.toggle('hidden', mode !== 'setup');
             document.getElementById('authLoginView').classList.toggle('hidden', mode !== 'login');
+            if (mode === 'setup') {
+                resetSetupFlow();
+            }
             showAuthError(mode, message);
             document.title = 'OutlookManager';
         }
@@ -3473,10 +3867,9 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             event.preventDefault();
             const password = document.getElementById('authSetupPassword').value;
             const confirmPassword = document.getElementById('authSetupPasswordConfirm').value;
-            const agreedTerms = document.getElementById('authAgreeTerms').checked;
 
-            if (!agreedTerms) {
-                showAuthError('setup', '请先阅读并同意使用协议');
+            if (!setupAgreementComplete) {
+                showAuthError('setup', '请先阅读协议并点击同意');
                 return;
             }
             if (!password || password.length < 8) {
@@ -3489,7 +3882,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             }
 
             showAuthError('setup', '');
-            setAuthPending('authSetupSubmit', true, '保存中...', '保存并进入后台');
+            setAuthPending('authSetupSubmit', true, '保存中...', '完成初始化');
 
             try {
                 const response = await fetch('/api/auth/setup', {
@@ -3498,7 +3891,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         password,
-                        agreed_terms: agreedTerms
+                        agreed_terms: true
                     })
                 });
                 const data = await response.json().catch(() => ({}));
@@ -3509,7 +3902,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             } catch (error) {
                 showAuthError('setup', error.message || '初始化失败');
             } finally {
-                setAuthPending('authSetupSubmit', false, '保存中...', '保存并进入后台');
+                setAuthPending('authSetupSubmit', false, '保存中...', '完成初始化');
             }
         }
 
@@ -3592,11 +3985,11 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
 
         function decorateStaticUi() {
             const navButtons = document.querySelectorAll('.sidebar .nav-item');
-            ['accounts', 'plus', 'batch', 'api', 'mail'].forEach((name, index) => {
+            ['accounts', 'plus', 'batch', 'key', 'api', 'mail'].forEach((name, index) => {
                 setButtonIcon(navButtons[index], name, true);
             });
 
-            const navLabels = ['邮箱账户管理', '添加账户', '批量添加', 'API 文档', '邮件列表'];
+            const navLabels = ['邮箱账户管理', '添加账户', '批量添加', 'API 密钥', 'API 文档', '邮件列表'];
             navButtons.forEach((button, index) => {
                 const label = navLabels[index];
                 if (!label) return;
@@ -3627,6 +4020,9 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             setButtonIcon(document.querySelector('#batchAddPage .btn-secondary[onclick="clearBatchForm()"]'), 'clear');
             setButtonIcon(document.querySelector('#batchAddPage .btn-secondary[onclick="validateBatchFormat()"]'), 'success');
             setButtonIcon(document.querySelector('#batchAddPage .btn-secondary[onclick="loadSampleData()"]'), 'docs');
+
+            setButtonIcon(document.getElementById('createApiKeyBtn'), 'key');
+            setButtonIcon(document.querySelector('#apiKeysPage .btn.btn-secondary.btn-sm[onclick="loadApiKeys()"]'), 'refresh');
 
             setButtonIcon(document.querySelector('#apiDocsPage .btn-secondary.btn-sm[onclick="downloadApiDocs()"]'), 'docs');
             setButtonIcon(document.querySelector('#apiDocsPage .btn-secondary.btn-sm[onclick="copyApiBaseUrl()"]'), 'copy');
@@ -3708,6 +4104,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                 'accounts': '邮箱账户管理',
                 'addAccount': '添加邮箱账户',
                 'batchAdd': '批量添加账户',
+                'apiKeys': 'API 密钥',
                 'apiDocs': 'API 接口文档',
                 'emails': '邮件列表'
             };
@@ -3721,6 +4118,8 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             } else if (pageName === 'batchAdd') {
                 clearBatchForm();
                 hideBatchProgress();
+            } else if (pageName === 'apiKeys') {
+                loadApiKeys();
             } else if (pageName === 'apiDocs') {
                 initApiDocs();
             } else if (pageName === 'emails') {
@@ -3748,6 +4147,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                 accounts: '邮箱账户管理',
                 addAccount: '添加邮箱账户',
                 batchAdd: '批量添加账户',
+                apiKeys: 'API 密钥',
                 apiDocs: 'API 接口文档',
                 emails: '邮件列表'
             };
@@ -3760,6 +4160,8 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             } else if (pageName === 'batchAdd') {
                 clearBatchForm();
                 hideBatchProgress();
+            } else if (pageName === 'apiKeys') {
+                loadApiKeys();
             } else if (pageName === 'apiDocs') {
                 initApiDocs();
             } else if (pageName === 'emails') {
@@ -3918,7 +4320,8 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                     if ((response.status === 401 || response.status === 403) && !url.startsWith('/api/auth/')) {
                         await initializeAuthFlow(response.status === 401 ? '登录状态已失效，请重新登录' : '请先完成初始化并登录');
                     }
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
                 }
 
                 return await response.json();
@@ -4275,11 +4678,222 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
             document.getElementById('batchResults').classList.remove('hidden');
         }
 
+        function escapeHtml(value = '') {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatDateTime(value, emptyText = '未设置') {
+            if (!value) return emptyText;
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return value;
+            return date.toLocaleString('zh-CN', { hour12: false });
+        }
+
+        function toggleApiKeyExpiryMode() {
+            const isFixed = document.getElementById('apiKeyExpiresMode').value === 'fixed';
+            document.getElementById('apiKeyExpiresAtGroup').classList.toggle('hidden', !isFixed);
+            if (!isFixed) {
+                document.getElementById('apiKeyExpiresAt').value = '';
+            }
+        }
+
+        function toggleApiKeyRequestMode() {
+            const isFixed = document.getElementById('apiKeyRequestMode').value === 'fixed';
+            document.getElementById('apiKeyMaxRequestsGroup').classList.toggle('hidden', !isFixed);
+            if (!isFixed) {
+                document.getElementById('apiKeyMaxRequests').value = '';
+            }
+        }
+
+        function copyLatestCreatedApiKey() {
+            if (!latestCreatedApiKey) {
+                showNotification('当前没有可复制的完整 API Key', 'warning');
+                return;
+            }
+            navigator.clipboard.writeText(latestCreatedApiKey).then(() => {
+                showNotification('API Key 已复制到剪贴板', 'success');
+            }).catch(() => {
+                showNotification('复制失败，请手动复制', 'error');
+            });
+        }
+
+        function getApiKeyStatusBadge(key) {
+            if (key.status === 'revoked') return '<span class="api-key-badge danger">已停用</span>';
+            if (key.status === 'expired') return '<span class="api-key-badge warn">已过期</span>';
+            if (key.status === 'exhausted') return '<span class="api-key-badge warn">额度耗尽</span>';
+            return '<span class="api-key-badge">生效中</span>';
+        }
+
+        async function loadApiKeys() {
+            try {
+                const data = await apiRequest('/api/api-keys');
+                const keys = Array.isArray(data.keys) ? data.keys : [];
+                const logs = Array.isArray(data.usage_logs) ? data.usage_logs : [];
+
+                document.getElementById('apiKeyCountBadge').textContent = `${keys.length} 个密钥`;
+
+                const keysList = document.getElementById('apiKeysList');
+                if (!keys.length) {
+                    keysList.innerHTML = '<div class="api-key-empty">暂无 API Key，请先创建。</div>';
+                } else {
+                    keysList.innerHTML = keys.map(key => `
+                        <div class="api-key-item">
+                            <div class="api-key-item-header">
+                                <div>
+                                    <div style="font-weight: 700; color: #0f172a;">${escapeHtml(key.name)}</div>
+                                    <div class="text-sm" style="color: #64748b; margin-top: 4px;">前缀：${escapeHtml(key.prefix || '')}</div>
+                                </div>
+                                <div class="api-key-meta">
+                                    ${getApiKeyStatusBadge(key)}
+                                    <span class="api-key-badge muted">${key.never_expires ? '永不过期' : '固定到期'}</span>
+                                    <span class="api-key-badge muted">${key.request_mode === 'unlimited' ? '无限请求' : `上限 ${key.max_requests} 次`}</span>
+                                </div>
+                            </div>
+                            <div class="api-key-meta" style="margin-bottom: 14px;">
+                                <span class="api-key-badge muted">已用 ${key.used_requests} 次</span>
+                                <span class="api-key-badge muted">${key.remaining_requests == null ? '剩余：无限' : `剩余：${key.remaining_requests}`}</span>
+                                <span class="api-key-badge muted">创建于 ${escapeHtml(formatDateTime(key.created_at))}</span>
+                                <span class="api-key-badge muted">到期：${escapeHtml(key.never_expires ? '永不过期' : formatDateTime(key.expires_at, '未设置'))}</span>
+                                <span class="api-key-badge muted">最后调用：${escapeHtml(formatDateTime(key.last_used_at, '暂无'))}</span>
+                            </div>
+                            ${key.status === 'active' ? `<button class="btn btn-secondary btn-sm" data-key-revoke="${escapeHtml(key.id)}" onclick="revokeApiKey('${escapeHtml(key.id)}')"><span></span>停用密钥</button>` : ''}
+                        </div>
+                    `).join('');
+
+                    document.querySelectorAll('[data-key-revoke]').forEach(button => {
+                        setButtonIcon(button, 'clear');
+                    });
+                }
+
+                const logsList = document.getElementById('apiKeyUsageLogs');
+                if (!logs.length) {
+                    logsList.innerHTML = '<div class="api-key-empty">暂无调用记录。</div>';
+                } else {
+                    logsList.innerHTML = logs.map(log => `
+                        <div class="api-log-item">
+                            <div class="api-log-item-header">
+                                <div style="font-weight: 700; color: #0f172a;">${escapeHtml(log.key_name || '未命名密钥')}</div>
+                                <div class="api-log-meta">
+                                    <span class="api-log-badge">${escapeHtml(log.method || 'GET')}</span>
+                                    <span class="api-log-badge">${escapeHtml(formatDateTime(log.used_at))}</span>
+                                </div>
+                            </div>
+                            <div class="api-key-code">${escapeHtml(log.path || '')}</div>
+                            <div class="api-key-meta" style="margin-top: 12px;">
+                                <span class="api-key-badge muted">IP：${escapeHtml(log.ip || '未知')}</span>
+                                <span class="api-key-badge muted">${log.remaining_requests == null ? '剩余额度：无限' : `剩余额度：${log.remaining_requests}`}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                showNotification('加载 API Key 列表失败: ' + error.message, 'error');
+            }
+        }
+
+        async function createApiKey() {
+            const name = document.getElementById('apiKeyName').value.trim();
+            const expiresMode = document.getElementById('apiKeyExpiresMode').value;
+            const requestMode = document.getElementById('apiKeyRequestMode').value;
+            const expiresAt = document.getElementById('apiKeyExpiresAt').value;
+            const maxRequests = document.getElementById('apiKeyMaxRequests').value;
+
+            if (!name) {
+                showNotification('请先填写 API Key 名称', 'warning');
+                return;
+            }
+            if (expiresMode === 'fixed' && !expiresAt) {
+                showNotification('请选择 API Key 到期时间', 'warning');
+                return;
+            }
+            if (requestMode === 'fixed' && (!maxRequests || Number(maxRequests) < 1)) {
+                showNotification('请输入有效的最大调用次数', 'warning');
+                return;
+            }
+
+            setAuthPending('createApiKeyBtn', true, '创建中...', '创建 API Key');
+            try {
+                const payload = {
+                    name,
+                    expires_mode: expiresMode,
+                    expires_at: expiresMode === 'fixed' ? new Date(expiresAt).toISOString() : null,
+                    request_mode: requestMode,
+                    max_requests: requestMode === 'fixed' ? Number(maxRequests) : null
+                };
+                const data = await apiRequest('/api/api-keys', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                latestCreatedApiKey = data.api_key || '';
+                const resultBox = document.getElementById('apiKeyCreateResult');
+                resultBox.classList.remove('hidden');
+                resultBox.innerHTML = `
+                    <div style="font-weight: 700; color: #0f172a;">API Key 创建成功</div>
+                    <p class="text-sm" style="color: #475569; margin: 8px 0 0;">完整密钥只会展示这一次，请立即保存。</p>
+                    <div class="api-key-secret">${escapeHtml(latestCreatedApiKey)}</div>
+                    <div class="auth-actions" style="margin-top: 14px;">
+                        <button class="btn btn-secondary btn-sm" id="copyLatestApiKeyBtn" onclick="copyLatestCreatedApiKey()"><span></span>复制完整密钥</button>
+                    </div>
+                `;
+                setButtonIcon(document.getElementById('copyLatestApiKeyBtn'), 'copy');
+
+                document.getElementById('apiKeyName').value = '';
+                document.getElementById('apiKeyExpiresMode').value = 'never';
+                document.getElementById('apiKeyRequestMode').value = 'unlimited';
+                document.getElementById('apiKeyExpiresAt').value = '';
+                document.getElementById('apiKeyMaxRequests').value = '';
+                toggleApiKeyExpiryMode();
+                toggleApiKeyRequestMode();
+
+                await loadApiKeys();
+                showNotification('API Key 已创建', 'success');
+            } catch (error) {
+                showNotification('创建 API Key 失败: ' + error.message, 'error');
+            } finally {
+                setAuthPending('createApiKeyBtn', false, '创建中...', '创建 API Key');
+                setButtonIcon(document.getElementById('createApiKeyBtn'), 'key');
+            }
+        }
+
+        async function revokeApiKey(keyId) {
+            if (!confirm('确定要停用这个 API Key 吗？停用后不能再用于接口调用。')) {
+                return;
+            }
+
+            try {
+                await apiRequest(`/api/api-keys/${keyId}`, { method: 'DELETE' });
+                await loadApiKeys();
+                showNotification('API Key 已停用', 'success');
+            } catch (error) {
+                showNotification('停用 API Key 失败: ' + error.message, 'error');
+            }
+        }
+
+        function getApiDocsAuthHeaders() {
+            const key = document.getElementById('apiDocsAuthKey')?.value.trim();
+            if (!key) return {};
+            return { Authorization: `Bearer ${key}` };
+        }
+
         // API鏂囨。鐩稿叧鍑芥暟
         function initApiDocs() {
             // 鏇存柊Base URL
             const baseUrl = window.location.origin;
             document.getElementById('baseUrlExample').textContent = baseUrl;
+            const bearerExample = document.getElementById('apiDocsBearerExample');
+            if (bearerExample) {
+                bearerExample.textContent = 'Authorization: Bearer om_your_api_key';
+            }
+            const authHeaderExample = document.getElementById('apiKeyAuthHeaderExample');
+            if (authHeaderExample) {
+                authHeaderExample.textContent = 'Authorization: Bearer om_your_api_key';
+            }
         }
 
         function copyApiBaseUrl() {
@@ -4350,7 +4964,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', 'outlook-email-api-docs.md');
+            link.setAttribute('download', 'outlookmanager-api-docs.md');
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -4365,8 +4979,17 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
 ## 基础信息
 
 - **Base URL**: ${baseUrl}
-- **认证方式**: 无需认证
+- **认证方式**: API Key
+- **请求头**: \`Authorization: Bearer om_your_api_key\`
+- **兼容请求头**: \`X-API-Key: om_your_api_key\`
 - **响应格式**: JSON
+
+## API Key 说明
+
+1. 在后台左侧的 \`API 密钥\` 页面创建密钥。
+2. 可设置永不过期或固定到期时间。
+3. 可设置无限请求或固定调用次数。
+4. 每次通过 API Key 调用接口，都会扣减 1 次请求额度并记录调用日志。
 
 ## 接口列表
 
@@ -4375,6 +4998,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
 **请求**
 \`\`\`
 GET /accounts
+Authorization: Bearer om_your_api_key
 \`\`\`
 
 **响应示例**
@@ -4396,6 +5020,7 @@ GET /accounts
 **请求**
 \`\`\`
 GET /emails/{email_id}?folder=inbox&page=1&page_size=20&refresh=false
+Authorization: Bearer om_your_api_key
 \`\`\`
 
 **参数说明**
@@ -4422,6 +5047,7 @@ GET /emails/{email_id}?folder=inbox&page=1&page_size=20&refresh=false
 **请求**
 \`\`\`
 GET /emails/{email_id}/{message_id}
+Authorization: Bearer om_your_api_key
 \`\`\`
 
 **参数说明**
@@ -4501,8 +5127,14 @@ GET /emails/{email_id}/{message_id}
 
             try {
                 showNotification('正在调用 API...', 'info', '', 2000);
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    credentials: 'same-origin',
+                    headers: getApiDocsAuthHeaders()
+                });
                 const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.detail || `HTTP ${response.status}: ${response.statusText}`);
+                }
 
                 // 鏄剧ず鍝嶅簲缁撴灉
                 const responseElement = document.getElementById(responseElementId);
@@ -5243,6 +5875,10 @@ GET /emails/{email_id}/{message_id}
         window.addEventListener('load', function() {
             document.getElementById('authSetupForm').addEventListener('submit', submitAuthSetup);
             document.getElementById('authLoginForm').addEventListener('submit', submitAuthLogin);
+            document.getElementById('authAgreementScroll').addEventListener('scroll', handleAgreementScroll);
+            toggleApiKeyExpiryMode();
+            toggleApiKeyRequestMode();
+            resetSetupFlow();
             initializeAuthFlow();
         });
         

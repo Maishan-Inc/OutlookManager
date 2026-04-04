@@ -10,27 +10,30 @@ Version: 1.0.0
 
 import asyncio
 import email
+import hashlib
+import hmac
 import imaplib
 import json
 import logging
 import os
 import re
+import secrets
 import socket
 import threading
 import time
 from contextlib import asynccontextmanager
-from datetime import datetime
+from datetime import datetime, timedelta
 from itertools import groupby
 from pathlib import Path
 from queue import Empty, Queue
-from typing import AsyncGenerator, List, Optional
+from typing import Any, AsyncGenerator, List, Optional
 
 import httpx
 from email.header import decode_header
 from email.utils import parsedate_to_datetime
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, EmailStr, Field
 
@@ -44,7 +47,11 @@ from pydantic import BaseModel, EmailStr, Field
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = Path(os.getenv("DATA_DIR", str(BASE_DIR / "data")))
 ACCOUNTS_FILE = Path(os.getenv("ACCOUNTS_FILE", str(DATA_DIR / "accounts.json")))
+AUTH_FILE = Path(os.getenv("AUTH_FILE", str(DATA_DIR / "auth.json")))
+SESSIONS_FILE = Path(os.getenv("SESSIONS_FILE", str(DATA_DIR / "sessions.json")))
 STATIC_DIR = BASE_DIR / "static"
+SESSION_COOKIE = "outlookmanager_session"
+SESSION_TTL_HOURS = max(1, int(os.getenv("SESSION_TTL_HOURS", "24")))
 
 # OAuth2配置
 TOKEN_URL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
@@ -173,6 +180,14 @@ class AccountListResponse(BaseModel):
 class UpdateTagsRequest(BaseModel):
     """更新标签请求模型"""
     tags: List[str]
+
+
+class PasswordPayload(BaseModel):
+    password: str = Field(min_length=8, max_length=256)
+
+
+class SetupPayload(PasswordPayload):
+    agreed_terms: bool = Field(default=False)
 
 # ============================================================================
 # IMAP连接池管理
@@ -707,6 +722,157 @@ async def get_all_accounts(
 # OAuth2令牌管理模块
 # ============================================================================
 
+auth_lock = threading.Lock()
+
+
+def _read_json_file(path: Path, default: dict[str, Any]) -> dict[str, Any]:
+    if not path.exists():
+        return json.loads(json.dumps(default))
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        logger.warning(f"Invalid JSON detected in {path}, using default structure")
+        return json.loads(json.dumps(default))
+
+
+def _write_json_file(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+
+
+def load_auth_settings() -> dict[str, Any]:
+    with auth_lock:
+        return _read_json_file(
+            AUTH_FILE,
+            {
+                "admin_password_hash": "",
+                "agreement_accepted": False,
+                "agreement_accepted_at": None,
+                "updated_at": None,
+            },
+        )
+
+
+def save_auth_settings(settings: dict[str, Any]) -> None:
+    with auth_lock:
+        payload = {
+            "admin_password_hash": settings.get("admin_password_hash", ""),
+            "agreement_accepted": bool(settings.get("agreement_accepted", False)),
+            "agreement_accepted_at": settings.get("agreement_accepted_at"),
+            "updated_at": datetime.utcnow().isoformat(),
+        }
+        _write_json_file(AUTH_FILE, payload)
+
+
+def load_sessions() -> dict[str, Any]:
+    with auth_lock:
+        data = _read_json_file(SESSIONS_FILE, {"sessions": {}})
+        sessions = data.get("sessions")
+        if not isinstance(sessions, dict):
+            return {"sessions": {}}
+        return {"sessions": sessions}
+
+
+def save_sessions(data: dict[str, Any]) -> None:
+    with auth_lock:
+        _write_json_file(SESSIONS_FILE, {"sessions": data.get("sessions", {})})
+
+
+def hash_password(password: str, salt_hex: str | None = None) -> str:
+    salt = bytes.fromhex(salt_hex) if salt_hex else secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 200_000)
+    return f"{salt.hex()}${digest.hex()}"
+
+
+def verify_password(password: str, stored: str | None) -> bool:
+    if not stored or "$" not in stored:
+        return False
+    salt_hex, expected = stored.split("$", 1)
+    actual = hash_password(password, salt_hex).split("$", 1)[1]
+    return hmac.compare_digest(actual, expected)
+
+
+def auth_is_configured() -> bool:
+    settings = load_auth_settings()
+    return bool(settings.get("admin_password_hash")) and bool(settings.get("agreement_accepted"))
+
+
+def cleanup_expired_sessions() -> None:
+    sessions = load_sessions()
+    now_ts = time.time()
+    active_sessions = {
+        token_hash: meta
+        for token_hash, meta in sessions.get("sessions", {}).items()
+        if isinstance(meta, dict) and float(meta.get("expires_at_ts", 0)) > now_ts
+    }
+    if active_sessions != sessions.get("sessions", {}):
+        save_sessions({"sessions": active_sessions})
+
+
+def create_session_token() -> tuple[str, str]:
+    cleanup_expired_sessions()
+    raw_token = secrets.token_urlsafe(32)
+    token_hash = hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
+    expires_at = datetime.utcnow() + timedelta(hours=SESSION_TTL_HOURS)
+    sessions = load_sessions()
+    sessions.setdefault("sessions", {})[token_hash] = {
+        "created_at": datetime.utcnow().isoformat(),
+        "expires_at": expires_at.isoformat(),
+        "expires_at_ts": expires_at.timestamp(),
+    }
+    save_sessions(sessions)
+    return raw_token, expires_at.isoformat()
+
+
+def delete_session(raw_token: str | None) -> None:
+    if not raw_token:
+        return
+    token_hash = hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
+    sessions = load_sessions()
+    if token_hash in sessions.get("sessions", {}):
+        del sessions["sessions"][token_hash]
+        save_sessions(sessions)
+
+
+def is_authenticated_request(request: Request) -> bool:
+    cleanup_expired_sessions()
+    raw_token = request.cookies.get(SESSION_COOKIE)
+    if not raw_token:
+        return False
+    token_hash = hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
+    sessions = load_sessions().get("sessions", {})
+    meta = sessions.get(token_hash)
+    if not isinstance(meta, dict):
+        return False
+    return float(meta.get("expires_at_ts", 0)) > time.time()
+
+
+def require_authenticated(request: Request) -> None:
+    if not auth_is_configured():
+        raise HTTPException(status_code=403, detail="Admin password is not configured yet")
+    if not is_authenticated_request(request):
+        raise HTTPException(status_code=401, detail="Login required")
+
+
+def make_session_response(payload: dict[str, Any], raw_token: str | None = None, expires_at: str | None = None) -> JSONResponse:
+    response = JSONResponse(payload)
+    if raw_token and expires_at:
+        max_age = SESSION_TTL_HOURS * 60 * 60
+        response.set_cookie(
+            SESSION_COOKIE,
+            raw_token,
+            max_age=max_age,
+            expires=max_age,
+            httponly=True,
+            samesite="lax",
+            secure=False,
+            path="/",
+        )
+    return response
+
+
 async def get_access_token(credentials: AccountCredentials) -> str:
     """
     使用refresh_token获取access_token
@@ -1036,6 +1202,23 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
     if not ACCOUNTS_FILE.exists():
         ACCOUNTS_FILE.write_text("{}", encoding="utf-8")
         logger.info(f"Created empty accounts file at {ACCOUNTS_FILE}")
+    if AUTH_FILE.exists() and AUTH_FILE.is_dir():
+        raise RuntimeError(f"Auth path is a directory, expected a file: {AUTH_FILE}")
+    if not AUTH_FILE.exists():
+        _write_json_file(
+            AUTH_FILE,
+            {
+                "admin_password_hash": "",
+                "agreement_accepted": False,
+                "agreement_accepted_at": None,
+                "updated_at": None,
+            },
+        )
+    if SESSIONS_FILE.exists() and SESSIONS_FILE.is_dir():
+        raise RuntimeError(f"Sessions path is a directory, expected a file: {SESSIONS_FILE}")
+    if not SESSIONS_FILE.exists():
+        _write_json_file(SESSIONS_FILE, {"sessions": {}})
+    cleanup_expired_sessions()
 
     yield
 
@@ -1053,6 +1236,9 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+app.title = "OutlookManager API"
+app.description = "OutlookManager 邮件管理后台服务"
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -1064,20 +1250,73 @@ app.add_middleware(
 # 挂载静态文件服务
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
+@app.get("/api/auth/state")
+async def auth_state(request: Request):
+    settings = load_auth_settings()
+    configured = auth_is_configured()
+    return {
+        "site_title": "OutlookManager",
+        "configured": configured,
+        "authenticated": is_authenticated_request(request) if configured else False,
+        "agreement_required": True,
+        "agreement_accepted": bool(settings.get("agreement_accepted", False)),
+        "auth_mode": "setup" if not configured else "login",
+    }
+
+
+@app.post("/api/auth/setup")
+async def auth_setup(payload: SetupPayload):
+    if auth_is_configured():
+        raise HTTPException(status_code=409, detail="Admin password is already configured")
+    if not payload.agreed_terms:
+        raise HTTPException(status_code=400, detail="You must agree to the terms before continuing")
+    save_auth_settings(
+        {
+            "admin_password_hash": hash_password(payload.password),
+            "agreement_accepted": True,
+            "agreement_accepted_at": datetime.utcnow().isoformat(),
+        }
+    )
+    raw_token, expires_at = create_session_token()
+    return make_session_response({"ok": True, "configured": True}, raw_token, expires_at)
+
+
+@app.post("/api/auth/login")
+async def auth_login(payload: PasswordPayload):
+    settings = load_auth_settings()
+    if not auth_is_configured():
+        raise HTTPException(status_code=403, detail="Admin password is not configured yet")
+    if not verify_password(payload.password, settings.get("admin_password_hash")):
+        raise HTTPException(status_code=401, detail="Password is incorrect")
+    raw_token, expires_at = create_session_token()
+    return make_session_response({"ok": True, "configured": True}, raw_token, expires_at)
+
+
+@app.post("/api/auth/logout")
+async def auth_logout(request: Request):
+    delete_session(request.cookies.get(SESSION_COOKIE))
+    response = JSONResponse({"ok": True})
+    response.delete_cookie(SESSION_COOKIE, path="/")
+    return response
+
+
 @app.get("/accounts", response_model=AccountListResponse)
 async def get_accounts(
+    request: Request,
     page: int = Query(1, ge=1, description="页码，从1开始"),
     page_size: int = Query(10, ge=1, le=100, description="每页数量，范围1-100"),
     email_search: Optional[str] = Query(None, description="邮箱账号模糊搜索"),
     tag_search: Optional[str] = Query(None, description="标签模糊搜索")
 ):
     """获取所有已加载的邮箱账户列表，支持分页和搜索"""
+    require_authenticated(request)
     return await get_all_accounts(page, page_size, email_search, tag_search)
 
 
 @app.post("/accounts", response_model=AccountResponse)
-async def register_account(credentials: AccountCredentials):
+async def register_account(credentials: AccountCredentials, request: Request):
     """注册或更新邮箱账户"""
+    require_authenticated(request)
     try:
         # 验证凭证有效性
         await get_access_token(credentials)
@@ -1099,6 +1338,7 @@ async def register_account(credentials: AccountCredentials):
 
 @app.get("/emails/{email_id}", response_model=EmailListResponse)
 async def get_emails(
+    request: Request,
     email_id: str,
     folder: str = Query("all", regex="^(inbox|junk|all)$"),
     page: int = Query(1, ge=1),
@@ -1106,6 +1346,7 @@ async def get_emails(
     refresh: bool = Query(False, description="强制刷新缓存")
 ):
     """获取邮件列表"""
+    require_authenticated(request)
     credentials = await get_account_credentials(email_id)
     print('credentials:' + str(credentials))
     return await list_emails(credentials, folder, page, page_size, refresh)
@@ -1113,11 +1354,13 @@ async def get_emails(
 
 @app.get("/emails/{email_id}/dual-view")
 async def get_dual_view_emails(
+    request: Request,
     email_id: str,
     inbox_page: int = Query(1, ge=1),
     junk_page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100)
 ):
+    require_authenticated(request)
     """获取双栏视图邮件（收件箱和垃圾箱）"""
     credentials = await get_account_credentials(email_id)
     
@@ -1135,14 +1378,15 @@ async def get_dual_view_emails(
 
 
 @app.put("/accounts/{email_id}/tags", response_model=AccountResponse)
-async def update_account_tags(email_id: str, request: UpdateTagsRequest):
+async def update_account_tags(email_id: str, payload: UpdateTagsRequest, request: Request):
     """更新账户标签"""
+    require_authenticated(request)
     try:
         # 检查账户是否存在
         credentials = await get_account_credentials(email_id)
         
         # 更新标签
-        credentials.tags = request.tags
+        credentials.tags = payload.tags
         
         # 保存更新后的凭证
         await save_account_credentials(email_id, credentials)
@@ -1158,14 +1402,16 @@ async def update_account_tags(email_id: str, request: UpdateTagsRequest):
         raise HTTPException(status_code=500, detail="Failed to update account tags")
 
 @app.get("/emails/{email_id}/{message_id}", response_model=EmailDetailsResponse)
-async def get_email_detail(email_id: str, message_id: str):
+async def get_email_detail(email_id: str, message_id: str, request: Request):
+    require_authenticated(request)
     """获取邮件详细内容"""
     credentials = await get_account_credentials(email_id)
     return await get_email_details(credentials, message_id)
 
 @app.delete("/accounts/{email_id}", response_model=AccountResponse)
-async def delete_account(email_id: str):
+async def delete_account(email_id: str, request: Request):
     """删除邮箱账户"""
+    require_authenticated(request)
     try:
         # 检查账户是否存在
         await get_account_credentials(email_id)
@@ -1203,24 +1449,31 @@ async def root():
     return FileResponse(STATIC_DIR / "index.html")
 
 @app.delete("/cache/{email_id}")
-async def clear_cache(email_id: str):
+async def clear_cache(email_id: str, request: Request):
     """清除指定邮箱的缓存"""
+    require_authenticated(request)
     clear_email_cache(email_id)
     return {"message": f"Cache cleared for {email_id}"}
 
 @app.delete("/cache")
-async def clear_all_cache():
+async def clear_all_cache(request: Request):
     """清除所有缓存"""
+    require_authenticated(request)
     clear_email_cache()
     return {"message": "All cache cleared"}
 
 @app.get("/api")
-async def api_status():
+async def api_status(request: Request):
+    require_authenticated(request)
     """API状态检查"""
     return {
         "message": "Outlook邮件API服务正在运行",
         "version": "1.0.0",
         "endpoints": {
+            "auth_state": "GET /api/auth/state",
+            "auth_setup": "POST /api/auth/setup",
+            "auth_login": "POST /api/auth/login",
+            "auth_logout": "POST /api/auth/logout",
             "get_accounts": "GET /accounts",
             "register_account": "POST /accounts",
             "get_emails": "GET /emails/{email_id}?refresh=true",

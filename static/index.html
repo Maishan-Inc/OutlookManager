@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outlook閭欢绠＄悊绯荤粺</title>
+    <title>Outlook 邮件管理系统</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -2047,36 +2047,320 @@
                 width: calc(100vw - 32px);
             }
         }
+
+        .auth-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            background:
+                radial-gradient(circle at top left, rgba(14, 165, 233, 0.18), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.16), transparent 28%),
+                linear-gradient(135deg, #eaf2ff 0%, #f8fbff 48%, #eef5ff 100%);
+        }
+
+        .auth-screen {
+            width: min(1080px, 100%);
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(360px, 460px);
+            gap: 28px;
+            align-items: stretch;
+        }
+
+        .auth-hero,
+        .auth-panel {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 28px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+            backdrop-filter: blur(18px);
+        }
+
+        .auth-hero {
+            padding: 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 620px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-hero::after {
+            content: '';
+            position: absolute;
+            inset: auto -80px -120px auto;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.18), transparent 68%);
+            pointer-events: none;
+        }
+
+        .auth-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .auth-brand-mark {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            box-shadow: 0 18px 34px rgba(37, 99, 235, 0.24);
+        }
+
+        .auth-brand-copy h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #0f172a;
+            letter-spacing: -0.04em;
+        }
+
+        .auth-brand-copy p {
+            margin: 6px 0 0;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .auth-hero h2 {
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 3vw, 3rem);
+            color: #0f172a;
+            line-height: 1.02;
+            letter-spacing: -0.05em;
+        }
+
+        .auth-hero p {
+            margin: 0;
+            color: #475569;
+            line-height: 1.7;
+        }
+
+        .auth-feature-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .auth-feature {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(248, 250, 252, 0.82);
+            border: 1px solid rgba(148, 163, 184, 0.14);
+        }
+
+        .auth-feature strong {
+            display: block;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .auth-feature span {
+            color: #64748b;
+            font-size: 0.92rem;
+        }
+
+        .auth-panel {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-panel h3 {
+            margin: 0 0 8px;
+            font-size: 1.6rem;
+            color: #0f172a;
+            letter-spacing: -0.04em;
+        }
+
+        .auth-panel p {
+            margin: 0 0 22px;
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        .auth-form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .auth-agreement {
+            max-height: 220px;
+            overflow: auto;
+            padding: 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            background: rgba(248, 250, 252, 0.78);
+            color: #475569;
+            line-height: 1.75;
+            font-size: 0.92rem;
+        }
+
+        .auth-agreement h4 {
+            margin: 0 0 10px;
+            color: #0f172a;
+            font-size: 1rem;
+        }
+
+        .auth-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #334155;
+            font-size: 0.92rem;
+        }
+
+        .auth-check input {
+            margin-top: 3px;
+        }
+
+        .auth-error {
+            min-height: 20px;
+            color: #dc2626;
+            font-size: 0.9rem;
+        }
+
+        .auth-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .auth-muted {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 960px) {
+            .auth-screen {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-hero {
+                min-height: auto;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="app-container">
+    <div id="authShell" class="auth-shell">
+        <div class="auth-screen">
+            <section class="auth-hero">
+                <div>
+                    <div class="auth-brand">
+                        <span class="auth-brand-mark">OM</span>
+                        <div class="auth-brand-copy">
+                            <h1>OutlookManager</h1>
+                            <p>Outlook 账户、邮件与接口后台</p>
+                        </div>
+                    </div>
+                    <h2>先完成初始化或登录，再进入后台。</h2>
+                    <p>当前项目已经加入密码保护流程。首次部署需要阅读并勾选协议，然后设置管理员密码；后续访问需要先登录才能查看账户、邮件和接口页面。</p>
+                </div>
+                <div class="auth-feature-list">
+                    <div class="auth-feature">
+                        <div>
+                            <strong>首次初始化</strong>
+                            <span>设置管理员密码并确认使用协议后，系统才会开放后台。</span>
+                        </div>
+                    </div>
+                    <div class="auth-feature">
+                        <div>
+                            <strong>登录会话</strong>
+                            <span>登录成功后会写入本地 Cookie，会话过期后需要重新登录。</span>
+                        </div>
+                    </div>
+                    <div class="auth-feature">
+                        <div>
+                            <strong>后端鉴权</strong>
+                            <span>不仅页面受保护，账户、邮件和缓存接口也会要求已登录状态。</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="auth-panel">
+                <div id="authSetupView">
+                    <h3>首次设置管理员密码</h3>
+                    <p>请先阅读使用协议，勾选确认后设置管理员密码。密码只会保存为本地哈希值。</p>
+                    <form id="authSetupForm" class="auth-form">
+                        <div class="auth-agreement">
+                            <h4>OutlookManager 使用协议</h4>
+                            <p>1. 仅可在合法、授权和合规场景下使用本系统，不得用于未获授权的邮箱访问、数据滥用或其他违法行为。</p>
+                            <p>2. 你应自行保管管理员密码、Refresh Token、Client ID 等敏感信息，并对所有操作结果负责。</p>
+                            <p>3. 本项目当前仅提供初始化与登录流程示例，部署者应自行补充完整的运维、审计和合规措施。</p>
+                        </div>
+                        <label class="auth-check">
+                            <input type="checkbox" id="authAgreeTerms">
+                            <span>我已阅读并同意以上使用协议</span>
+                        </label>
+                        <input type="password" id="authSetupPassword" class="form-input" placeholder="设置管理员密码，至少 8 位" autocomplete="new-password">
+                        <input type="password" id="authSetupPasswordConfirm" class="form-input" placeholder="再次输入管理员密码" autocomplete="new-password">
+                        <div id="authSetupError" class="auth-error"></div>
+                        <div class="auth-actions">
+                            <button type="submit" id="authSetupSubmit" class="btn btn-primary">保存并进入后台</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="authLoginView" class="hidden">
+                    <h3>登录 OutlookManager</h3>
+                    <p>当前站点已经启用密码保护。输入管理员密码后才可进入后台。</p>
+                    <form id="authLoginForm" class="auth-form">
+                        <input type="password" id="authLoginPassword" class="form-input" placeholder="输入管理员密码" autocomplete="current-password">
+                        <div id="authLoginError" class="auth-error"></div>
+                        <div class="auth-actions">
+                            <button type="submit" id="authLoginSubmit" class="btn btn-primary">登录</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="appShell" class="app-container hidden">
         <!-- 宸︿晶鑿滃崟 -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h1>馃摟 閭欢绠＄悊</h1>
-                <p>Outlook閭欢绠＄悊绯荤粺</p>
+                <h1>Outlook 邮件管理</h1>
+                <p>账户、邮件与接口统一管理</p>
             </div>
             <nav class="sidebar-nav">
                 <button class="nav-item active" onclick="showPage('accounts', this)">
                     <span class="icon">馃懃</span>
-                    閭璐︽埛
+                    邮箱账户
                 </button>
                 <button class="nav-item" onclick="showPage('addAccount', this)">
-                    <span class="icon">鉃?/span>
-                    娣诲姞璐︽埛
+                    <span class="icon"></span>
+                    添加账户
                 </button>
                 <button class="nav-item" onclick="showPage('batchAdd', this)">
                     <span class="icon">馃摝</span>
-                    鎵归噺娣诲姞
+                    批量添加
                 </button>
                 <button class="nav-item" onclick="showPage('apiDocs', this)">
                     <span class="icon">馃摉</span>
-                    API绠＄悊
+                    API 文档
                 </button>
                 <button class="nav-item" onclick="showPage('emails', this)" oncontextmenu="showEmailsContextMenu(event)" id="emailsNav" style="display: none;">
                     <span class="icon">馃摟</span>
-                    閭欢鍒楄〃
+                    邮件列表
                 </button>
             </nav>
         </div>
@@ -2084,7 +2368,7 @@
         <!-- 涓诲唴瀹瑰尯鍩?-->
         <div class="main-content">
             <div class="main-header">
-                <h2 id="pageTitle">閭璐︽埛绠＄悊</h2>
+                <h2 id="pageTitle">邮箱账户管理</h2>
                 <div id="headerActions"></div>
             </div>
 
@@ -2094,21 +2378,21 @@
                     <div class="card">
                         <div class="flex items-center justify-between mb-4">
                             <div>
-                                <h3 class="font-semibold">閭璐︽埛绠＄悊</h3>
-                                <p class="text-sm" style="color: #64748b;">绠＄悊鎵€鏈夊凡娣诲姞鐨勯偖绠辫处鎴?/p>
+                                <h3 class="font-semibold">邮箱账户管理</h3>
+                                <p class="text-sm" style="color: #64748b;">管理所有已接入的 Outlook 邮箱账户</p>
                             </div>
                             <div class="flex gap-2">
                                 <button class="btn btn-primary btn-sm" onclick="showPage('addAccount')">
-                                    <span>鉃?/span>
-                                    娣诲姞璐︽埛
+                                    <span></span>
+                                    添加账户
                                 </button>
                                 <button class="btn btn-secondary btn-sm" onclick="showPage('batchAdd')">
                                     <span>馃摝</span>
-                                    鎵归噺娣诲姞
+                                    批量添加
                                 </button>
                                 <button class="btn btn-secondary btn-sm" onclick="loadAccounts()">
                                     <span>馃攧</span>
-                                    鍒锋柊鍒楄〃
+                                    刷新列表
                                 </button>
                             </div>
                         </div>
@@ -2117,18 +2401,18 @@
                         <div class="search-container">
                             <div class="flex gap-3 mb-4">
                                 <div class="flex-1">
-                                    <input type="text" id="emailSearch" class="form-control" placeholder="鎸夐偖绠辫处鍙锋悳绱?.." onkeypress="handleSearchKeyPress(event)">
+                                    <input type="text" id="emailSearch" class="form-control" placeholder="按邮箱地址搜索..." onkeypress="handleSearchKeyPress(event)">
                                 </div>
                                 <div class="flex-1">
-                                    <input type="text" id="tagSearch" class="form-control" placeholder="鎸夋爣绛炬悳绱?.." onkeypress="handleSearchKeyPress(event)">
+                                    <input type="text" id="tagSearch" class="form-control" placeholder="按标签搜索..." onkeypress="handleSearchKeyPress(event)">
                                 </div>
                                 <button class="btn btn-primary" onclick="searchAccounts()">
                                     <span>馃攳</span>
-                                    鎼滅储
+                                    搜索
                                 </button>
                                 <button class="btn btn-secondary" onclick="clearSearch()">
-                                    <span>馃棏锔?/span>
-                                    娓呴櫎
+                                    <span></span>
+                                    清空
                                 </button>
                             </div>
                         </div>
@@ -2136,27 +2420,27 @@
                         <!-- 缁熻淇℃伅 -->
                         <div id="accountsStats" class="mb-4" style="display: none;">
                             <div class="flex gap-4 text-sm">
-                                <span>鎬绘暟锛?strong id="totalAccounts">0</strong></span>
-                                <span>褰撳墠椤碉細<strong id="currentPage">1</strong></span>
-                                <span>姣忛〉锛?strong id="pageSize">10</strong></span>
+                                <span>总数：<strong id="totalAccounts">0</strong></span>
+                                <span>当前页：<strong id="currentPage">1</strong></span>
+                                <span>每页：<strong id="pageSize">10</strong></span>
                             </div>
                         </div>
 
                         <div id="accountsList" class="account-list">
                             <div class="loading">
                                 <div class="loading-spinner"></div>
-                                姝ｅ湪鍔犺浇璐︽埛鍒楄〃...
+                                正在加载账户列表...
                             </div>
                         </div>
                         
                         <!-- 鍒嗛〉鎺т欢 -->
                         <div id="accountsPagination" class="pagination" style="display: none;">
                             <button class="btn btn-sm" id="prevPageBtn" onclick="changePage('prev')" disabled>
-                                <span>鈫?/span>
-                                涓婁竴椤?                            </button>
+                                <span></span>
+                                上一页                            </button>
                             <div id="pageNumbers" class="flex gap-1"></div>
                             <button class="btn btn-sm" id="nextPageBtn" onclick="changePage('next')">
-                                涓嬩竴椤?                                <span>鈫?/span>
+                                下一页                                <span></span>
                             </button>
                         </div>
                     </div>
@@ -2167,66 +2451,66 @@
                     <div class="card">
                         <div class="flex items-center justify-between mb-6">
                             <div>
-                                <h3 class="font-semibold">娣诲姞閭璐︽埛</h3>
-                                <p class="text-sm" style="color: #64748b;">娣诲姞鍗曚釜Outlook閭璐︽埛鍒扮郴缁?/p>
+                                <h3 class="font-semibold">添加邮箱账户</h3>
+                                <p class="text-sm" style="color: #64748b;">添加单个 Outlook 邮箱账户到系统</p>
                             </div>
                             <button class="btn btn-secondary btn-sm" onclick="showPage('accounts')">
-                                <span>鈫?/span>
-                                杩斿洖鍒楄〃
+                                <span></span>
+                                返回列表
                             </button>
                         </div>
 
                         <div style="max-width: 600px;">
                             <div class="form-group">
-                                <label class="form-label">閭鍦板潃 *</label>
+                                <label class="form-label">邮箱地址 *</label>
                                 <input type="email" id="email" class="form-input" placeholder="example@outlook.com" required>
-                                <p class="text-xs" style="color: #64748b; margin-top: 4px;">璇疯緭鍏ユ湁鏁堢殑Outlook閭鍦板潃</p>
+                                <p class="text-xs" style="color: #64748b; margin-top: 4px;">请输入有效的 Outlook 邮箱地址</p>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">鍒锋柊浠ょ墝 (Refresh Token) *</label>
-                                <textarea id="refreshToken" class="form-input form-textarea" rows="4" placeholder="浠嶢zure搴旂敤鑾峰彇鐨剅efresh_token" required></textarea>
+                                <label class="form-label">刷新令牌 (Refresh Token) *</label>
+                                <textarea id="refreshToken" class="form-input form-textarea" rows="4" placeholder="从 Azure 应用获取的 refresh_token" required></textarea>
                                 <p class="text-xs" style="color: #64748b; margin-top: 4px;">
-                                    浠嶢zure搴旂敤绋嬪簭娉ㄥ唽涓幏鍙栫殑鍒锋柊浠ょ墝锛岀敤浜嶰Auth2璁よ瘉
+                                    从 Azure 应用注册流程中获取的刷新令牌，用于 OAuth2 认证
                                 </p>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">瀹㈡埛绔疘D (Client ID) *</label>
-                                <input type="text" id="clientId" class="form-input" placeholder="Azure搴旂敤鐨刢lient_id" required>
+                                <label class="form-label">客户端 ID (Client ID) *</label>
+                                <input type="text" id="clientId" class="form-input" placeholder="Azure 应用的 client_id" required>
                                 <p class="text-xs" style="color: #64748b; margin-top: 4px;">
-                                    Azure搴旂敤绋嬪簭鐨勫鎴风鏍囪瘑绗?                                </p>
+                                    Azure 应用程序的客户端标识符                                </p>
                             </div>
 
                             <div class="form-group">
                                 <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                    <h4 style="margin: 0 0 8px 0; font-size: 0.875rem; font-weight: 600; color: #374151;">馃搵 鑾峰彇姝ラ锛?/h4>
+                                    <h4 style="margin: 0 0 8px 0; font-size: 0.875rem; font-weight: 600; color: #374151;">获取步骤</h4>
                                     <ol style="margin: 0; padding-left: 20px; font-size: 0.75rem; color: #6b7280; line-height: 1.5;">
                                         <li>璁块棶 <a href="https://portal.azure.com" target="_blank" style="color: #3b82f6;">Azure Portal</a></li>
-                                        <li>娉ㄥ唽搴旂敤绋嬪簭骞堕厤缃潈闄?/li>
-                                        <li>鑾峰彇Client ID鍜孯efresh Token</li>
-                                        <li>纭繚搴旂敤鏈夐偖浠惰鍙栨潈闄?/li>
+                                        <li>注册应用程序并配置权限</li>
+                                        <li>获取 Client ID 和 Refresh Token</li>
+                                        <li>确认应用具备邮件读取权限</li>
                                     </ol>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="accountTags">鏍囩 (鍙€夛紝鐢ㄩ€楀彿鍒嗛殧)</label>
-                                <input type="text" id="accountTags" class="form-control" placeholder="宸ヤ綔,涓汉,閲嶈">
+                                <label for="accountTags">标签（可选，逗号分隔）</label>
+                                <input type="text" id="accountTags" class="form-control" placeholder="工作,个人,重要">
                             </div>
 
                             <div class="flex gap-3">
                                 <button class="btn btn-primary" onclick="addAccount()" id="addAccountBtn">
-                                    <span>鉃?/span>
-                                    娣诲姞璐︽埛
+                                    <span></span>
+                                    添加账户
                                 </button>
                                 <button class="btn btn-secondary" onclick="clearAddAccountForm()">
-                                    <span>馃棏锔?/span>
-                                    娓呯┖琛ㄥ崟
+                                    <span></span>
+                                    清空表单
                                 </button>
                                 <button class="btn btn-secondary" onclick="testAccountConnection()" id="testBtn">
                                     <span>馃攳</span>
-                                    娴嬭瘯杩炴帴
+                                    测试连接
                                 </button>
                             </div>
                         </div>
@@ -2238,39 +2522,39 @@
                     <div class="card">
                         <div class="flex items-center justify-between mb-6">
                             <div>
-                                <h3 class="font-semibold">鎵归噺娣诲姞閭璐︽埛</h3>
-                                <p class="text-sm" style="color: #64748b;">涓€娆℃€ф坊鍔犲涓偖绠辫处鎴峰埌绯荤粺</p>
+                                <h3 class="font-semibold">批量添加邮箱账户</h3>
+                                <p class="text-sm" style="color: #64748b;">一次性导入多个 Outlook 邮箱账户</p>
                             </div>
                             <button class="btn btn-secondary btn-sm" onclick="showPage('accounts')">
-                                <span>鈫?/span>
-                                杩斿洖鍒楄〃
+                                <span></span>
+                                返回列表
                             </button>
                         </div>
 
                         <div style="max-width: 800px;">
                             <div class="form-group">
-                                <label class="form-label">鎵归噺璐︽埛淇℃伅</label>
+                                <label class="form-label">批量账户信息</label>
                                 <p class="text-sm" style="color: #64748b; margin-bottom: 8px;">
-                                    姣忚鏍煎紡锛?code>閭----瀵嗙爜----鍒锋柊浠ょ墝----瀹㈡埛绔疘D</code>
+                                    每行格式：<code>邮箱----密码----刷新令牌----客户端ID</code>
                                 </p>
                                 <p class="text-sm" style="color: #64748b; margin-bottom: 12px;">
-                                    馃摟 鎺ㄨ崘璐拱鍦板潃锛堥潪骞垮憡锛屽彧鏄帹鑽愶級锛?                                    <a target="_blank" href="http://wmemail.com" style="color: #3b82f6; margin: 0 8px;">wmemail.com</a>
+                                    推荐购买地址（非广告，仅供参考）：                                    <a target="_blank" href="http://wmemail.com" style="color: #3b82f6; margin: 0 8px;">wmemail.com</a>
                                 </p>
                                 <textarea id="batchAccounts" class="form-input form-textarea" rows="12" placeholder="example1@outlook.com----password1----refresh_token1----client_id1
 example2@outlook.com----password2----refresh_token2----client_id2
 example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                                 <p class="text-xs" style="color: #64748b; margin-top: 8px;">
-                                    馃挕 鎻愮ず锛氭瘡琛屼竴涓处鎴凤紝浣跨敤鍥涗釜杩炲瓧绗?----)鍒嗛殧瀛楁
+                                    提示：每行一个账户，使用四个连字符（`----`）分隔字段
                                 </p>
                             </div>
 
                             <div class="form-group">
                                 <div style="background: #fef3c7; padding: 16px; border-radius: 8px; border: 1px solid #fbbf24;">
-                                    <h4 style="margin: 0 0 8px 0; font-size: 0.875rem; font-weight: 600; color: #92400e;">鈿狅笍 娉ㄦ剰浜嬮」锛?/h4>
+                                    <h4 style="margin: 0 0 8px 0; font-size: 0.875rem; font-weight: 600; color: #92400e;">注意事项</h4>
                                     <ul style="margin: 0; padding-left: 20px; font-size: 0.75rem; color: #92400e; line-height: 1.5;">
-                                        <li>纭繚鎵€鏈夎处鎴蜂俊鎭牸寮忔纭?/li>
-                                        <li>寤鸿鍏堟祴璇曞皯閲忚处鎴峰啀鎵归噺娣诲姞</li>
-                                        <li>娣诲姞杩囩▼涓鍕垮叧闂〉闈?/li>
+                                        <li>确保所有账户信息格式正确</li>
+                                        <li>建议先测试少量账户再批量导入</li>
+                                        <li>导入过程中请不要关闭页面</li>
                                         <li>澶辫触鐨勮处鎴蜂細鍦ㄧ粨鏋滀腑鏄剧ず</li>
                                     </ul>
                                 </div>
@@ -2279,36 +2563,36 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                             <div class="flex gap-3">
                                 <button class="btn btn-primary" onclick="batchAddAccounts()" id="batchAddBtn">
                                     <span>馃摝</span>
-                                    寮€濮嬫壒閲忔坊鍔?                                </button>
+                                    开始批量添加                                </button>
                                 <button class="btn btn-secondary" onclick="clearBatchForm()">
-                                    <span>馃棏锔?/span>
-                                    娓呯┖琛ㄥ崟
+                                    <span></span>
+                                    清空表单
                                 </button>
                                 <button class="btn btn-secondary" onclick="validateBatchFormat()">
-                                    <span>鉁?/span>
-                                    楠岃瘉鏍煎紡
+                                    <span></span>
+                                    验证格式
                                 </button>
                                 <button class="btn btn-secondary" onclick="loadSampleData()">
                                     <span>馃摑</span>
-                                    鍔犺浇绀轰緥
+                                    加载示例
                                 </button>
                             </div>
 
                             <!-- 鎵归噺娣诲姞杩涘害 -->
                             <div id="batchProgress" class="hidden" style="margin-top: 24px;">
-                                <h4 style="margin-bottom: 12px; font-size: 0.875rem; font-weight: 600;">娣诲姞杩涘害锛?/h4>
+                                <h4 style="margin-bottom: 12px; font-size: 0.875rem; font-weight: 600;">添加进度</h4>
                                 <div class="progress-bar">
                                     <div class="progress-fill" id="batchProgressFill"></div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b; margin-top: 8px;">
-                                    <span id="batchProgressText">鍑嗗涓?..</span>
+                                    <span id="batchProgressText">准备中...</span>
                                     <span id="batchProgressCount">0 / 0</span>
                                 </div>
                             </div>
 
                             <!-- 鎵归噺娣诲姞缁撴灉 -->
                             <div id="batchResults" class="hidden" style="margin-top: 24px;">
-                                <h4 style="margin-bottom: 12px; font-size: 0.875rem; font-weight: 600;">娣诲姞缁撴灉锛?/h4>
+                                <h4 style="margin-bottom: 12px; font-size: 0.875rem; font-weight: 600;">添加结果</h4>
                                 <div id="batchResultsList"></div>
                             </div>
                         </div>
@@ -2320,17 +2604,17 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                     <div class="card">
                         <div class="flex items-center justify-between mb-6">
                             <div>
-                                <h3 class="font-semibold">API鎺ュ彛鏂囨。</h3>
-                                <p class="text-sm" style="color: #64748b;">閭欢绠＄悊绯荤粺鐨凴ESTful API鎺ュ彛璇存槑</p>
+                                <h3 class="font-semibold">API 接口文档</h3>
+                                <p class="text-sm" style="color: #64748b;">邮件管理系统的 RESTful API 使用说明</p>
                             </div>
                             <div class="flex gap-2">
                                 <button class="btn btn-secondary btn-sm" onclick="copyApiBaseUrl()">
                                     <span>馃搵</span>
-                                    澶嶅埗Base URL
+                                    复制 Base URL
                                 </button>
                                 <button class="btn btn-secondary btn-sm" onclick="downloadApiDocs()">
                                     <span>馃摜</span>
-                                    涓嬭浇鏂囨。
+                                    下载文档
                                 </button>
                             </div>
                         </div>
@@ -2340,7 +2624,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                             <div class="api-endpoint">
                                 <div class="api-header">
                                     <div>
-                                        <h3 style="margin: 0; color: #1f2937;">馃摗 API鍩虹淇℃伅</h3>
+                                        <h3 style="margin: 0; color: #1f2937;">API 基础信息</h3>
                                     </div>
                                 </div>
                                 <div class="api-body">
@@ -2349,12 +2633,12 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                                         <div class="api-example" id="baseUrlExample">http://localhost:8001</div>
                                     </div>
                                     <div class="api-section">
-                                        <h4>璁よ瘉鏂瑰紡</h4>
-                                        <p class="api-description">褰撳墠鐗堟湰鏃犻渶璁よ瘉锛岀洿鎺ヨ皟鐢ㄦ帴鍙ｅ嵆鍙€?/p>
+                                        <h4>认证方式</h4>
+                                        <p class="api-description">当前版本无需认证，可直接调用接口。</p>
                                     </div>
                                     <div class="api-section">
-                                        <h4>鍝嶅簲鏍煎紡</h4>
-                                        <p class="api-description">鎵€鏈夋帴鍙ｈ繑鍥濲SON鏍煎紡鏁版嵁锛孒TTP鐘舵€佺爜琛ㄧず璇锋眰缁撴灉銆?/p>
+                                        <h4>响应格式</h4>
+                                        <p class="api-description">所有接口均返回 JSON 数据，并通过 HTTP 状态码表示请求结果。</p>
                                     </div>
                                 </div>
                             </div>
@@ -2366,39 +2650,39 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                                         <span class="api-method get">GET</span>
                                         <span class="api-path">/accounts</span>
                                     </div>
-                                    <button class="api-try-button" onclick="tryApi('accounts')">馃殌 璇曠敤鎺ュ彛</button>
+                                    <button class="api-try-button" onclick="tryApi('accounts')">试用接口</button>
                                 </div>
                                 <div class="api-body">
-                                    <p class="api-description">鑾峰彇绯荤粺涓墍鏈夊凡娣诲姞鐨勯偖绠辫处鎴峰垪琛紝鏀寔鍒嗛〉鍜屾ā绯婃悳绱€?/p>
+                                    <p class="api-description">获取系统中已添加的全部邮箱账户列表，支持分页与模糊搜索。</p>
 
                                     <div class="api-section">
-                                        <h4>璇锋眰鍙傛暟</h4>
+                                        <h4>请求参数</h4>
                                         <div class="api-params">
                                             <div class="api-param">
                                                 <span class="api-param-name">page</span>
                                                 <span class="api-param-type">integer</span>
-                                                <span class="api-param-desc">椤电爜锛屼粠1寮€濮嬶紝榛樿: 1</span>
+                                                <span class="api-param-desc">页码，从 1 开始，默认值为 1</span>
                                             </div>
                                             <div class="api-param">
                                                 <span class="api-param-name">page_size</span>
                                                 <span class="api-param-type">integer</span>
-                                                <span class="api-param-desc">姣忛〉鏁伴噺锛岃寖鍥?-100锛岄粯璁? 10</span>
+                                                <span class="api-param-desc">每页数量，范围 1-100，默认值为 10</span>
                                             </div>
                                             <div class="api-param">
                                                 <span class="api-param-name">email_search</span>
                                                 <span class="api-param-type">string</span>
-                                                <span class="api-param-desc">閭璐﹀彿妯＄硦鎼滅储锛屽彲閫?/span>
+                                                <span class="api-param-desc">邮箱账号模糊搜索，可选</span>
                                             </div>
                                             <div class="api-param">
                                                 <span class="api-param-name">tag_search</span>
                                                 <span class="api-param-type">string</span>
-                                                <span class="api-param-desc">鏍囩妯＄硦鎼滅储锛屽彲閫?/span>
+                                                <span class="api-param-desc">标签模糊搜索，可选</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="api-section">
-                                        <h4>鍝嶅簲绀轰緥</h4>
+                                        <h4>响应示例</h4>
                                         <div class="api-example">{
   "total_accounts": 25,
   "page": 1,
@@ -2416,7 +2700,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                                     </div>
 
                                     <div class="api-response" id="accountsResponse">
-                                        <h4 style="margin-bottom: 8px; color: #15803d;">鍝嶅簲缁撴灉锛?/h4>
+                                        <h4 style="margin-bottom: 8px; color: #15803d;">响应结果</h4>
                                         <pre id="accountsResponseData"></pre>
                                     </div>
                                 </div>
@@ -2429,55 +2713,55 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                                         <span class="api-method get">GET</span>
                                         <span class="api-path">/emails/{email_id}</span>
                                     </div>
-                                    <button class="api-try-button" onclick="tryApi('emails')">馃殌 璇曠敤鎺ュ彛</button>
+                                    <button class="api-try-button" onclick="tryApi('emails')">试用接口</button>
                                 </div>
                                 <div class="api-body">
-                                    <p class="api-description">鑾峰彇鎸囧畾閭鐨勯偖浠跺垪琛紝鏀寔鍒嗛〉鍜岃繃婊ゃ€?/p>
+                                    <p class="api-description">获取指定邮箱的邮件列表，支持分页和筛选。</p>
 
                                     <div class="api-section">
-                                        <h4>璺緞鍙傛暟</h4>
+                                        <h4>路径参数</h4>
                                         <div class="api-params">
                                             <div class="api-param">
                                                 <span class="api-param-name">email_id</span>
                                                 <span class="api-param-type">string</span>
-                                                <span class="api-param-desc">閭鍦板潃锛岄渶瑕乁RL缂栫爜</span>
+                                                <span class="api-param-desc">邮箱地址，需要进行 URL 编码</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="api-section">
-                                        <h4>鏌ヨ鍙傛暟</h4>
+                                        <h4>查询参数</h4>
                                         <div class="api-params">
                                             <div class="api-param">
                                                 <span class="api-param-name">folder</span>
                                                 <span class="api-param-type">string</span>
-                                                <span class="api-param-desc">閭欢鏂囦欢澶?(all, inbox, junk)锛岄粯璁? all</span>
+                                                <span class="api-param-desc">邮件文件夹（all、inbox、junk），默认值为 all</span>
                                             </div>
                                             <div class="api-param">
                                                 <span class="api-param-name">page</span>
                                                 <span class="api-param-type">integer</span>
-                                                <span class="api-param-desc">椤电爜锛屼粠1寮€濮嬶紝榛樿: 1</span>
+                                                <span class="api-param-desc">页码，从 1 开始，默认值为 1</span>
                                             </div>
                                             <div class="api-param">
                                                 <span class="api-param-name">page_size</span>
                                                 <span class="api-param-type">integer</span>
-                                                <span class="api-param-desc">姣忛〉鏁伴噺锛岃寖鍥?-500锛岄粯璁? 100</span>
+                                                <span class="api-param-desc">每页数量，范围 1-500，默认值为 100</span>
                                             </div>
                                             <div class="api-param">
                                                 <span class="api-param-name">refresh</span>
                                                 <span class="api-param-type">boolean</span>
-                                                <span class="api-param-desc">鏄惁寮哄埗鍒锋柊缂撳瓨锛岄粯璁? false</span>
+                                                <span class="api-param-desc">是否强制刷新缓存，默认值为 false</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="api-section">
-                                        <h4>璇锋眰绀轰緥</h4>
+                                        <h4>请求示例</h4>
                                         <div class="api-example">GET /emails/example%40outlook.com?folder=inbox&page=1&page_size=20&refresh=true</div>
                                     </div>
 
                                     <div class="api-section">
-                                        <h4>鍝嶅簲绀轰緥</h4>
+                                        <h4>响应示例</h4>
                                         <div class="api-example">{
   "email_id": "example@outlook.com",
   "folder_view": "inbox",
@@ -2488,7 +2772,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
     {
       "message_id": "INBOX-1",
       "folder": "INBOX",
-      "subject": "閭欢涓婚",
+      "subject": "邮件主题",
       "from_email": "sender@example.com",
       "date": "2024-01-01T12:00:00Z",
       "is_read": false,
@@ -2500,7 +2784,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                                     </div>
 
                                     <div class="api-response" id="emailsResponse">
-                                        <h4 style="margin-bottom: 8px; color: #15803d;">鍝嶅簲缁撴灉锛?/h4>
+                                        <h4 style="margin-bottom: 8px; color: #15803d;">响应结果</h4>
                                         <pre id="emailsResponseData"></pre>
                                     </div>
                                 </div>
@@ -2513,47 +2797,47 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                                         <span class="api-method get">GET</span>
                                         <span class="api-path">/emails/{email_id}/{message_id}</span>
                                     </div>
-                                    <button class="api-try-button" onclick="tryApi('emailDetail')">馃殌 璇曠敤鎺ュ彛</button>
+                                    <button class="api-try-button" onclick="tryApi('emailDetail')">试用接口</button>
                                 </div>
                                 <div class="api-body">
-                                    <p class="api-description">鑾峰彇鎸囧畾閭欢鐨勮缁嗗唴瀹癸紝鍖呮嫭閭欢姝ｆ枃銆?/p>
+                                    <p class="api-description">获取指定邮件的详细内容，包括正文。</p>
 
                                     <div class="api-section">
-                                        <h4>璺緞鍙傛暟</h4>
+                                        <h4>路径参数</h4>
                                         <div class="api-params">
                                             <div class="api-param">
                                                 <span class="api-param-name">email_id</span>
                                                 <span class="api-param-type">string</span>
-                                                <span class="api-param-desc">閭鍦板潃锛岄渶瑕乁RL缂栫爜</span>
+                                                <span class="api-param-desc">邮箱地址，需要进行 URL 编码</span>
                                             </div>
                                             <div class="api-param">
                                                 <span class="api-param-name">message_id</span>
                                                 <span class="api-param-type">string</span>
-                                                <span class="api-param-desc">閭欢ID锛屾牸寮? {folder}-{id}</span>
+                                                <span class="api-param-desc">邮件 ID，格式为 {folder}-{id}</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="api-section">
-                                        <h4>璇锋眰绀轰緥</h4>
+                                        <h4>请求示例</h4>
                                         <div class="api-example">GET /emails/example%40outlook.com/INBOX-1</div>
                                     </div>
 
                                     <div class="api-section">
-                                        <h4>鍝嶅簲绀轰緥</h4>
+                                        <h4>响应示例</h4>
                                         <div class="api-example">{
   "message_id": "INBOX-1",
-  "subject": "閭欢涓婚",
+  "subject": "邮件主题",
   "from_email": "sender@example.com",
   "to_email": "example@outlook.com",
   "date": "2024-01-01T12:00:00Z",
-  "body_plain": "绾枃鏈偖浠跺唴瀹?,
-  "body_html": "&lt;html&gt;&lt;body&gt;HTML閭欢鍐呭&lt;/body&gt;&lt;/html&gt;"
+  "body_plain": "纯文本邮件内容",
+  "body_html": "&lt;html&gt;&lt;body&gt;HTML 邮件内容&lt;/body&gt;&lt;/html&gt;"
 }</div>
                                     </div>
 
                                     <div class="api-response" id="emailDetailResponse">
-                                        <h4 style="margin-bottom: 8px; color: #15803d;">鍝嶅簲缁撴灉锛?/h4>
+                                        <h4 style="margin-bottom: 8px; color: #15803d;">响应结果</h4>
                                         <pre id="emailDetailResponseData"></pre>
                                     </div>
                                 </div>
@@ -2568,32 +2852,32 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                         <!-- 璐︽埛淇℃伅鍜屾搷浣滄寜閽?-->
                         <div class="flex items-center justify-between mb-4">
                             <div>
-                                <h3 class="font-semibold">褰撳墠璐︽埛锛?                                    <span id="currentAccountEmail"
+                                <h3 class="font-semibold">当前账户：                                    <span id="currentAccountEmail"
                                           class="text-sm font-medium email-copyable"
                                           style="color: #3b82f6; cursor: pointer; position: relative;"
                                           onclick="copyEmailAddress(this.textContent)"
-                                          title="鐐瑰嚮澶嶅埗閭鍦板潃">
+                                          title="点击复制邮箱地址">
                                     </span>
                                     <span class="copy-icon" style="margin-left: 6px; opacity: 0.6; font-size: 0.8em;">馃搵</span>
                                 </h3>
-                                <p class="text-sm" style="color: #64748b;">鏈€鍚庢洿鏂帮細<span id="lastUpdateTime">-</span></p>
+                                <p class="text-sm" style="color: #64748b;">最后更新：<span id="lastUpdateTime">-</span></p>
                             </div>
                             <div class="flex gap-2">
                                 <button class="btn btn-secondary btn-sm" onclick="refreshEmails()" id="refreshBtn">
                                     <span>馃攧</span>
-                                    鍒锋柊
+                                    刷新
                                 </button>
                                 <button class="btn btn-secondary btn-sm" onclick="clearCache()">
-                                    <span>馃棏锔?/span>
-                                    娓呴櫎缂撳瓨
+                                    <span></span>
+                                    清除缓存
                                 </button>
                                 <button class="btn btn-secondary btn-sm" onclick="exportEmails()">
                                     <span>馃摛</span>
-                                    瀵煎嚭
+                                    导出
                                 </button>
                                 <button class="btn btn-secondary btn-sm" onclick="backToAccounts()">
-                                    <span>鈫?/span>
-                                    杩斿洖璐︽埛
+                                    <span></span>
+                                    返回账户
                                 </button>
                             </div>
                         </div>
@@ -2602,72 +2886,72 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                         <div class="stats-container">
                             <div class="stat-item">
                                 <div class="stat-value" id="totalEmailCount">0</div>
-                                <div class="stat-label">鎬婚偖浠舵暟</div>
+                                <div class="stat-label">邮件总数</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value" id="unreadEmailCount">0</div>
-                                <div class="stat-label">鏈閭欢</div>
+                                <div class="stat-label">未读邮件</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value" id="todayEmailCount">0</div>
-                                <div class="stat-label">浠婃棩閭欢</div>
+                                <div class="stat-label">今日邮件</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-value" id="attachmentEmailCount">0</div>
-                                <div class="stat-label">甯﹂檮浠?/div>
+                                <div class="stat-label">带附件</div>
                             </div>
                         </div>
 
                         <!-- 鎼滅储鍜岃繃婊?-->
                         <div class="search-container">
                             <span class="search-icon">馃攳</span>
-                            <input type="text" class="search-input" id="emailSearch" placeholder="鎼滅储閭欢鏍囬銆佸彂浠朵汉鎴栧唴瀹?.." onkeyup="searchEmails()">
+                            <input type="text" class="search-input" id="emailSearch" placeholder="搜索邮件主题、发件人或内容..." onkeyup="searchEmails()">
                         </div>
 
                         <div class="filter-container">
                             <div class="filter-group">
-                                <label class="filter-label">鏂囦欢澶?</label>
+                                <label class="filter-label">文件夹</label>
                                 <select class="filter-select" id="folderFilter" onchange="applyFilters()">
-                                    <option value="all">鍏ㄩ儴閭欢</option>
-                                    <option value="inbox">鏀朵欢绠?/option>
-                                    <option value="junk">鍨冨溇閭欢</option>
+                                    <option value="all">全部邮件</option>
+                                    <option value="inbox">收件箱</option>
+                                    <option value="junk">垃圾邮件</option>
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <label class="filter-label">鐘舵€?</label>
+                                <label class="filter-label">状态</label>
                                 <select class="filter-select" id="statusFilter" onchange="applyFilters()">
-                                    <option value="all">鍏ㄩ儴鐘舵€?/option>
-                                    <option value="unread">鏈</option>
-                                    <option value="read">宸茶</option>
+                                    <option value="all">全部状态</option>
+                                    <option value="unread">未读</option>
+                                    <option value="read">已读</option>
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <label class="filter-label">鏃堕棿:</label>
+                                <label class="filter-label">时间</label>
                                 <select class="filter-select" id="timeFilter" onchange="applyFilters()">
-                                    <option value="all">鍏ㄩ儴鏃堕棿</option>
-                                    <option value="today">浠婂ぉ</option>
-                                    <option value="week">鏈懆</option>
-                                    <option value="month">鏈湀</option>
+                                    <option value="all">全部时间</option>
+                                    <option value="today">今天</option>
+                                    <option value="week">本周</option>
+                                    <option value="month">本月</option>
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <label class="filter-label">闄勪欢:</label>
+                                <label class="filter-label">附件</label>
                                 <select class="filter-select" id="attachmentFilter" onchange="applyFilters()">
-                                    <option value="all">鍏ㄩ儴</option>
-                                    <option value="with">鏈夐檮浠?/option>
-                                    <option value="without">鏃犻檮浠?/option>
+                                    <option value="all">全部</option>
+                                    <option value="with">有附件</option>
+                                    <option value="without">无附件</option>
                                 </select>
                             </div>
                             <button class="btn btn-secondary btn-sm" onclick="clearFilters()">
-                                <span>馃棏锔?/span>
-                                娓呴櫎绛涢€?                            </button>
+                                <span></span>
+                                清除筛选                            </button>
                         </div>
 
                         <!-- 閭欢鍒楄〃 -->
                         <div id="emailsList" class="email-list">
                             <div class="loading">
                                 <div class="loading-spinner"></div>
-                                姝ｅ湪鍔犺浇閭欢...
+                                正在加载邮件...
                             </div>
                         </div>
 
@@ -2685,12 +2969,12 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
     <div id="emailModal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="emailModalTitle">閭欢璇︽儏</h3>
+                <h3 id="emailModalTitle">邮件详情</h3>
                 <button class="modal-close" onclick="closeEmailModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div id="emailModalContent">
-                    <div class="loading">姝ｅ湪鍔犺浇閭欢璇︽儏...</div>
+                    <div class="loading">正在加载邮件详情...</div>
                 </div>
             </div>
         </div>
@@ -2700,25 +2984,25 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
     <div id="tagsModal" class="modal">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
-                <h3>绠＄悊璐︽埛鏍囩</h3>
+                <h3>管理账户标签</h3>
                 <span class="close" onclick="closeTagsModal()">&times;</span>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="currentTags">褰撳墠鏍囩</label>
+                    <label for="currentTags">当前标签</label>
                     <div id="currentTagsList" class="tags-list"></div>
                 </div>
                 <div class="form-group">
-                    <label for="newTag">娣诲姞鏂版爣绛?/label>
+                    <label for="newTag">添加新标签</label>
                     <div class="input-group">
-                        <input type="text" id="newTag" class="form-control" placeholder="杈撳叆鏍囩鍚嶇О">
-                        <button class="btn btn-primary" onclick="addTag()">娣诲姞</button>
+                        <input type="text" id="newTag" class="form-control" placeholder="输入标签名称">
+                        <button class="btn btn-primary" onclick="addTag()">添加</button>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeTagsModal()">鍙栨秷</button>
-                <button class="btn btn-primary" onclick="saveAccountTags()">淇濆瓨</button>
+                <button class="btn btn-secondary" onclick="closeTagsModal()">取消</button>
+                <button class="btn btn-primary" onclick="saveAccountTags()">保存</button>
             </div>
         </div>
     </div>
@@ -2727,20 +3011,20 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
     <div id="contextMenu" class="context-menu">
         <div class="context-menu-item" onclick="openInNewTab()">
             <span>馃敆</span>
-            鍦ㄦ柊鏍囩椤典腑鎵撳紑
+            在新标签页中打开
         </div>
         <div class="context-menu-item" onclick="copyAccountLink()">
             <span>馃搵</span>
-            澶嶅埗閾炬帴
+            复制链接
         </div>
         <div class="context-menu-divider"></div>
         <div class="context-menu-item" onclick="contextEditTags()">
-            <span>馃彿锔?/span>
-            绠＄悊鏍囩
+            <span></span>
+            管理标签
         </div>
         <div class="context-menu-item danger" onclick="contextDeleteAccount()">
-            <span>馃棏锔?/span>
-            鍒犻櫎璐︽埛
+            <span></span>
+            删除账户
         </div>
     </div>
 
@@ -2761,6 +3045,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             docs: '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h5"></path></svg>',
             copy: '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',
             open: '<svg viewBox="0 0 24 24"><path d="M14 3h7v7"></path><path d="M10 14L21 3"></path><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"></path></svg>',
+            logout: '<svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>',
             'arrow-left': '<svg viewBox="0 0 24 24"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>',
             'arrow-right': '<svg viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>',
             success: '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>',
@@ -2784,6 +3069,8 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
         let accountsTotalCount = 0;
         let currentEmailSearch = '';
         let currentTagSearch = '';
+        let authState = null;
+        let appBootstrapped = false;
 
         // 鍏ㄥ眬鍙橀噺锛岀敤浜庡瓨鍌ㄥ綋鍓嶇紪杈戠殑璐︽埛淇℃伅
         let currentEditAccount = null;
@@ -2807,12 +3094,164 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             iconElement.innerHTML = UI_ICONS[iconName] || UI_ICONS.info;
         }
 
+        async function fetchAuthState() {
+            const response = await fetch('/api/auth/state', { credentials: 'same-origin' });
+            if (!response.ok) {
+                throw new Error('无法读取认证状态');
+            }
+            return await response.json();
+        }
+
+        function showAuthError(view, message = '') {
+            const setupError = document.getElementById('authSetupError');
+            const loginError = document.getElementById('authLoginError');
+            if (setupError) setupError.textContent = view === 'setup' ? message : '';
+            if (loginError) loginError.textContent = view === 'login' ? message : '';
+        }
+
+        function setAuthPending(buttonId, pending, busyText, idleText) {
+            const button = document.getElementById(buttonId);
+            if (!button) return;
+            button.disabled = pending;
+            button.textContent = pending ? busyText : idleText;
+        }
+
+        function showAuthScreen(mode, message = '') {
+            document.getElementById('authShell').classList.remove('hidden');
+            document.getElementById('appShell').classList.add('hidden');
+            document.getElementById('authSetupView').classList.toggle('hidden', mode !== 'setup');
+            document.getElementById('authLoginView').classList.toggle('hidden', mode !== 'login');
+            showAuthError(mode, message);
+            document.title = 'OutlookManager';
+        }
+
+        function enterApplication() {
+            document.getElementById('authShell').classList.add('hidden');
+            document.getElementById('appShell').classList.remove('hidden');
+            document.title = 'OutlookManager';
+
+            if (!appBootstrapped) {
+                decorateStaticUi();
+                handleUrlRouting();
+
+                if (!window.location.hash || window.location.hash === '#') {
+                    showPage('accounts');
+                }
+
+                setTimeout(() => {
+                    showNotification('欢迎使用 OutlookManager', 'info', '欢迎', 3000);
+                }, 500);
+
+                appBootstrapped = true;
+            }
+        }
+
+        async function initializeAuthFlow(message = '') {
+            try {
+                authState = await fetchAuthState();
+                if (authState.authenticated) {
+                    enterApplication();
+                    return;
+                }
+                showAuthScreen(authState.auth_mode || 'login', message);
+            } catch (error) {
+                showAuthScreen('login', error.message || '初始化认证失败');
+            }
+        }
+
+        async function submitAuthSetup(event) {
+            event.preventDefault();
+            const password = document.getElementById('authSetupPassword').value;
+            const confirmPassword = document.getElementById('authSetupPasswordConfirm').value;
+            const agreedTerms = document.getElementById('authAgreeTerms').checked;
+
+            if (!agreedTerms) {
+                showAuthError('setup', '请先阅读并同意使用协议');
+                return;
+            }
+            if (!password || password.length < 8) {
+                showAuthError('setup', '管理员密码至少需要 8 位');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showAuthError('setup', '两次输入的密码不一致');
+                return;
+            }
+
+            showAuthError('setup', '');
+            setAuthPending('authSetupSubmit', true, '保存中...', '保存并进入后台');
+
+            try {
+                const response = await fetch('/api/auth/setup', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password,
+                        agreed_terms: agreedTerms
+                    })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(data.detail || '初始化失败');
+                }
+                await initializeAuthFlow();
+            } catch (error) {
+                showAuthError('setup', error.message || '初始化失败');
+            } finally {
+                setAuthPending('authSetupSubmit', false, '保存中...', '保存并进入后台');
+            }
+        }
+
+        async function submitAuthLogin(event) {
+            event.preventDefault();
+            const password = document.getElementById('authLoginPassword').value;
+            if (!password) {
+                showAuthError('login', '请输入管理员密码');
+                return;
+            }
+
+            showAuthError('login', '');
+            setAuthPending('authLoginSubmit', true, '登录中...', '登录');
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(data.detail || '登录失败');
+                }
+                await initializeAuthFlow();
+            } catch (error) {
+                showAuthError('login', error.message || '登录失败');
+            } finally {
+                setAuthPending('authLoginSubmit', false, '登录中...', '登录');
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'same-origin'
+                });
+            } finally {
+                showAuthError('login', '');
+                document.getElementById('authLoginPassword').value = '';
+                await initializeAuthFlow('登录已退出，请重新输入管理员密码');
+            }
+        }
+
         function decorateStaticUi() {
             const sidebarHeader = document.querySelector('.sidebar-header');
             if (sidebarHeader) {
                 sidebarHeader.innerHTML = `
-                    <h1><span class="brand-mark">OM</span><span>閭欢绠＄悊</span></h1>
-                    <p>Outlook 閭欢璐︽埛涓庢敹浠跺悗鍙?/p>
+                    <h1><span class="brand-mark">OM</span><span>邮件管理</span></h1>
+                    <p>Outlook 账户与邮件后台</p>
                 `;
             }
 
@@ -2868,6 +3307,12 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                 iconElement.className = 'ui-icon';
                 iconElement.innerHTML = UI_ICONS[name] || UI_ICONS.info;
             });
+
+            const headerActions = document.getElementById('headerActions');
+            if (headerActions) {
+                headerActions.innerHTML = '<button id="logoutBtn" class="btn btn-secondary btn-sm" onclick="logout()"><span></span>退出登录</button>';
+                setButtonIcon(document.getElementById('logoutBtn'), 'logout');
+            }
         }
 
         function decorateAccountList(root = document) {
@@ -2916,11 +3361,11 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
 
             // 鏇存柊椤甸潰鏍囬
             const titles = {
-                'accounts': '閭璐︽埛绠＄悊',
-                'addAccount': '娣诲姞閭璐︽埛',
-                'batchAdd': '鎵归噺娣诲姞璐︽埛',
-                'apiDocs': 'API鎺ュ彛鏂囨。',
-                'emails': '閭欢鍒楄〃'
+                'accounts': '邮箱账户管理',
+                'addAccount': '添加邮箱账户',
+                'batchAdd': '批量添加账户',
+                'apiDocs': 'API 接口文档',
+                'emails': '邮件列表'
             };
             document.getElementById('pageTitle').textContent = titles[pageName] || '';
 
@@ -2956,11 +3401,11 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             }
 
             const titles = {
-                accounts: '閭璐︽埛绠＄悊',
-                addAccount: '娣诲姞閭璐︽埛',
-                batchAdd: '鎵归噺娣诲姞璐︽埛',
-                apiDocs: 'API 鎺ュ彛鏂囨。',
-                emails: '閭欢鍒楄〃'
+                accounts: '邮箱账户管理',
+                addAccount: '添加邮箱账户',
+                batchAdd: '批量添加账户',
+                apiDocs: 'API 接口文档',
+                emails: '邮件列表'
             };
             document.getElementById('pageTitle').textContent = titles[pageName] || '';
 
@@ -2980,7 +3425,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
 
         function formatEmailDate(dateString) {
             try {
-                if (!dateString) return '鏈煡鏃堕棿';
+                if (!dateString) return '未知时间';
 
                 let date = new Date(dateString);
 
@@ -2989,7 +3434,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                         date = new Date(dateString + 'Z');
                     }
                     if (isNaN(date.getTime())) {
-                        return '鏃ユ湡鏍煎紡閿欒';
+                        return '日期格式错误';
                     }
                 }
 
@@ -3000,9 +3445,9 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                 if (diffDays === 0) {
                     return date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
                 } else if (diffDays === 1) {
-                    return '鏄ㄥぉ ' + date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+                    return '昨天 ' + date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
                 } else if (diffDays < 7) {
-                    return `${diffDays}澶╁墠`;
+                    return `${diffDays}天前`;
                 } else if (diffDays < 365) {
                     return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
                 } else {
@@ -3010,7 +3455,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                 }
             } catch (error) {
                 console.error('Date formatting error:', error);
-                return '鏃堕棿瑙ｆ瀽澶辫触';
+                return '时间解析失败';
             }
         }
 
@@ -3028,10 +3473,10 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             };
 
             const titles = {
-                success: title || '鎴愬姛',
-                error: title || '閿欒',
-                warning: title || '璀﹀憡',
-                info: title || '鎻愮ず'
+                success: title || '成功',
+                error: title || '错误',
+                warning: title || '警告',
+                info: title || '提示'
             };
 
             notification.innerHTML = `
@@ -3040,7 +3485,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                     <div class="notification-title">${titles[type]}</div>
                     <div class="notification-message">${message}</div>
                 </div>
-                <button class="notification-close" onclick="closeNotification(this)">脳</button>
+                <button class="notification-close" onclick="closeNotification(this)">&times;</button>
             `;
 
             container.appendChild(notification);
@@ -3066,10 +3511,10 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
             };
 
             const titles = {
-                success: title || '鎴愬姛',
-                error: title || '閿欒',
-                warning: title || '璀﹀憡',
-                info: title || '鎻愮ず'
+                success: title || '成功',
+                error: title || '错误',
+                warning: title || '警告',
+                info: title || '提示'
             };
 
             notification.innerHTML = `
@@ -3078,7 +3523,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                     <div class="notification-title">${titles[type] || titles.info}</div>
                     <div class="notification-message">${message}</div>
                 </div>
-                <button class="notification-close" onclick="closeNotification(this)">脳</button>
+                <button class="notification-close" onclick="closeNotification(this)">&times;</button>
             `;
 
             container.appendChild(notification);
@@ -3117,6 +3562,7 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
         async function apiRequest(url, options = {}) {
             try {
                 const response = await fetch(API_BASE + url, {
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json',
                         ...options.headers
@@ -3125,6 +3571,9 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
                 });
 
                 if (!response.ok) {
+                    if ((response.status === 401 || response.status === 403) && !url.startsWith('/api/auth/')) {
+                        await initializeAuthFlow(response.status === 401 ? '登录状态已失效，请重新登录' : '请先完成初始化并登录');
+                    }
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
 
@@ -3151,13 +3600,13 @@ example3@outlook.com----password3----refresh_token3----client_id3"></textarea>
 example2@outlook.com----password2----refresh_token_here_2----client_id_here_2
 example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
             document.getElementById('batchAccounts').value = sampleData;
-            showNotification('绀轰緥鏁版嵁宸插姞杞斤紝璇锋浛鎹负鐪熷疄鏁版嵁', 'info');
+            showNotification('示例数据已加载，请替换为真实数据', 'info');
         }
 
         function validateBatchFormat() {
             const batchText = document.getElementById('batchAccounts').value.trim();
             if (!batchText) {
-                showNotification('璇峰厛杈撳叆璐︽埛淇℃伅', 'warning');
+                showNotification('请先输入账户信息', 'warning');
                 return;
             }
 
@@ -3187,13 +3636,13 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
             const clientId = document.getElementById('clientId').value.trim();
 
             if (!email || !refreshToken || !clientId) {
-                showNotification('璇峰～鍐欐墍鏈夊繀闇€瀛楁', 'warning');
+                showNotification('请填写所有必填字段', 'warning');
                 return;
             }
 
             const testBtn = document.getElementById('testBtn');
             testBtn.disabled = true;
-            testBtn.innerHTML = buttonLabel('loading', '娴嬭瘯涓?..', 'spinning');
+            testBtn.innerHTML = buttonLabel('loading', '测试中...', 'spinning');
 
             try {
             await new Promise(resolve => setTimeout(resolve, 2000)); // 妯℃嫙娴嬭瘯
@@ -3202,7 +3651,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
                 showNotification('连接测试失败：' + error.message, 'error');
             } finally {
                 testBtn.disabled = false;
-                testBtn.innerHTML = buttonLabel('search', '娴嬭瘯杩炴帴');
+                testBtn.innerHTML = buttonLabel('search', '测试连接');
             }
         }
 
@@ -3222,7 +3671,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
             const accountsStats = document.getElementById('accountsStats');
             const accountsPagination = document.getElementById('accountsPagination');
             
-            accountsList.innerHTML = '<div class="loading">姝ｅ湪鍔犺浇璐︽埛鍒楄〃...</div>';
+            accountsList.innerHTML = '<div class="loading">正在加载账户列表...</div>';
             accountsStats.style.display = 'none';
             accountsPagination.style.display = 'none';
 
@@ -3251,7 +3700,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
                 updateAccountsStats();
                 
                 if (accounts.length === 0) {
-                    accountsList.innerHTML = '<div class="text-center" style="padding: 40px; color: #64748b;">鏆傛棤绗﹀悎鏉′欢鐨勮处鎴?/div>';
+                    accountsList.innerHTML = '<div class="text-center" style="padding: 40px; color: #64748b;">暂无符合条件的账户</div>';
                     return;
                 }
 
@@ -3268,22 +3717,22 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
                                 <div class="account-avatar">${account.email_id.charAt(0).toUpperCase()}</div>
                                 <div class="account-details">
                                     <h4>${account.email_id}</h4>
-                                    <p>鐘舵€? ${account.status === 'active' ? '姝ｅ父' : '寮傚父'}</p>
+                                    <p>状态: ${account.status === 'active' ? '正常' : '异常'}</p>
                                     ${tagsHtml}
                                 </div>
                             </div>
                             <div class="account-actions" onclick="event.stopPropagation()">
                                 <button class="btn btn-primary btn-sm" onclick="viewAccountEmails('${account.email_id}')">
                                     <span>馃摟</span>
-                                    鏌ョ湅閭欢
+                                    查看邮件
                                 </button>
                                 <button class="btn btn-secondary btn-sm" onclick="editAccountTags('${account.email_id}', ${JSON.stringify(account.tags || [])})">
-                                    <span>馃彿锔?/span>
-                                    绠＄悊鏍囩
+                                    <span></span>
+                                    管理标签
                                 </button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteAccount('${account.email_id}')">
-                                    <span>馃棏锔?/span>
-                                    鍒犻櫎
+                                    <span></span>
+                                    删除
                                 </button>
                             </div>
                         </div>
@@ -3295,7 +3744,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
                 updateAccountsPagination();
 
             } catch (error) {
-                accountsList.innerHTML = '<div class="error">鍔犺浇澶辫触: ' + error.message + '</div>';
+                accountsList.innerHTML = '<div class="error">加载失败: ' + error.message + '</div>';
             }
         }
 
@@ -3315,7 +3764,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
 
             const addBtn = document.getElementById('addAccountBtn');
             addBtn.disabled = true;
-            addBtn.innerHTML = buttonLabel('loading', '娣诲姞涓?..', 'spinning');
+            addBtn.innerHTML = buttonLabel('loading', '添加中...', 'spinning');
 
             try {
                 const response = await apiRequest('/accounts', {
@@ -3328,15 +3777,15 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
                     })
                 });
 
-                showSuccess('璐︽埛娣诲姞鎴愬姛');
+                showSuccess('账户添加成功');
                 clearAddAccountForm();
                 showPage('accounts');
                 loadAccounts();
             } catch (error) {
-                showNotification('娣诲姞璐︽埛澶辫触: ' + error.message, 'error');
+                showNotification('添加账户失败: ' + error.message, 'error');
             } finally {
                 addBtn.disabled = false;
-                addBtn.innerHTML = buttonLabel('plus', '娣诲姞璐︽埛');
+                addBtn.innerHTML = buttonLabel('plus', '添加账户');
             }
         }
 
@@ -3357,7 +3806,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
             showBatchProgress();
             const batchBtn = document.getElementById('batchAddBtn');
             batchBtn.disabled = true;
-            batchBtn.innerHTML = buttonLabel('loading', '娣诲姞涓?..', 'spinning');
+            batchBtn.innerHTML = buttonLabel('loading', '添加中...', 'spinning');
 
             let successCount = 0;
             let failCount = 0;
@@ -3368,14 +3817,14 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
                 const parts = line.split('----').map(p => p.trim());
 
                 // 鏇存柊杩涘害
-                updateBatchProgress(i + 1, lines.length, `澶勭悊绗?${i + 1} 涓处鎴?..`);
+                updateBatchProgress(i + 1, lines.length, `正在处理第 ${i + 1} 个账户...`);
 
                 if (parts.length !== 4) {
                     failCount++;
                     results.push({
-                        email: parts[0] || '鏍煎紡閿欒',
+                        email: parts[0] || '格式错误',
                         status: 'error',
-                        message: '鏍煎紡閿欒锛氬簲涓?閭----瀵嗙爜----鍒锋柊浠ょ墝----瀹㈡埛绔疘D'
+                        message: '格式错误: 应为 邮箱----密码----刷新令牌----客户端ID'
                     });
                     continue;
                 }
@@ -3395,7 +3844,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
                     results.push({
                         email: email,
                         status: 'success',
-                        message: '娣诲姞鎴愬姛'
+                        message: '添加成功'
                     });
                 } catch (error) {
                     failCount++;
@@ -3457,21 +3906,21 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
 
             if (successResults.length > 0) {
                 html += `<div style="margin-bottom: 16px;">
-                    <h5 style="color: #16a34a; margin-bottom: 8px;">鉁?鎴愬姛娣诲姞 (${successResults.length})</h5>
+                    <h5 style="color: #16a34a; margin-bottom: 8px;">成功添加 (${successResults.length})</h5>
                     <div style="background: #f0fdf4; padding: 12px; border-radius: 6px; border: 1px solid #bbf7d0;">`;
                 successResults.forEach(result => {
-                    html += `<div style="font-size: 0.875rem; color: #15803d; margin-bottom: 4px;">鈥?${result.email}</div>`;
+                    html += `<div style="font-size: 0.875rem; color: #15803d; margin-bottom: 4px;">• ${result.email}</div>`;
                 });
                 html += `</div></div>`;
             }
 
             if (errorResults.length > 0) {
                 html += `<div>
-                    <h5 style="color: #dc2626; margin-bottom: 8px;">鉂?娣诲姞澶辫触 (${errorResults.length})</h5>
+                    <h5 style="color: #dc2626; margin-bottom: 8px;">添加失败 (${errorResults.length})</h5>
                     <div style="background: #fef2f2; padding: 12px; border-radius: 6px; border: 1px solid #fecaca;">`;
                 errorResults.forEach(result => {
                     html += `<div style="font-size: 0.875rem; color: #dc2626; margin-bottom: 8px;">
-                        <strong>鈥?${result.email}</strong><br>
+                        <strong>• ${result.email}</strong><br>
                         <span style="color: #991b1b; font-size: 0.75rem;">&nbsp;&nbsp;${result.message}</span>
                     </div>`;
                 });
@@ -3494,7 +3943,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
             navigator.clipboard.writeText(baseUrl).then(() => {
                 showNotification('Base URL 已复制到剪贴板', 'success');
             }).catch(() => {
-                showNotification('澶嶅埗澶辫触锛岃鎵嬪姩澶嶅埗', 'error');
+                showNotification('复制失败，请手动复制', 'error');
             });
         }
 
@@ -3503,7 +3952,7 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
             const cleanEmail = emailAddress.trim();
 
             if (!cleanEmail) {
-                showNotification('閭鍦板潃涓虹┖', 'error');
+                showNotification('邮箱地址为空', 'error');
                 return;
             }
 
@@ -3535,8 +3984,8 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
 
                     showNotification('邮箱地址已复制到剪贴板', 'success');
                 } catch (fallbackError) {
-                    console.error('闄嶇骇澶嶅埗鏂规涔熷け璐?', fallbackError);
-                    showNotification('澶嶅埗澶辫触锛岃鎵嬪姩澶嶅埗閭鍦板潃', 'error');
+                    console.error('Fallback copy failed:', fallbackError);
+                    showNotification('复制失败，请手动复制邮箱地址', 'error');
 
                     // 閫変腑鏂囨湰浠ヤ究鐢ㄦ埛鎵嬪姩澶嶅埗
                     const emailElement = document.getElementById('currentAccountEmail');
@@ -3567,24 +4016,24 @@ example3@outlook.com----password3----refresh_token_here_3----client_id_here_3`;
 
         function generateApiDocsMarkdown() {
             const baseUrl = window.location.origin;
-            return `# Outlook閭欢绠＄悊绯荤粺 API鏂囨。
+            return `# Outlook 邮件管理系统 API 文档
 
-## 鍩虹淇℃伅
+## 基础信息
 
 - **Base URL**: ${baseUrl}
-- **璁よ瘉鏂瑰紡**: 鏃犻渶璁よ瘉
-- **鍝嶅簲鏍煎紡**: JSON
+- **认证方式**: 无需认证
+- **响应格式**: JSON
 
-## 鎺ュ彛鍒楄〃
+## 接口列表
 
-### 1. 鑾峰彇閭鍒楄〃
+### 1. 获取账户列表
 
-**璇锋眰**
+**请求**
 \`\`\`
 GET /accounts
 \`\`\`
 
-**鍝嶅簲绀轰緥**
+**响应示例**
 \`\`\`json
 {
   "accounts": [
@@ -3598,20 +4047,21 @@ GET /accounts
 }
 \`\`\`
 
-### 2. 鑾峰彇閭欢鍒楄〃
+### 2. 获取邮件列表
 
-**璇锋眰**
+**请求**
 \`\`\`
 GET /emails/{email_id}?folder=inbox&page=1&page_size=20&refresh=false
 \`\`\`
 
-**鍙傛暟璇存槑**
-- \`email_id\`: 閭鍦板潃锛圲RL缂栫爜锛?- \`folder\`: 鏂囦欢澶?(all, inbox, junk)
-- \`page\`: 椤电爜
-- \`page_size\`: 姣忛〉鏁伴噺
-- \`refresh\`: 鏄惁寮哄埗鍒锋柊
+**参数说明**
+- \`email_id\`: 邮箱地址（需要 URL 编码）
+- \`folder\`: 文件夹（all、inbox、junk）
+- \`page\`: 页码
+- \`page_size\`: 每页数量
+- \`refresh\`: 是否强制刷新
 
-**鍝嶅簲绀轰緥**
+**响应示例**
 \`\`\`json
 {
   "email_id": "example@outlook.com",
@@ -3623,31 +4073,32 @@ GET /emails/{email_id}?folder=inbox&page=1&page_size=20&refresh=false
 }
 \`\`\`
 
-### 3. 鑾峰彇閭欢璇︽儏
+### 3. 获取邮件详情
 
-**璇锋眰**
+**请求**
 \`\`\`
 GET /emails/{email_id}/{message_id}
 \`\`\`
 
-**鍙傛暟璇存槑**
-- \`email_id\`: 閭鍦板潃锛圲RL缂栫爜锛?- \`message_id\`: 閭欢ID
+**参数说明**
+- \`email_id\`: 邮箱地址（需要 URL 编码）
+- \`message_id\`: 邮件 ID
 
-**鍝嶅簲绀轰緥**
+**响应示例**
 \`\`\`json
 {
   "message_id": "INBOX-1",
-  "subject": "閭欢涓婚",
+  "subject": "邮件主题",
   "from_email": "sender@example.com",
   "to_email": "example@outlook.com",
   "date": "2024-01-01T12:00:00Z",
-  "body_plain": "绾枃鏈唴瀹?,
-  "body_html": "HTML鍐呭"
+  "body_plain": "纯文本内容",
+  "body_html": "HTML 内容"
 }
 \`\`\`
 
 ---
-鐢熸垚鏃堕棿: ${new Date().toLocaleString()}
+生成时间: ${new Date().toLocaleString()}
 `;
         }
 
@@ -3668,11 +4119,11 @@ GET /emails/{email_id}/{message_id}
                             url = `${baseUrl}/emails/${emailId}?folder=inbox&page=1&page_size=5`;
                             responseElementId = 'emailsResponse';
                         } else {
-                            showNotification('娌℃湁鍙敤鐨勯偖绠辫处鎴凤紝璇峰厛娣诲姞璐︽埛', 'warning');
+                            showNotification('没有可用的邮箱账户，请先添加账户', 'warning');
                             return;
                         }
                     } catch (error) {
-                        showNotification('鑾峰彇閭璐︽埛澶辫触: ' + error.message, 'error');
+                        showNotification('获取邮箱账户失败: ' + error.message, 'error');
                         return;
                     }
                     break;
@@ -3692,11 +4143,11 @@ GET /emails/{email_id}/{message_id}
                                 return;
                             }
                         } else {
-                            showNotification('娌℃湁鍙敤鐨勯偖绠辫处鎴凤紝璇峰厛娣诲姞璐︽埛', 'warning');
+                            showNotification('没有可用的邮箱账户，请先添加账户', 'warning');
                             return;
                         }
                     } catch (error) {
-                        showNotification('鑾峰彇閭欢鏁版嵁澶辫触: ' + error.message, 'error');
+                        showNotification('获取邮件数据失败: ' + error.message, 'error');
                         return;
                     }
                     break;
@@ -3705,7 +4156,7 @@ GET /emails/{email_id}/{message_id}
             }
 
             try {
-                showNotification('姝ｅ湪璋冪敤API...', 'info', '', 2000);
+                showNotification('正在调用 API...', 'info', '', 2000);
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -3719,7 +4170,7 @@ GET /emails/{email_id}/{message_id}
                 showNotification('API 调用成功', 'success');
 
             } catch (error) {
-                showNotification('API璋冪敤澶辫触: ' + error.message, 'error');
+                showNotification('API 调用失败: ' + error.message, 'error');
             }
         }
 
@@ -3771,9 +4222,9 @@ GET /emails/{email_id}/{message_id}
             const refreshBtn = document.getElementById('refreshBtn');
 
             // Show loading state
-            emailsList.innerHTML = '<div class="loading"><div class="loading-spinner"></div>姝ｅ湪鍔犺浇閭欢...</div>';
+            emailsList.innerHTML = '<div class="loading"><div class="loading-spinner"></div>正在加载邮件...</div>';
             refreshBtn.disabled = true;
-            refreshBtn.innerHTML = buttonLabel('loading', '鍔犺浇涓?..', 'spinning');
+            refreshBtn.innerHTML = buttonLabel('loading', '加载中...', 'spinning');
 
             try {
                 const refreshParam = forceRefresh ? '&refresh=true' : '';
@@ -3796,12 +4247,12 @@ GET /emails/{email_id}/{message_id}
                 }
 
             } catch (error) {
-                emailsList.innerHTML = '<div class="error">鉂?鍔犺浇澶辫触: ' + error.message + '</div>';
-                showNotification('鍔犺浇閭欢澶辫触: ' + error.message, 'error');
+                emailsList.innerHTML = '<div class="error">加载失败: ' + error.message + '</div>';
+                showNotification('加载邮件失败: ' + error.message, 'error');
             } finally {
                 // Restore refresh button state
                 refreshBtn.disabled = false;
-                refreshBtn.innerHTML = buttonLabel('refresh', '鍒锋柊');
+                refreshBtn.innerHTML = buttonLabel('refresh', '刷新');
             }
         }
 
@@ -3885,7 +4336,7 @@ GET /emails/{email_id}/{message_id}
             const emailsList = document.getElementById('emailsList');
 
             if (filteredEmails.length === 0) {
-                emailsList.innerHTML = '<div class="text-center" style="padding: 40px; color: #64748b;">娌℃湁鎵惧埌鍖归厤鐨勯偖浠?/div>';
+                emailsList.innerHTML = '<div class="text-center" style="padding: 40px; color: #64748b;">没有找到匹配的邮件</div>';
                 return;
             }
 
@@ -3906,19 +4357,19 @@ GET /emails/{email_id}/{message_id}
 
         function createEmailItem(email) {
             const unreadClass = email.is_read ? '' : 'unread';
-            const attachmentIcon = email.has_attachments ? '<span style="color: #8b5cf6;">馃搸</span>' : '';
-            const readIcon = email.is_read ? '馃摉' : '馃摟';
+            const attachmentIcon = email.has_attachments ? '<span style="color: #8b5cf6;">📎</span>' : '';
+            const readIcon = email.is_read ? '✉️' : '📩';
 
             return `
                 <div class="email-item ${unreadClass}" onclick="showEmailDetail('${email.message_id}')">
                     <div class="email-avatar">${email.sender_initial}</div>
                     <div class="email-content">
                         <div class="email-header">
-                            <div class="email-subject">${email.subject || '(鏃犱富棰?'}</div>
+                            <div class="email-subject">${email.subject || '(无主题)'}</div>
                             <div class="email-date">${formatEmailDate(email.date)}</div>
                         </div>
                         <div class="email-from">${readIcon} ${email.from_email} ${attachmentIcon}</div>
-                        <div class="email-preview">鏂囦欢澶? ${email.folder} | 鐐瑰嚮鏌ョ湅璇︽儏</div>
+                        <div class="email-preview">文件夹: ${email.folder} | 点击查看详情</div>
                     </div>
                 </div>
             `;
@@ -3926,25 +4377,25 @@ GET /emails/{email_id}/{message_id}
 
         async function showEmailDetail(messageId) {
             document.getElementById('emailModal').classList.remove('hidden');
-            document.getElementById('emailModalTitle').textContent = '閭欢璇︽儏';
-            document.getElementById('emailModalContent').innerHTML = '<div class="loading">姝ｅ湪鍔犺浇閭欢璇︽儏...</div>';
+            document.getElementById('emailModalTitle').textContent = '邮件详情';
+            document.getElementById('emailModalContent').innerHTML = '<div class="loading">正在加载邮件详情...</div>';
 
             try {
                 const data = await apiRequest('/emails/' + currentAccount + '/' + messageId);
 
-                document.getElementById('emailModalTitle').textContent = data.subject || '(鏃犱富棰?';
+                document.getElementById('emailModalTitle').textContent = data.subject || '(无主题)';
                 document.getElementById('emailModalContent').innerHTML = `
                     <div class="email-detail-meta">
-                        <p><strong>鍙戜欢浜?</strong> ${data.from_email}</p>
-                        <p><strong>鏀朵欢浜?</strong> ${data.to_email}</p>
-                        <p><strong>鏃ユ湡:</strong> ${formatEmailDate(data.date)} (${new Date(data.date).toLocaleString()})</p>
-                        <p><strong>閭欢ID:</strong> ${data.message_id}</p>
+                        <p><strong>发件人:</strong> ${data.from_email}</p>
+                        <p><strong>收件人:</strong> ${data.to_email}</p>
+                        <p><strong>日期:</strong> ${formatEmailDate(data.date)} (${new Date(data.date).toLocaleString()})</p>
+                        <p><strong>邮件 ID:</strong> ${data.message_id}</p>
                     </div>
                     ${renderEmailContent(data)}
                 `;
 
             } catch (error) {
-                document.getElementById('emailModalContent').innerHTML = '<div class="error">鍔犺浇澶辫触: ' + error.message + '</div>';
+                document.getElementById('emailModalContent').innerHTML = '<div class="error">加载失败: ' + error.message + '</div>';
             }
         }
 
@@ -3953,7 +4404,7 @@ GET /emails/{email_id}/{message_id}
             const hasPlain = email.body_plain && email.body_plain.trim();
 
             if (!hasHtml && !hasPlain) {
-                return '<p style="color: #9ca3af; font-style: italic;">姝ら偖浠舵棤鍐呭</p>';
+                return '<p style="color: #9ca3af; font-style: italic;">此邮件无内容</p>';
             }
 
             if (hasHtml) {
@@ -3961,9 +4412,9 @@ GET /emails/{email_id}/{message_id}
 
                 return `
                     <div class="email-content-tabs">
-                        <button class="content-tab active" onclick="showEmailContentTab('html', this)">HTML瑙嗗浘</button>
-                        ${hasPlain ? '<button class="content-tab" onclick="showEmailContentTab(\'plain\', this)">绾枃鏈?/button>' : ''}
-                        <button class="content-tab" onclick="showEmailContentTab('raw', this)">婧愮爜</button>
+                        <button class="content-tab active" onclick="showEmailContentTab('html', this)">HTML 视图</button>
+                        ${hasPlain ? '<button class="content-tab" onclick="showEmailContentTab(\'plain\', this)">纯文本</button>' : ''}
+                        <button class="content-tab" onclick="showEmailContentTab('raw', this)">源码</button>
                     </div>
 
                     <div class="email-content-body">
@@ -4016,7 +4467,7 @@ GET /emails/{email_id}/{message_id}
                 showNotification('缓存已清除', 'success');
                 loadEmails(true);
             } catch (error) {
-                showNotification('娓呴櫎缂撳瓨澶辫触: ' + error.message, 'error');
+                showNotification('清除缓存失败: ' + error.message, 'error');
             }
         }
 
@@ -4085,9 +4536,9 @@ GET /emails/{email_id}/{message_id}
 
             pagination.classList.remove('hidden');
             pagination.innerHTML = `
-                <button class="btn btn-secondary btn-sm" onclick="changeEmailPage(${currentEmailPage - 1})" ${currentEmailPage === 1 ? 'disabled' : ''}>${icon('arrow-left')} 涓婁竴椤?/button>
+                <button class="btn btn-secondary btn-sm" onclick="changeEmailPage(${currentEmailPage - 1})" ${currentEmailPage === 1 ? 'disabled' : ''}>${icon('arrow-left')} 上一页</button>
                 <span style="padding: 0 16px; color: #64748b;">${currentEmailPage} / ${totalPages}</span>
-                <button class="btn btn-secondary btn-sm" onclick="changeEmailPage(${currentEmailPage + 1})" ${currentEmailPage === totalPages ? 'disabled' : ''}>涓嬩竴椤?${icon('arrow-right')}</button>
+                <button class="btn btn-secondary btn-sm" onclick="changeEmailPage(${currentEmailPage + 1})" ${currentEmailPage === totalPages ? 'disabled' : ''}>下一页 ${icon('arrow-right')}</button>
             `;
         }
 
@@ -4116,14 +4567,14 @@ GET /emails/{email_id}/{message_id}
             const tagsList = document.getElementById('currentTagsList');
             
             if (currentEditTags.length === 0) {
-                tagsList.innerHTML = '<p class="text-muted">鏆傛棤鏍囩</p>';
+                tagsList.innerHTML = '<p class="text-muted">暂无标签</p>';
                 return;
             }
             
             tagsList.innerHTML = currentEditTags.map(tag => `
                 <div class="tag-item">
                     <span class="tag-name">${tag}</span>
-                    <button class="tag-delete" onclick="removeTag('${tag}')">脳</button>
+                    <button class="tag-delete" onclick="removeTag('${tag}')">&times;</button>
                 </div>
             `).join('');
         }
@@ -4133,7 +4584,7 @@ GET /emails/{email_id}/{message_id}
             const newTag = newTagInput.value.trim();
             
             if (!newTag) {
-                showNotification('鏍囩鍚嶇О涓嶈兘涓虹┖', 'warning');
+                showNotification('标签名称不能为空', 'warning');
                 return;
             }
             
@@ -4179,13 +4630,13 @@ GET /emails/{email_id}/{message_id}
                     body: JSON.stringify({ tags: currentEditTags })
                 });
                 
-                showSuccess('鏍囩鏇存柊鎴愬姛');
+                showSuccess('标签更新成功');
                 closeTagsModal();
                 
                 // 閲嶆柊鍔犺浇璐︽埛鍒楄〃
                 loadAccounts();
             } catch (error) {
-                showError('鏇存柊鏍囩澶辫触: ' + error.message);
+                showError('更新标签失败: ' + error.message);
             }
         }
 
@@ -4294,10 +4745,10 @@ GET /emails/{email_id}/{message_id}
 
             try {
                 await apiRequest('/accounts/' + emailId, { method: 'DELETE' });
-                showSuccess('璐︽埛鍒犻櫎鎴愬姛');
+                showSuccess('账户删除成功');
                 loadAccounts(accountsCurrentPage); // 淇濇寔褰撳墠椤电爜
             } catch (error) {
-                showError('鍒犻櫎璐︽埛澶辫触: ' + error.message);
+                showError('删除账户失败: ' + error.message);
             }
         }
         
@@ -4368,7 +4819,7 @@ GET /emails/{email_id}/{message_id}
                 document.execCommand('copy');
                 showNotification('链接已复制到剪贴板', 'success');
             } catch (err) {
-                showNotification('澶嶅埗澶辫触锛岃鎵嬪姩澶嶅埗', 'error');
+                showNotification('复制失败，请手动复制', 'error');
             }
             document.body.removeChild(textArea);
         }
@@ -4438,7 +4889,7 @@ GET /emails/{email_id}/{message_id}
                     const diffMinutes = (now - lastUpdateTime) / (1000 * 60);
 
                     if (diffMinutes > 5) {
-                        showNotification('妫€娴嬪埌鏁版嵁鍙兘杩囨湡锛屾鍦ㄥ埛鏂?..', 'info', '', 2000);
+                        showNotification('检测到数据可能已过期，正在刷新...', 'info', '', 2000);
                         setTimeout(() => refreshEmails(), 1000);
                     }
                 }
@@ -4446,18 +4897,9 @@ GET /emails/{email_id}/{message_id}
         });
 
         window.addEventListener('load', function() {
-            decorateStaticUi();
-            // 澶勭悊URL璺敱
-            handleUrlRouting();
-            
-            if (!window.location.hash || window.location.hash === '#') {
-                showPage('accounts');
-            }
-
-            // 鏄剧ず娆㈣繋娑堟伅
-            setTimeout(() => {
-                showNotification('欢迎使用邮件管理系统', 'info', '欢迎', 3000);
-            }, 500);
+            document.getElementById('authSetupForm').addEventListener('submit', submitAuthSetup);
+            document.getElementById('authLoginForm').addEventListener('submit', submitAuthLogin);
+            initializeAuthFlow();
         });
         
         // URL璺敱澶勭悊

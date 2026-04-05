@@ -3732,11 +3732,6 @@
                             <p>7. 点击同意并继续，即表示你已阅读、理解并接受以上条款，并确认你有权管理当前部署环境及相关 Outlook 数据。</p>
                         </div>
                         <div id="authAgreementStatus" class="auth-scroll-status">请先滚动到协议底部</div>
-                        <div class="form-group" style="margin-top: 18px;">
-                            <label class="form-label" for="authSetupAdminPath">管理员后台登录地址 *</label>
-                            <input type="text" id="authSetupAdminPath" class="form-input" placeholder="例如 /admin-enter" autocomplete="off">
-                            <div class="auth-step-note" style="margin-top: 8px;">安装时就需要设置。后续管理员后台只会在这个地址打开，根路径 <code>/</code> 作为网站主页使用。这个地址后面也可以在“设置”页面修改。</div>
-                        </div>
                         <div class="auth-actions center full-width">
                             <button type="button" id="authAgreementContinue" class="btn btn-primary" onclick="goToSetupPasswordStep()" disabled>同意并继续</button>
                         </div>
@@ -3744,14 +3739,15 @@
 
                     <div id="authSetupPasswordStep" class="auth-stage hidden">
                         <div class="auth-stage-header">
-                            <h3>设置管理员密码</h3>
-                            <p>协议已确认。现在设置管理员密码，完成后将直接进入后台。</p>
+                            <h3>设置管理员账户与后台登录地址</h3>
+                            <p>协议已确认。现在请设置管理员密码，并指定后台登录地址，完成后将直接进入后台。</p>
                         </div>
-                        <div class="auth-step-note">密码只会保存为本地哈希值，长度至少 8 位。请妥善保管，后续登录需要使用该密码。</div>
-                        <div class="auth-step-note">管理员后台登录地址：<strong id="authSetupAdminPathPreview">/admin</strong>。如需修改可返回上一步。</div>
+                        <div class="auth-step-note">管理员密码只会保存为本地哈希值，长度至少 8 位。请妥善保管，后续登录需要使用该密码。</div>
                         <form id="authSetupForm" class="auth-form">
                             <input type="password" id="authSetupPassword" class="form-input" placeholder="设置管理员密码，至少 8 位" autocomplete="new-password">
                             <input type="password" id="authSetupPasswordConfirm" class="form-input" placeholder="再次输入管理员密码" autocomplete="new-password">
+                            <input type="text" id="authSetupAdminPath" class="form-input" placeholder="设置管理员后台登录地址，例如 /admin-enter" autocomplete="off">
+                            <div class="auth-step-note" style="margin-top: -4px;">后续管理员后台只会在这个地址打开。根路径 <code>/</code> 会作为网站主页使用，这个地址后面也可以在“设置”页面修改。</div>
                             <div id="authSetupError" class="auth-error"></div>
                             <div class="auth-actions auth-setup-password-actions">
                                 <button type="button" class="btn btn-secondary" onclick="backToAgreementStep()">返回协议</button>
@@ -4963,7 +4959,7 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
     </div>
 
     <!-- 账户分类与标签管理 -->
-    <div id="tagsModal" class="modal">
+    <div id="tagsModal" class="modal hidden">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
                 <h3>管理账户分类与标签</h3>
@@ -5363,13 +5359,6 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
             return stripped ? `/${stripped}` : '/';
         }
 
-        function syncSetupAdminPathPreview() {
-            const input = document.getElementById('authSetupAdminPath');
-            const preview = document.getElementById('authSetupAdminPathPreview');
-            if (!preview) return;
-            preview.textContent = normalizeAdminPathInput(input ? input.value : '');
-        }
-
         function setAuthPending(buttonId, pending, busyText, idleText) {
             const button = document.getElementById(buttonId);
             if (!button) return;
@@ -5387,7 +5376,6 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
             if (setupPassword) setupPassword.value = '';
             if (setupPasswordConfirm) setupPasswordConfirm.value = '';
             if (setupAdminPath) setupAdminPath.value = currentAdminLoginPath || normalizeAdminPathInput(window.location.pathname);
-            syncSetupAdminPathPreview();
             if (agreementStep) agreementStep.classList.remove('hidden');
             if (passwordStep) passwordStep.classList.add('hidden');
 
@@ -5420,19 +5408,13 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
 
         function goToSetupPasswordStep() {
             const continueButton = document.getElementById('authAgreementContinue');
-            const adminPath = normalizeAdminPathInput(document.getElementById('authSetupAdminPath').value);
             if (continueButton && continueButton.disabled) {
                 showAuthError('setup', '请先完整滑动阅读协议');
-                return;
-            }
-            if (adminPath === '/') {
-                showAuthError('setup', '请先设置管理员后台登录地址，不能使用根路径 /');
                 return;
             }
 
             setupAgreementComplete = true;
             showAuthError('setup', '');
-            syncSetupAdminPathPreview();
             const agreementStep = document.getElementById('authSetupAgreementStep');
             const passwordStep = document.getElementById('authSetupPasswordStep');
             if (agreementStep) agreementStep.classList.add('hidden');
@@ -7983,11 +7965,11 @@ Authorization: Bearer om_your_api_key
             document.querySelector('#tagsModal .modal-header h3').textContent = `管理 ${emailId} 的分类与标签`;
             populateCategorySelect('editAccountCategoryKey', currentEditCategoryKey);
             renderTagOptionGrid('currentTagsList', 'editAccountTagsEmpty', currentEditTags, 'toggleEditAccountTag', currentEditTagDetails);
-            document.getElementById('tagsModal').style.display = 'flex';
+            document.getElementById('tagsModal').classList.remove('hidden');
         }
 
         function closeTagsModal() {
-            document.getElementById('tagsModal').style.display = 'none';
+            document.getElementById('tagsModal').classList.add('hidden');
             currentEditAccount = null;
             currentEditTags = [];
             currentEditCategoryKey = '';
@@ -8473,7 +8455,6 @@ Authorization: Bearer om_your_api_key
             document.getElementById('authSetupForm').addEventListener('submit', submitAuthSetup);
             document.getElementById('authLoginForm').addEventListener('submit', submitAuthLogin);
             document.getElementById('authAgreementScroll').addEventListener('scroll', handleAgreementScroll);
-            document.getElementById('authSetupAdminPath').addEventListener('input', syncSetupAdminPathPreview);
             toggleApiKeyExpiryMode();
             toggleApiKeyRequestMode();
             updateAddAccountMethodHints();

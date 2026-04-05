@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microsoft-Email-Manager</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=20260405">
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=20260405">
+    <link rel="icon" type="image/png" href="/static/assets/logo.png?v=20260406">
+    <link rel="shortcut icon" type="image/png" href="/static/assets/logo.png?v=20260406">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -1668,8 +1668,8 @@
         }
 
         .sidebar-logo {
-            width: 32px;
-            height: 32px;
+            width: 42px;
+            height: 42px;
             border-radius: 0;
             position: relative;
             display: inline-flex;
@@ -1686,6 +1686,7 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
+            object-position: center;
             padding: 0;
             display: block;
         }
@@ -1843,9 +1844,6 @@
         .nav-item .icon,
         .sidebar-utility .ui-icon,
         .sidebar-toggle .ui-icon {
-            width: 32px;
-            height: 32px;
-            flex: 0 0 32px;
             margin-right: 0;
             border-radius: 0;
             background: transparent;
@@ -1860,7 +1858,27 @@
             transition: color 0.18s ease;
         }
 
+        .nav-item .icon {
+            width: 38px;
+            height: 38px;
+            flex: 0 0 38px;
+        }
+
+        .sidebar-utility .ui-icon,
+        .sidebar-toggle .ui-icon {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+        }
+
         .nav-item .icon svg,
+        .sidebar .nav-item .icon.ui-icon svg {
+            width: 24px;
+            height: 24px;
+            flex: 0 0 24px;
+            transform-origin: center;
+        }
+
         .sidebar-utility .ui-icon svg,
         .sidebar-toggle .ui-icon svg {
             width: 20px;
@@ -1938,8 +1956,8 @@
         }
 
         .sidebar.is-collapsed .sidebar-logo {
-            width: 32px;
-            height: 32px;
+            width: 42px;
+            height: 42px;
             border-radius: 0;
         }
 
@@ -1973,6 +1991,18 @@
             gap: 0;
         }
 
+        .sidebar.is-collapsed .nav-item .icon {
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+        }
+
+        .sidebar.is-collapsed .nav-item .icon svg {
+            width: 24px;
+            height: 24px;
+            flex: 0 0 24px;
+        }
+
         .sidebar.is-collapsed .sidebar-utility,
         .sidebar.is-collapsed .sidebar-toggle {
             width: 62px;
@@ -1982,6 +2012,20 @@
             margin: 0;
             padding: 0;
             gap: 0;
+        }
+
+        .sidebar.is-collapsed .sidebar-utility .ui-icon,
+        .sidebar.is-collapsed .sidebar-toggle .ui-icon {
+            width: 28px;
+            height: 28px;
+            flex: 0 0 28px;
+        }
+
+        .sidebar.is-collapsed .sidebar-utility .ui-icon svg,
+        .sidebar.is-collapsed .sidebar-toggle .ui-icon svg {
+            width: 17px;
+            height: 17px;
+            flex: 0 0 17px;
         }
 
         .sidebar.is-collapsed .sidebar-footer {
@@ -2471,6 +2515,9 @@
             border: 1px solid rgba(148, 163, 184, 0.22);
             box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
             overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .account-avatar.has-avatar,
@@ -2512,6 +2559,32 @@
             box-shadow:
                 inset 4px 0 0 rgba(37, 99, 235, 0.96),
                 0 16px 28px rgba(15, 23, 42, 0.05);
+        }
+
+        .email-item {
+            align-items: center;
+        }
+
+        .email-item.is-new-email {
+            overflow: hidden;
+            opacity: 0;
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            transform: translateY(-18px);
+            transition:
+                max-height 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.28s ease,
+                transform 0.32s ease,
+                padding 0.32s ease;
+        }
+
+        .email-item.is-new-email.is-entered {
+            opacity: 1;
+            max-height: 220px;
+            padding-top: 16px;
+            padding-bottom: 16px;
+            transform: translateY(0);
         }
 
         .email-from {
@@ -2594,9 +2667,12 @@
         .email-detail-avatar img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            object-position: center;
             display: block;
             border-radius: inherit;
+            padding: 8%;
+            box-sizing: border-box;
         }
 
         .account-avatar .avatar-brand-icon,
@@ -2907,11 +2983,15 @@
             height: 18px;
         }
 
-        .sidebar .icon.ui-icon,
+        .sidebar .nav-item .icon.ui-icon {
+            width: 38px;
+            height: 38px;
+        }
+
         .sidebar-utility .ui-icon,
         .sidebar-toggle .ui-icon {
-            width: 30px;
-            height: 30px;
+            width: 34px;
+            height: 34px;
         }
 
         .nav-item[data-page="apiKeys"] .icon.ui-icon svg {
@@ -5550,32 +5630,65 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
         }
 
         const DOMAIN_LOGO_RULES = [
-            { keywords: ['microsoft.com', 'office.com', 'outlook.com', 'live.com', 'hotmail.com'], domain: 'microsoft.com' },
-            { keywords: ['google.com', 'gmail.com', 'googlemail.com'], domain: 'google.com' },
-            { keywords: ['openai.com', 'chatgpt.com'], domain: 'openai.com' },
-            { keywords: ['apple.com', 'icloud.com', 'me.com', 'mac.com'], domain: 'apple.com' },
-            { keywords: ['spotify.com'], domain: 'spotify.com' },
-            { keywords: ['music.youtube.com', 'youtube.com', 'ytimg.com'], domain: 'music.youtube.com' },
-            { keywords: ['soundcloud.com'], domain: 'soundcloud.com' },
-            { keywords: ['music.apple.com'], domain: 'music.apple.com' },
-            { keywords: ['amazon.com', 'amazonaws.com'], domain: 'amazon.com' },
-            { keywords: ['meta.com', 'facebook.com', 'instagram.com', 'whatsapp.com'], domain: 'meta.com' },
-            { keywords: ['x.com', 'twitter.com'], domain: 'x.com' },
-            { keywords: ['github.com'], domain: 'github.com' },
-            { keywords: ['gitlab.com'], domain: 'gitlab.com' },
-            { keywords: ['linkedin.com'], domain: 'linkedin.com' },
-            { keywords: ['discord.com'], domain: 'discord.com' },
-            { keywords: ['slack.com'], domain: 'slack.com' },
-            { keywords: ['telegram.org'], domain: 'telegram.org' },
-            { keywords: ['zoom.us'], domain: 'zoom.us' },
-            { keywords: ['adobe.com'], domain: 'adobe.com' },
-            { keywords: ['netflix.com'], domain: 'netflix.com' },
-            { keywords: ['tiktok.com', 'bytedance.com'], domain: 'tiktok.com' },
-            { keywords: ['bilibili.com'], domain: 'bilibili.com' },
-            { keywords: ['qq.com', 'y.qq.com'], domain: 'y.qq.com' },
-            { keywords: ['music.163.com', '163.com'], domain: 'music.163.com' },
-            { keywords: ['kugou.com'], domain: 'kugou.com' },
-            { keywords: ['kuwo.cn'], domain: 'kuwo.cn' }
+            { keywords: ['microsoft.com', 'office.com', 'outlook.com', 'live.com', 'hotmail.com', 'microsoftonline.com'], asset: 'microsoft-color.svg' },
+            { keywords: ['azure.com', 'azure.net', 'azureedge.net'], asset: 'azure-color.svg' },
+            { keywords: ['google.com', 'gmail.com', 'googlemail.com'], asset: 'google-color.svg' },
+            { keywords: ['gemini'], asset: 'gemini.svg' },
+            { keywords: ['gemma'], asset: 'gemma-color.svg' },
+            { keywords: ['googlecloud.com', 'gcp.com'], asset: 'googlecloud-color.svg' },
+            { keywords: ['openai.com', 'chatgpt.com'], asset: 'openai.svg' },
+            { keywords: ['anthropic.com'], asset: 'anthropic.svg' },
+            { keywords: ['claude.ai'], asset: 'Claude.svg' },
+            { keywords: ['ai21.com', 'ai21labs.com'], asset: 'ai21.png' },
+            { keywords: ['cohere.ai', 'cohere.com'], asset: 'aya.png' },
+            { keywords: ['akash.chat', 'akash.network'], asset: 'akashchat-color.svg' },
+            { keywords: ['x.ai', 'grok.com'], asset: 'XAI.svg' },
+            { keywords: ['groq.com'], asset: 'groq.svg' },
+            { keywords: ['mistral.ai'], asset: 'mistral.svg' },
+            { keywords: ['perplexity.ai', 'perplexity.com'], asset: 'perplexity-color.svg' },
+            { keywords: ['deepseek.com', 'deepseek.ai'], asset: 'DeepSeek.svg' },
+            { keywords: ['blackforestlabs.ai', 'bfl.ai', 'flux'], asset: 'flux.svg' },
+            { keywords: ['moonshot.cn', 'moonshot.ai'], asset: 'moonshot.svg' },
+            { keywords: ['kimi.com'], asset: 'kimi.svg' },
+            { keywords: ['minimax.chat', 'minimax.com'], asset: 'MiniMax.svg' },
+            { keywords: ['zhipu.ai', 'bigmodel.cn'], asset: 'zhipu.svg' },
+            { keywords: ['qwen.ai', 'tongyi.com', 'dashscope.com'], asset: 'Qwen.svg' },
+            { keywords: ['alibaba.com', 'alibaba-inc.com', '1688.com'], asset: 'alibaba.svg' },
+            { keywords: ['alibabacloud.com', 'aliyun.com', 'aliyuncs.com'], asset: 'alibabacloud-color.svg' },
+            { keywords: ['aws.amazon.com', 'amazon.com', 'amazonaws.com'], asset: 'aws-color.svg' },
+            { keywords: ['cloudflare.com'], asset: 'cloudflare-color.svg' },
+            { keywords: ['burncloud.com'], asset: 'burncloud-color.svg' },
+            { keywords: ['tencent.com', 'qq.com', 'weixin.com', 'wechat.com'], asset: 'tencent-color.svg' },
+            { keywords: ['tencentcloud.com', 'tencentcloudapi.com'], asset: 'tencentcloud-color.svg' },
+            { keywords: ['hunyuan.tencent.com'], asset: 'hunyuan.svg' },
+            { keywords: ['bytedance.com', 'tiktok.com', 'douyin.com'], asset: 'bytedance.svg' },
+            { keywords: ['doubao.com', 'doubao.cn'], asset: 'doubao-color.svg' },
+            { keywords: ['volcengine.com'], asset: 'volcengine-color.svg' },
+            { keywords: ['baidu.com'], asset: 'baidu-brand-color.svg' },
+            { keywords: ['ernie.bot', 'yiyan.baidu.com', 'qianfan'], asset: 'ernie.svg' },
+            { keywords: ['baiducloud.com', 'bcebos.com', 'baidubce.com'], asset: 'baiducloud-color.svg' },
+            { keywords: ['huawei.com', 'huaweicloud.com'], asset: 'huaweicloud-color.svg' },
+            { keywords: ['klingai.com', 'kling.ai'], asset: 'kling-color.svg' },
+            { keywords: ['kolors'], asset: 'kolors-color.svg' },
+            { keywords: ['kwaipilot.com', 'kwai.com', 'kuaishou.com'], asset: 'kwaipilot.svg' },
+            { keywords: ['lumalabs.ai', 'luma.ai'], asset: 'luma-color.svg' },
+            { keywords: ['meta.com', 'facebook.com', 'instagram.com', 'whatsapp.com'], asset: 'meta.png' },
+            { keywords: ['github.com'], asset: 'github.svg' },
+            { keywords: ['huggingface.co', 'huggingface.com'], asset: 'huggingface-color.svg' },
+            { keywords: ['modelscope.cn', 'modelscope.com'], asset: 'modelscope-color.svg' },
+            { keywords: ['nvidia.com'], asset: 'nvidia-color.svg' },
+            { keywords: ['runwayml.com', 'runwayml.ai'], asset: 'runway.svg' },
+            { keywords: ['xfyun.cn', 'iflytek.com', 'spark'], asset: 'spark-color.svg' },
+            { keywords: ['statecloud'], asset: 'statecloud-color.svg' },
+            { keywords: ['suno.ai', 'suno.com'], asset: 'suno.svg' },
+            { keywords: ['upstage.ai'], asset: 'upstage-color.svg' },
+            { keywords: ['vercel.com'], asset: 'vercel.svg' },
+            { keywords: ['xiaomi.com'], asset: 'xiaomi.svg' },
+            { keywords: ['01.ai', 'lingyiwanwu.com', 'yi.ai'], asset: 'yi-color.svg' },
+            { keywords: ['commanda.ai', 'commanda.com'], asset: 'commanda.png' },
+            { keywords: ['zeabur.com'], asset: 'zeabur-color.png' },
+            { keywords: ['railway.app', 'railway.com'], asset: 'railway.png' },
+            { keywords: ['claw.cloud'], asset: 'Logo-clawcloud.png' }
         ];
 
         function getSenderProfile(fromValue = '') {
@@ -5601,8 +5714,11 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
             }
 
             const matchedRule = DOMAIN_LOGO_RULES.find(rule => rule.keywords.some(keyword => domain.includes(keyword)));
-            const logoDomain = matchedRule ? matchedRule.domain : domain;
-            return `/icons/domain/${encodeURIComponent(logoDomain)}?size=128`;
+            if (matchedRule && matchedRule.asset) {
+                return `/static/assets/icons/${encodeURIComponent(matchedRule.asset)}`;
+            }
+
+            return `/icons/domain/${encodeURIComponent(domain)}?size=128`;
         }
 
         function renderSenderAvatar(initial, avatarUrl, className = 'email-avatar', fallbackUrl = '') {
@@ -7867,6 +7983,9 @@ Authorization: Bearer om_your_api_key
         let allEmails = [];
         let filteredEmails = [];
         let searchTimeout = null;
+        const EMAIL_LIST_PAGE_SIZE = 100;
+        const EMAIL_REFRESH_PROBE_SIZE = 12;
+        let pendingInsertedEmailIds = [];
 
         function updateCurrentAccountHeader(accountId = currentAccount) {
             const accountLabel = document.getElementById('currentAccountEmail');
@@ -7969,9 +8088,12 @@ Authorization: Bearer om_your_api_key
             const autoRefreshBtn = document.getElementById('autoRefreshBtn');
             updateCurrentAccountHeader(currentAccount);
             isLoadingEmails = true;
+            const hasExistingEmails = Array.isArray(allEmails) && allEmails.length > 0;
+            const shouldProbeLatest = hasExistingEmails && currentEmailPage === 1;
 
-            // Show loading state
-            emailsList.innerHTML = '<div class="loading"><div class="loading-spinner"></div>正在加载邮件...</div>';
+            if (!shouldProbeLatest) {
+                emailsList.innerHTML = '<div class="loading"><div class="loading-spinner"></div>正在加载邮件...</div>';
+            }
             refreshBtn.disabled = true;
             refreshBtn.innerHTML = buttonLabel('loading', '加载中...', 'spinning');
             if (autoRefreshBtn) {
@@ -7979,12 +8101,22 @@ Authorization: Bearer om_your_api_key
             }
 
             try {
-                const refreshParam = forceRefresh ? '&refresh=true' : '';
-                const url = `/emails/${currentAccount}?folder=${currentEmailFolder}&page=${currentEmailPage}&page_size=100${refreshParam}`;
+                const refreshParam = (forceRefresh || shouldProbeLatest) ? '&refresh=true' : '';
+                const requestPage = shouldProbeLatest ? 1 : currentEmailPage;
+                const requestPageSize = shouldProbeLatest ? EMAIL_REFRESH_PROBE_SIZE : EMAIL_LIST_PAGE_SIZE;
+                const url = `/emails/${currentAccount}?folder=${currentEmailFolder}&page=${requestPage}&page_size=${requestPageSize}${refreshParam}`;
                 const data = await apiRequest(url);
+                const fetchedEmails = data.emails || [];
+                let insertedIds = [];
 
-                // Store full email dataset
-                allEmails = data.emails || [];
+                if (shouldProbeLatest) {
+                    insertedIds = getNewlyInsertedEmailIds(fetchedEmails, allEmails);
+                    pendingInsertedEmailIds = insertedIds;
+                    allEmails = mergeLatestEmails(fetchedEmails, allEmails, EMAIL_LIST_PAGE_SIZE);
+                } else {
+                    pendingInsertedEmailIds = [];
+                    allEmails = fetchedEmails;
+                }
 
                 // 更新统计信息
                 updateEmailStats(allEmails);
@@ -7992,14 +8124,22 @@ Authorization: Bearer om_your_api_key
                 // Apply active filters
                 applyFilters();
 
-            document.getElementById('lastUpdateTime').textContent = new Date().toLocaleString();
+                document.getElementById('lastUpdateTime').textContent = new Date().toLocaleString();
 
                 if (forceRefresh) {
-                    showNotification('邮件列表已刷新', 'success');
+                    if (insertedIds.length) {
+                        showNotification(`已获取 ${insertedIds.length} 封最新邮件`, 'success');
+                    } else {
+                        showNotification('已检查最新邮件', 'success');
+                    }
+                } else if (insertedIds.length) {
+                    showNotification(`检测到 ${insertedIds.length} 封新邮件`, 'info', '新邮件', 2200);
                 }
 
             } catch (error) {
-                emailsList.innerHTML = '<div class="error">加载失败: ' + error.message + '</div>';
+                if (!shouldProbeLatest) {
+                    emailsList.innerHTML = '<div class="error">加载失败: ' + error.message + '</div>';
+                }
                 showNotification('加载邮件失败: ' + error.message, 'error');
             } finally {
                 // Restore refresh button state
@@ -8027,6 +8167,41 @@ Authorization: Bearer om_your_api_key
             document.getElementById('unreadEmailCount').textContent = unread;
             document.getElementById('todayEmailCount').textContent = today;
             document.getElementById('attachmentEmailCount').textContent = withAttachments;
+        }
+
+        function mergeLatestEmails(latestEmails, existingEmails, maxItems = EMAIL_LIST_PAGE_SIZE) {
+            const merged = [];
+            const seen = new Set();
+            [...latestEmails, ...existingEmails].forEach(email => {
+                const messageId = String((email && email.message_id) || '');
+                if (!messageId || seen.has(messageId)) return;
+                seen.add(messageId);
+                merged.push(email);
+            });
+            return merged.slice(0, maxItems);
+        }
+
+        function getNewlyInsertedEmailIds(latestEmails, existingEmails) {
+            const existingIds = new Set((existingEmails || []).map(email => String((email && email.message_id) || '')));
+            return (latestEmails || [])
+                .map(email => String((email && email.message_id) || ''))
+                .filter(messageId => messageId && !existingIds.has(messageId));
+        }
+
+        function animateInsertedEmailItems(root, messageIds = []) {
+            const targetIds = new Set((messageIds || []).filter(Boolean));
+            if (!root || !targetIds.size) return;
+
+            const items = Array.from(root.querySelectorAll('.email-item')).filter(item => targetIds.has(item.dataset.messageId || ''));
+            if (!items.length) return;
+
+            items.forEach(item => item.classList.add('is-new-email'));
+            requestAnimationFrame(() => {
+                items.forEach(item => item.classList.add('is-entered'));
+            });
+            window.setTimeout(() => {
+                items.forEach(item => item.classList.remove('is-new-email', 'is-entered'));
+            }, 560);
         }
 
         function searchEmails() {
@@ -8112,11 +8287,14 @@ Authorization: Bearer om_your_api_key
 
             if (filteredEmails.length === 0) {
                 emailsList.innerHTML = '<div class="text-center" style="padding: 40px; color: #64748b;">没有找到匹配的邮件</div>';
+                pendingInsertedEmailIds = [];
                 return;
             }
 
             emailsList.innerHTML = filteredEmails.map(email => createEmailItem(email)).join('');
             decorateEmailList(emailsList);
+            animateInsertedEmailItems(emailsList, pendingInsertedEmailIds);
+            pendingInsertedEmailIds = [];
         }
 
         function clearFilters() {
@@ -8231,7 +8409,7 @@ Authorization: Bearer om_your_api_key
             const readIcon = email.is_read ? '✉️' : '📩';
 
             return `
-                <div class="email-item ${unreadClass}" onclick="showEmailDetail('${email.message_id}')">
+                <div class="email-item ${unreadClass}" data-message-id="${escapeHtml(email.message_id || '')}" onclick="showEmailDetail('${email.message_id}')">
                     ${renderSenderAvatar(email.sender_initial || sender.initial, senderLogoUrl, 'email-avatar', email.sender_avatar_url)}
                     <div class="email-content">
                         <div class="email-header">

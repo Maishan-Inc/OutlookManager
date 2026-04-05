@@ -3647,7 +3647,7 @@ async def clear_all_cache(request: Request):
 
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
-    return FileResponse(STATIC_DIR / "favicon.ico")
+    return FileResponse(STATIC_DIR / "assets" / "logo.png")
 
 
 def build_domain_icon_svg(domain: str) -> bytes:

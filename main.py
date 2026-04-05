@@ -3439,7 +3439,9 @@ async def open_email_page(email_id: str):
 
 @app.get("/")
 async def root():
-    """根路径 - 返回站点主页"""
+    """根路径：未初始化时进入安装页，初始化后显示网站主页"""
+    if not auth_is_configured():
+        return FileResponse(STATIC_DIR / "index.html")
     return FileResponse(STATIC_DIR / "home.html")
 
 @app.delete("/cache/{email_id}")

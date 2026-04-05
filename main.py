@@ -2818,6 +2818,7 @@ async def site_access_middleware(request: Request, call_next):
     share_domain_enabled = bool(site_settings.get("share_domain_enabled")) and bool(share_domain)
     request_host = get_request_host(request)
     path = request.url.path or "/"
+    admin_path = get_admin_login_path(site_settings)
 
     if share_domain_enabled:
         on_share_domain = hosts_match(request_host, share_domain)
@@ -2830,7 +2831,7 @@ async def site_access_middleware(request: Request, call_next):
                 return JSONResponse({"detail": "Public share pages are restricted to the configured share domain."}, status_code=404)
             return PlainTextResponse("Not Found", status_code=404)
 
-    if request.method in {"GET", "HEAD"} and path == get_admin_login_path(site_settings):
+    if request.method in {"GET", "HEAD"} and (path == admin_path or path.startswith(admin_path + "/")):
         return FileResponse(STATIC_DIR / "index.html")
 
     return await call_next(request)
@@ -2845,6 +2846,7 @@ async def auth_state(request: Request):
     configured = auth_is_configured()
     return {
         "site_title": site_settings.get("home_title") or DEFAULT_HOME_TITLE,
+        "admin_login_path": get_admin_login_path(site_settings),
         "configured": configured,
         "authenticated": is_authenticated_request(request) if configured else False,
         "agreement_required": True,

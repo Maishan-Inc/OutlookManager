@@ -1890,11 +1890,11 @@
         }
 
         .sidebar.is-collapsed {
-            width: 120px;
+            width: 86px;
         }
 
         .sidebar.is-collapsed .sidebar-header {
-            padding: 24px 20px 18px;
+            padding: 16px 12px 14px;
         }
 
         .sidebar.is-collapsed .sidebar-brand {
@@ -1907,14 +1907,14 @@
         .sidebar.is-collapsed .sidebar-brand-main {
             width: 100%;
             flex-direction: row;
-            justify-content: flex-start;
+            justify-content: center;
             gap: 0;
             align-items: center;
         }
 
         .sidebar.is-collapsed .sidebar-logo {
-            width: 60px;
-            height: 60px;
+            width: 54px;
+            height: 54px;
             border-radius: 18px;
         }
 
@@ -1929,33 +1929,39 @@
         }
 
         .sidebar.is-collapsed .sidebar-nav {
-            padding-inline: 14px;
+            padding-inline: 12px;
         }
 
         .sidebar.is-collapsed .nav-item,
         .sidebar.is-collapsed .sidebar-utility,
         .sidebar.is-collapsed .sidebar-toggle {
-            justify-content: flex-start;
+            justify-content: center;
         }
 
         .sidebar.is-collapsed .nav-item {
-            width: 100%;
+            width: 62px;
             min-width: 0;
-            height: 58px;
+            min-height: 62px;
+            height: 62px;
             margin: 0;
+            padding: 0;
+            gap: 0;
         }
 
         .sidebar.is-collapsed .sidebar-utility,
         .sidebar.is-collapsed .sidebar-toggle {
-            width: 100%;
+            width: 62px;
             min-width: 0;
-            height: 46px;
-            min-height: 46px;
+            height: 62px;
+            min-height: 62px;
             margin: 0;
+            padding: 0;
+            gap: 0;
         }
 
         .sidebar.is-collapsed .sidebar-footer {
-            padding: 16px 14px 18px;
+            align-items: center;
+            padding: 16px 12px 18px;
         }
 
         .sidebar.is-collapsed #sidebarToggle .ui-icon svg {
@@ -2022,7 +2028,7 @@
         }
 
         .page:not(.hidden) {
-            animation: pageReveal 0.34s ease;
+            animation: none;
         }
 
         .card {
@@ -4069,7 +4075,7 @@
 example2@outlook.com----refresh_token2----client_id2
 example3@outlook.com----refresh_token3----client_id3"></textarea>
                                 <p class="text-xs" style="color: #64748b; margin-top: 8px;">
-                                    提示：每行一个账户，使用四个连字符（`----`）分隔字段；IMAP 兼容旧格式 <code>邮箱----占位密码----刷新令牌----客户端ID</code>
+                                    提示：每行一个账户，使用四个连字符（`----`）分隔字段；Graph API 支持 <code>邮箱----密码----client_id----令牌</code>，IMAP 兼容旧格式 <code>邮箱----占位密码----刷新令牌----客户端ID</code>
                                 </p>
                             </div>
 
@@ -5125,7 +5131,7 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
         let addAccountTagKeys = [];
         let batchTagKeys = [];
         let siteSettingsCache = null;
-        let currentAdminLoginPath = window.location.pathname || '/admin';
+        let currentAdminLoginPath = '/admin';
 
         // 当前正在编辑的账户信息
         let currentEditAccount = null;
@@ -5359,6 +5365,28 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
             return stripped ? `/${stripped}` : '/';
         }
 
+        function getAdminBasePath() {
+            return normalizeAdminPathInput(currentAdminLoginPath || '/admin');
+        }
+
+        function buildAdminUrl(path = '') {
+            const basePath = getAdminBasePath();
+            if (!path || path === '/') {
+                return basePath;
+            }
+            return `${basePath}${path.startsWith('/') ? path : `/${path}`}`;
+        }
+
+        function navigateAdmin(path, replace = false) {
+            const targetPath = buildAdminUrl(path);
+            if (replace) {
+                window.history.replaceState({}, '', targetPath);
+            } else if (window.location.pathname !== targetPath) {
+                window.history.pushState({}, '', targetPath);
+            }
+            handleUrlRouting();
+        }
+
         function setAuthPending(buttonId, pending, busyText, idleText) {
             const button = document.getElementById(buttonId);
             if (!button) return;
@@ -5454,8 +5482,8 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
                 loadClassifications().catch(error => console.warn('Unable to preload classifications', error));
                 handleUrlRouting();
 
-                if ((!window.location.hash || window.location.hash === '#') && document.getElementById('accountsPage').classList.contains('hidden')) {
-                    showPage('accounts');
+                if (document.getElementById('accountsPage').classList.contains('hidden')) {
+                    handleUrlRouting();
                 }
 
                 setTimeout(() => {
@@ -5469,7 +5497,7 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
         async function initializeAuthFlow(message = '') {
             try {
                 authState = await fetchAuthState();
-                currentAdminLoginPath = normalizeAdminPathInput(window.location.pathname);
+                currentAdminLoginPath = normalizeAdminPathInput(authState.admin_login_path || window.location.pathname);
                 if (authState.authenticated) {
                     enterApplication();
                     return;
@@ -5523,7 +5551,7 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
                 }
                 currentAdminLoginPath = normalizeAdminPathInput(data.admin_login_path || adminPath);
                 if (currentAdminLoginPath !== normalizeAdminPathInput(window.location.pathname)) {
-                    window.location.replace(currentAdminLoginPath + '#/accounts');
+                    window.location.replace(buildAdminUrl('/accounts'));
                     return;
                 }
                 await initializeAuthFlow();
@@ -5774,10 +5802,27 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
             showNotification(`自动刷新已${autoRefreshEnabled ? '开启' : '关闭'}，${autoRefreshEnabled ? '每 5 秒刷新一次邮件' : '停止自动刷新邮件'}`, 'info');
         }
 
-        function showPage(pageName, targetElement = null) {
+        function showPage(pageName, targetElement = null, updateRoute = true) {
             document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
             document.getElementById(pageName + 'Page').classList.remove('hidden');
             syncSidebarContext(pageName);
+
+            const pageRoutes = {
+                accounts: '/accounts',
+                addAccount: '/add-account',
+                batchAdd: '/batch-add',
+                classifications: '/classifications',
+                apiKeys: '/api-keys',
+                apiDocs: '/api-docs',
+                settings: '/settings'
+            };
+
+            if (updateRoute && pageName !== 'emails' && pageRoutes[pageName]) {
+                const targetPath = buildAdminUrl(pageRoutes[pageName]);
+                if (window.location.pathname !== targetPath) {
+                    window.history.pushState({}, '', targetPath);
+                }
+            }
 
             const titles = {
                 accounts: '邮箱账户管理',
@@ -6154,9 +6199,9 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
 
         function getBatchPlaceholder(authMethod) {
             if (authMethod === 'graph') {
-                return `example1@outlook.com----refresh_token1----client_id1
-example2@hotmail.com----refresh_token2----client_id2
-example3@live.com----refresh_token3----client_id3`;
+                return `example1@outlook.com----password1----client_id1----token1
+example2@hotmail.com----password2----client_id2----token2
+example3@live.com----password3----client_id3----token3`;
             }
 
             return `example1@outlook.com----refresh_token1----client_id1
@@ -6164,8 +6209,19 @@ example2@hotmail.com----refresh_token2----client_id2
 example3@live.com----refresh_token3----client_id3`;
         }
 
-        function parseBatchAccountLine(line) {
+        function parseBatchAccountLine(line, authMethod = 'imap') {
             const parts = line.split('----').map(p => p.trim()).filter(part => part.length > 0);
+            if (authMethod === 'graph') {
+                if (parts.length === 4) {
+                    const [email, _password, clientId, refreshToken] = parts;
+                    return { email, refreshToken, clientId };
+                }
+                if (parts.length === 3) {
+                    const [email, refreshToken, clientId] = parts;
+                    return { email, refreshToken, clientId };
+                }
+                return null;
+            }
             if (parts.length === 3) {
                 const [email, refreshToken, clientId] = parts;
                 return { email, refreshToken, clientId };
@@ -6218,7 +6274,9 @@ example3@live.com----refresh_token3----client_id3`;
             }
 
             if (formatHint) {
-                formatHint.innerHTML = '每行格式：<code>邮箱----刷新令牌----客户端ID</code>';
+                formatHint.innerHTML = authMethod === 'graph'
+                    ? '每行格式：<code>邮箱----密码----client_id----令牌</code>'
+                    : '每行格式：<code>邮箱----刷新令牌----客户端ID</code>';
             }
 
             if (batchAccounts) {
@@ -6254,6 +6312,7 @@ example3@live.com----refresh_token3----client_id3`;
         }
 
         function validateBatchFormat() {
+            const authMethod = getSelectedBatchAuthMethod();
             const batchText = document.getElementById('batchAccounts').value.trim();
             if (!batchText) {
                 showNotification('请先输入账户信息', 'warning');
@@ -6265,7 +6324,7 @@ example3@live.com----refresh_token3----client_id3`;
             let invalidLines = [];
 
             lines.forEach((line, index) => {
-                if (parseBatchAccountLine(line)) {
+                if (parseBatchAccountLine(line, authMethod)) {
                     validCount++;
                 } else {
                     invalidLines.push(index + 1);
@@ -6537,7 +6596,7 @@ example3@live.com----refresh_token3----client_id3`;
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
-                const parsedLine = parseBatchAccountLine(line);
+                const parsedLine = parseBatchAccountLine(line, authMethod);
 
                 // 更新进度
                 updateBatchProgress(i + 1, lines.length, `正在处理第 ${i + 1} 个账户...`);
@@ -6547,7 +6606,9 @@ example3@live.com----refresh_token3----client_id3`;
                     results.push({
                         email: line.split('----')[0] || '格式错误',
                         status: 'error',
-                        message: '格式错误: 应为 邮箱----刷新令牌----客户端ID，或兼容旧格式 邮箱----占位密码----刷新令牌----客户端ID'
+                        message: authMethod === 'graph'
+                            ? '格式错误: Graph API 应为 邮箱----密码----client_id----令牌'
+                            : '格式错误: 应为 邮箱----刷新令牌----客户端ID，或兼容旧格式 邮箱----占位密码----刷新令牌----客户端ID'
                     });
                     continue;
                 }
@@ -7248,6 +7309,7 @@ Authorization: Bearer om_your_api_key
             const adminPath = normalizeAdminPathInput(document.getElementById('siteSettingsAdminPath').value);
             const shareDomainEnabled = document.getElementById('siteSettingsShareDomainEnabled').checked;
             const shareDomain = document.getElementById('siteSettingsShareDomain').value.trim();
+            const previousAdminPath = getAdminBasePath();
 
             if (!homeTitle) {
                 showNotification('请填写网站主页标题', 'warning');
@@ -7290,11 +7352,10 @@ Authorization: Bearer om_your_api_key
                 renderSiteSettingsStatus(config, '设置已保存，主页介绍、后台入口和公开分享域名都已更新。');
                 showNotification('站点设置已保存', 'success');
 
-                const currentPath = normalizeAdminPathInput(window.location.pathname);
-                if (currentAdminLoginPath !== currentPath) {
+                if (currentAdminLoginPath !== previousAdminPath) {
                     showNotification('管理员入口地址已修改，正在跳转到新地址', 'info');
                     setTimeout(() => {
-                        window.location.replace(currentAdminLoginPath + '#/settings');
+                        window.location.replace(buildAdminUrl('/settings'));
                     }, 600);
                 }
             } catch (error) {
@@ -7438,9 +7499,8 @@ Authorization: Bearer om_your_api_key
             currentEmailPage = 1;
             updateCurrentAccountHeader(emailId);
             clearFilters();
-            window.location.hash = '#/emails/' + encodeURIComponent(emailId);
+            navigateAdmin('/emails/' + encodeURIComponent(emailId));
             syncAutoRefreshTimer();
-            loadEmails();
         }
 
         // 邮件管理
@@ -7450,17 +7510,15 @@ Authorization: Bearer om_your_api_key
             currentEmailPage = 1;
             updateCurrentAccountHeader(emailId);
             populateAccountSwitcher(emailId);
-            window.location.hash = '#/emails/' + encodeURIComponent(emailId);
+            navigateAdmin('/emails/' + encodeURIComponent(emailId));
             clearFilters();
             syncAutoRefreshTimer();
-            showPage('emails');
         }
 
         function backToAccounts() {
             currentAccount = null;
-            window.location.hash = '#/accounts';
+            navigateAdmin('/accounts');
             syncAutoRefreshTimer();
-            showPage('accounts');
         }
 
         function switchEmailTab(folder, targetElement = null) {
@@ -8324,7 +8382,7 @@ Authorization: Bearer om_your_api_key
         // 鍦ㄦ柊鏍囩椤典腑鎵撳紑
         function openInNewTab() {
             if (contextMenuTarget) {
-                const url = window.location.origin + '/#/emails/' + encodeURIComponent(contextMenuTarget);
+                const url = window.location.origin + buildAdminUrl('/emails/' + encodeURIComponent(contextMenuTarget));
                 window.open(url, '_blank');
             }
             hideContextMenu();
@@ -8333,7 +8391,7 @@ Authorization: Bearer om_your_api_key
         // 澶嶅埗璐︽埛閾炬帴
         function copyAccountLink() {
             if (contextMenuTarget) {
-                const url = window.location.origin + '/#/emails/' + encodeURIComponent(contextMenuTarget);
+                const url = window.location.origin + buildAdminUrl('/emails/' + encodeURIComponent(contextMenuTarget));
                 
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(url).then(() => {
@@ -8389,7 +8447,7 @@ Authorization: Bearer om_your_api_key
             event.preventDefault();
             event.stopPropagation();
             
-            const url = window.location.origin + '/#/emails/' + encodeURIComponent(currentAccount);
+            const url = window.location.origin + buildAdminUrl('/emails/' + encodeURIComponent(currentAccount));
             window.open(url, '_blank');
         }
 
@@ -8474,39 +8532,47 @@ Authorization: Bearer om_your_api_key
         
         // URL璺敱澶勭悊
         function handleUrlRouting() {
-            const hash = window.location.hash;
+            const adminBasePath = getAdminBasePath();
+            const currentPath = window.location.pathname || adminBasePath;
+            const relativePath = currentPath === adminBasePath
+                ? '/'
+                : (currentPath.startsWith(adminBasePath + '/') ? currentPath.slice(adminBasePath.length) : '/');
             const pageRoutes = {
-                '#/accounts': 'accounts',
-                '#/addAccount': 'addAccount',
-                '#/batchAdd': 'batchAdd',
-                '#/classifications': 'classifications',
-                '#/apiKeys': 'apiKeys',
-                '#/apiDocs': 'apiDocs',
-                '#/settings': 'settings'
+                '/accounts': 'accounts',
+                '/add-account': 'addAccount',
+                '/batch-add': 'batchAdd',
+                '/classifications': 'classifications',
+                '/api-keys': 'apiKeys',
+                '/api-docs': 'apiDocs',
+                '/settings': 'settings'
             };
 
-            if (hash.startsWith('#/emails/')) {
-                const emailId = decodeURIComponent(hash.replace('#/emails/', ''));
+            if (relativePath.startsWith('/emails/')) {
+                const emailId = decodeURIComponent(relativePath.replace('/emails/', ''));
                 if (emailId) {
-                    // 设置当前账户
                     currentAccount = emailId;
                     updateCurrentAccountHeader(emailId);
                     populateAccountSwitcher(emailId);
-
-                    // 显示邮件页面
-                    showPage('emails');
+                    showPage('emails', null, false);
                     return;
                 }
             }
 
-            if (!hash || hash === '#') {
-                showPage('accounts');
+            if (!relativePath || relativePath === '/') {
+                showPage('accounts', null, false);
+                if (currentPath === adminBasePath) {
+                    window.history.replaceState({}, '', buildAdminUrl('/accounts'));
+                }
                 return;
             }
 
-            if (pageRoutes[hash]) {
-                showPage(pageRoutes[hash]);
+            if (pageRoutes[relativePath]) {
+                showPage(pageRoutes[relativePath], null, false);
+                return;
             }
+
+            showPage('accounts', null, false);
+            window.history.replaceState({}, '', buildAdminUrl('/accounts'));
         }
 
         window.addEventListener('popstate', function() {

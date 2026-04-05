@@ -8,15 +8,20 @@
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=20260405">
     <style>
         :root {
-            --bg: #f3f7f6;
-            --panel: rgba(255, 255, 255, 0.86);
-            --line: rgba(15, 23, 42, 0.08);
-            --text: #102a43;
-            --muted: #5c6b7b;
-            --primary: #0f766e;
-            --accent: #0ea5e9;
-            --shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
-            --radius: 24px;
+            --bg: #060816;
+            --bg-2: #0b1228;
+            --panel: rgba(10, 18, 40, 0.72);
+            --panel-strong: rgba(13, 22, 48, 0.9);
+            --line: rgba(123, 157, 255, 0.18);
+            --line-strong: rgba(87, 203, 255, 0.28);
+            --text: #eef4ff;
+            --muted: #9eafcf;
+            --primary: #57cbff;
+            --primary-2: #6b7cff;
+            --accent: #34d399;
+            --shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
         }
 
         * {
@@ -26,169 +31,388 @@
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
             color: var(--text);
+            font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
             background:
-                radial-gradient(circle at top left, rgba(14, 165, 233, 0.16), transparent 30%),
-                radial-gradient(circle at top right, rgba(15, 118, 110, 0.14), transparent 28%),
-                linear-gradient(180deg, #eff7f5 0%, #f8fafc 48%, #ffffff 100%);
+                radial-gradient(circle at 12% 18%, rgba(87, 203, 255, 0.24), transparent 24%),
+                radial-gradient(circle at 88% 14%, rgba(107, 124, 255, 0.2), transparent 24%),
+                radial-gradient(circle at 78% 78%, rgba(52, 211, 153, 0.12), transparent 20%),
+                linear-gradient(180deg, #070a16 0%, #09101f 46%, #05070f 100%);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.55), transparent 92%);
         }
 
         .shell {
-            max-width: 1200px;
+            position: relative;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 28px 20px 60px;
+            padding: 24px 20px 72px;
         }
 
-        .hero,
-        .panel {
-            background: var(--panel);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 14px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            background: rgba(8, 12, 24, 0.68);
             backdrop-filter: blur(16px);
-        }
-
-        .hero {
-            padding: 28px;
-            display: grid;
-            grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
-            gap: 18px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+            margin-bottom: 22px;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 18px;
-        }
-
-        .brand-logo {
-            width: 84px;
-            height: 84px;
-            border-radius: 24px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            display: grid;
-            place-items: center;
-            box-shadow: 0 18px 40px rgba(15, 118, 110, 0.22);
-            overflow: hidden;
-        }
-
-        .brand-logo img {
-            width: 54px;
-            height: 54px;
-            object-fit: contain;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: clamp(34px, 5vw, 54px);
-            line-height: 1.06;
-        }
-
-        .lead {
-            margin: 16px 0 0;
-            font-size: 18px;
-            line-height: 1.9;
-            color: var(--muted);
-            white-space: pre-wrap;
-        }
-
-        .hero-meta,
-        .feature-grid,
-        .note-grid {
-            display: grid;
-            gap: 16px;
-        }
-
-        .hero-meta {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            margin-top: 24px;
-        }
-
-        .chip {
-            min-height: 110px;
-            padding: 18px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.78);
-            border: 1px solid var(--line);
-        }
-
-        .chip strong,
-        .card-title {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .chip span,
-        .card-copy {
-            color: var(--muted);
-            line-height: 1.8;
-        }
-
-        .hero-side {
-            display: grid;
             gap: 14px;
         }
 
-        .hero-side .panel {
-            padding: 20px;
+        .brand-mark {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, rgba(87, 203, 255, 0.24), rgba(107, 124, 255, 0.3));
+            border: 1px solid rgba(87, 203, 255, 0.26);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+            overflow: hidden;
         }
 
-        .badge {
+        .brand-mark img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .brand-copy strong {
+            display: block;
+            font-size: 15px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .brand-copy span,
+        .topbar-note,
+        .eyebrow,
+        .stat-label,
+        .feature-copy,
+        .detail-copy,
+        .footer-copy {
+            color: var(--muted);
+        }
+
+        .topbar-note {
+            font-size: 13px;
+            text-align: right;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .glass,
+        .metric,
+        .feature,
+        .detail,
+        .footer-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(13, 21, 45, 0.88), rgba(8, 13, 28, 0.74));
+            border: 1px solid var(--line);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        .glass::before,
+        .metric::before,
+        .feature::before,
+        .detail::before,
+        .footer-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(87, 203, 255, 0.08), transparent 34%, rgba(107, 124, 255, 0.08));
+            pointer-events: none;
+        }
+
+        .hero-main {
+            padding: 30px;
+            min-height: 560px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .eyebrow {
             display: inline-flex;
             align-items: center;
-            min-height: 34px;
-            padding: 0 12px;
+            gap: 10px;
+            min-height: 38px;
+            padding: 0 14px;
             border-radius: 999px;
-            background: rgba(15, 118, 110, 0.1);
-            color: var(--primary);
+            background: rgba(87, 203, 255, 0.1);
+            border: 1px solid rgba(87, 203, 255, 0.18);
             font-size: 13px;
-            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
         }
 
-        .section {
-            margin-top: 20px;
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            box-shadow: 0 0 14px rgba(87, 203, 255, 0.8);
         }
 
-        .feature-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+        h1 {
+            margin: 20px 0 0;
+            font-size: clamp(42px, 6vw, 76px);
+            line-height: 0.96;
+            letter-spacing: -0.04em;
+            max-width: 860px;
         }
 
-        .panel {
-            padding: 22px;
+        .hero-title-accent {
+            display: block;
+            background: linear-gradient(90deg, #57cbff, #87f3ff 42%, #7f8cff 78%, #d0e3ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
-        .note-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            margin-top: 20px;
+        .lead {
+            max-width: 760px;
+            margin: 22px 0 0;
+            font-size: 18px;
+            line-height: 1.95;
+            color: #d7e4ff;
+            white-space: pre-wrap;
         }
 
-        .footer-note {
-            margin-top: 20px;
-            padding: 18px 20px;
-            border-radius: 20px;
-            background: rgba(15, 23, 42, 0.04);
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .buttonish,
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 18px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-decoration: none;
+        }
+
+        .buttonish.primary {
+            background: linear-gradient(135deg, rgba(87, 203, 255, 0.18), rgba(107, 124, 255, 0.2));
+            color: var(--text);
+            border-color: rgba(87, 203, 255, 0.28);
+            box-shadow: 0 12px 30px rgba(28, 109, 255, 0.18);
+        }
+
+        .buttonish.secondary {
+            background: rgba(255, 255, 255, 0.04);
             color: var(--muted);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 28px;
+        }
+
+        .metric {
+            padding: 18px;
+            border-radius: var(--radius-lg);
+        }
+
+        .metric-value {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .metric-value strong {
+            background: linear-gradient(90deg, #ffffff, #87f3ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-side {
+            padding: 22px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .hero-side-card {
+            padding: 18px 18px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .hero-side-card strong,
+        .feature-title,
+        .detail-title {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .hero-side-card p {
+            margin: 0;
+            color: #d5e2ff;
             line-height: 1.8;
         }
 
-        @media (max-width: 960px) {
+        .hero-side-stack {
+            display: grid;
+            gap: 12px;
+        }
+
+        .badge-pill {
+            min-height: 38px;
+            padding: 0 14px;
+            justify-content: flex-start;
+            background: rgba(255, 255, 255, 0.04);
+            color: #d3e1ff;
+            border-color: rgba(255, 255, 255, 0.08);
+            font-size: 13px;
+        }
+
+        .section {
+            margin-top: 22px;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .feature,
+        .detail,
+        .footer-card {
+            padding: 22px;
+        }
+
+        .feature-icon,
+        .detail-icon {
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, rgba(87, 203, 255, 0.18), rgba(107, 124, 255, 0.2));
+            border: 1px solid var(--line-strong);
+            font-size: 22px;
+        }
+
+        .feature-copy,
+        .detail-copy,
+        .footer-copy {
+            line-height: 1.85;
+            font-size: 15px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 18px;
+        }
+
+        .footer-card {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .footer-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .footer-item {
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d6e2fb;
+        }
+
+        @media (max-width: 1040px) {
             .hero,
-            .feature-grid,
-            .note-grid,
-            .hero-meta {
+            .detail-grid,
+            .footer-card,
+            .section-grid {
                 grid-template-columns: 1fr;
             }
 
+            .hero-main {
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 720px) {
             .shell {
-                padding: 18px 14px 40px;
+                padding: 16px 14px 48px;
             }
 
-            .hero,
-            .panel {
-                border-radius: 20px;
+            .topbar {
+                border-radius: 22px;
+                padding: 14px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .topbar-note {
+                text-align: left;
+            }
+
+            .hero-main,
+            .hero-side,
+            .feature,
+            .detail,
+            .footer-card {
+                padding: 18px;
+                border-radius: 22px;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 40px;
             }
 
             .lead {
@@ -199,77 +423,121 @@
 </head>
 <body>
     <main class="shell">
-        <section class="hero">
-            <div>
-                <div class="brand">
-                    <div class="brand-logo">
-                        <img src="/static/assets/logo.png" alt="OutlookManager logo" onerror="this.style.display='none'">
-                    </div>
-                    <div>
-                        <div class="badge">Website Home</div>
-                        <p style="margin: 10px 0 0; color: var(--muted);">根路径展示页</p>
-                    </div>
+        <div class="topbar">
+            <div class="brand">
+                <div class="brand-mark">
+                    <img src="/static/assets/logo.png" alt="OutlookManager logo" onerror="this.style.display='none'">
                 </div>
-                <h1 id="homeTitle">OutlookManager</h1>
-                <p id="homeIntro" class="lead">用于集中管理 Outlook 邮箱账户、邮件公开分享、API 接入与日常运营排查。</p>
-
-                <div class="hero-meta">
-                    <div class="chip">
-                        <strong>主页作用</strong>
-                        <span>用来说明这个站点是做什么的，适合给访客、客户或内部同事先看一眼。</span>
-                    </div>
-                    <div class="chip">
-                        <strong>后台入口</strong>
-                        <span>管理员后台登录地址由部署者自定义，不会直接暴露在主页上。</span>
-                    </div>
-                    <div class="chip">
-                        <strong>公开分享</strong>
-                        <span>邮件公开分享可按需绑定独立域名，把公开页和后台分开。</span>
-                    </div>
+                <div class="brand-copy">
+                    <strong>OutlookManager</strong>
+                    <span>Private Deployment · Multi-Account Control Plane</span>
                 </div>
             </div>
-
-            <div class="hero-side">
-                <div class="panel">
-                    <span class="card-title">当前主页说明</span>
-                    <div class="card-copy">这里展示的是管理员在后台“设置”页填写的主页标题和主页介绍，用来告诉访问者这个网站的用途。</div>
-                </div>
-                <div class="panel">
-                    <span class="card-title">部署建议</span>
-                    <div class="card-copy">如果启用了独立分享域名，公开邮件页会自动切换到指定域名，后台仍然保留在管理员入口地址。</div>
-                </div>
+            <div class="topbar-note">
+                私有化部署邮件控制台
+                <br>
+                适合运营团队、销售团队、代管团队与自动化系统集成
             </div>
-        </section>
-
-        <section class="section feature-grid">
-            <div class="panel">
-                <span class="card-title">集中管理 Outlook 账户</span>
-                <div class="card-copy">统一维护邮箱账户、分类、标签和健康状态，减少人工切换账号的成本。</div>
-            </div>
-            <div class="panel">
-                <span class="card-title">公开分享指定邮箱页面</span>
-                <div class="card-copy">支持按邮箱生成公开访问页，可设置开关、有效期和访问密码。</div>
-            </div>
-            <div class="panel">
-                <span class="card-title">提供 API 接口能力</span>
-                <div class="card-copy">可通过 API Key 接入外部流程，把邮箱管理、查询和标记接到自动化系统里。</div>
-            </div>
-        </section>
-
-        <section class="note-grid">
-            <div class="panel">
-                <span class="card-title">公开主页</span>
-                <div class="card-copy">适合展示网站用途、服务范围和使用说明。修改内容请登录管理员后台后进入“设置”。</div>
-            </div>
-            <div class="panel">
-                <span class="card-title">安全隔离</span>
-                <div id="shareDomainNote" class="card-copy">当前未启用独立分享域名，公开分享页默认使用当前站点域名。</div>
-            </div>
-        </section>
-
-        <div class="footer-note">
-            管理员后台入口路径可在初始化时设置，也可在后台“设置”页面修改。根路径主页只负责介绍站点用途，不承担后台登录入口展示职责。
         </div>
+
+        <section class="hero">
+            <div class="glass hero-main">
+                <div>
+                    <div class="eyebrow">Commercial Landing Page</div>
+                    <h1>
+                        <span id="homeTitle">OutlookManager</span>
+                        <span class="hero-title-accent">多账户邮件运营控制台</span>
+                    </h1>
+                    <p id="homeIntro" class="lead">面向私有化部署与商业化运营场景，集中管理 Outlook 邮箱账户、邮件公开分享、API 接入与团队协作流程。</p>
+                    <div class="hero-actions">
+                        <span class="buttonish primary">Multi Account Management</span>
+                        <span class="buttonish secondary">Public Share Domain Isolation</span>
+                        <span class="buttonish secondary">API Automation Ready</span>
+                    </div>
+                </div>
+
+                <div class="hero-grid">
+                    <div class="metric">
+                        <div class="stat-label">核心能力</div>
+                        <div class="metric-value"><strong>多账户统一接管</strong></div>
+                        <div class="stat-label">集中维护多个 Outlook 邮箱的接入、分类、标签、健康检查与邮件读取。</div>
+                    </div>
+                    <div class="metric">
+                        <div class="stat-label">分享安全</div>
+                        <div class="metric-value"><strong>公开页域名隔离</strong></div>
+                        <div class="stat-label">可将公开分享页切到独立域名，降低后台暴露面，适配商业站点部署。</div>
+                    </div>
+                    <div class="metric">
+                        <div class="stat-label">自动化接入</div>
+                        <div class="metric-value"><strong>API 驱动运营</strong></div>
+                        <div class="stat-label">通过 API Key 与外部系统、脚本、采集流程和内部平台进行联动。</div>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="glass hero-side">
+                <div class="hero-side-card">
+                    <strong>适合什么场景</strong>
+                    <p>适合邮件运营、账号矩阵管理、客服协作、线索分发、注册验证、公开页展示、数据整理与自动化工作流衔接。</p>
+                </div>
+                <div class="hero-side-stack">
+                    <span class="badge-pill">邮件列表检索与标签标记</span>
+                    <span class="badge-pill">账户分类与批量管理</span>
+                    <span class="badge-pill">公开邮件页独立分享</span>
+                    <span class="badge-pill">可自定义后台入口路径</span>
+                    <span class="badge-pill">适配品牌化网站主页展示</span>
+                </div>
+                <div class="hero-side-card">
+                    <strong>部署方式</strong>
+                    <p>默认根路径展示站点主页，后台登录入口使用自定义路径，便于做品牌站、私有部署站和商业交付站点的分层隔离。</p>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section section-grid">
+            <article class="feature">
+                <div class="feature-icon">1</div>
+                <div class="feature-title">多账户集中管理</div>
+                <div class="feature-copy">统一查看多个 Outlook 账户，集中做接入配置、账户分组、标签体系、健康检查和状态排查，减少人工切换账号的操作负担。</div>
+            </article>
+            <article class="feature">
+                <div class="feature-icon">2</div>
+                <div class="feature-title">公开页面独立分发</div>
+                <div class="feature-copy">单个邮箱可开启独立公开页，支持有效期与访问密码控制，并可强制切换到指定分享域名，适合外部展示和链接分发。</div>
+            </article>
+            <article class="feature">
+                <div class="feature-icon">3</div>
+                <div class="feature-title">自动化接口能力</div>
+                <div class="feature-copy">内置 API 文档和 Key 管理，可接到 CRM、爬虫、营销流程、内部后台或数据平台，实现更稳定的邮件处理自动化。</div>
+            </article>
+        </section>
+
+        <section class="section detail-grid">
+            <article class="detail">
+                <div class="detail-icon">A</div>
+                <div class="detail-title">适合商业化站点包装</div>
+                <div class="detail-copy">根路径可作为品牌主页，展示产品价值、部署方式、服务能力与运营场景；后台则隐藏在自定义路径中，避免直接暴露管理入口。</div>
+            </article>
+            <article class="detail">
+                <div class="detail-icon">B</div>
+                <div class="detail-title">更适合团队协作</div>
+                <div class="detail-copy">把账户管理、邮件查看、公开分享和接口接入放在同一个控制台里，减少在多个系统之间切换的学习和维护成本。</div>
+            </article>
+        </section>
+
+        <section class="section">
+            <div class="footer-card">
+                <div>
+                    <div class="detail-title">私有部署、品牌落地、持续扩展</div>
+                    <div class="footer-copy">这个主页用于向访客说明网站用途与商业能力。具体主页标题和介绍文案，可在后台“设置”里按你的品牌、客户和交付场景持续调整。</div>
+                </div>
+                <div class="footer-list">
+                    <div class="footer-item" id="shareDomainStatus">当前未启用独立分享域名，公开分享页默认使用当前站点域名。</div>
+                    <div class="footer-item">管理员后台入口已与主页分离，可走自定义地址。</div>
+                    <div class="footer-item">适合做企业内部工具站、品牌交付站、运营控制台站点。</div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <script>
@@ -282,12 +550,13 @@
 
                 const data = await response.json();
                 const title = data.home_title || 'OutlookManager';
-                const intro = data.home_intro || '用于集中管理 Outlook 邮箱账户、邮件公开分享、API 接入与日常运营排查。';
+                const intro = data.home_intro || '面向私有化部署与商业化运营场景，集中管理 Outlook 邮箱账户、邮件公开分享、API 接入与团队协作流程。';
+
                 document.title = title;
                 document.getElementById('homeTitle').textContent = title;
                 document.getElementById('homeIntro').textContent = intro;
-                document.getElementById('shareDomainNote').textContent = data.share_domain_enabled && data.share_domain
-                    ? `当前已启用独立分享域名：${data.share_domain}。公开分享链接会自动使用这个域名。`
+                document.getElementById('shareDomainStatus').textContent = data.share_domain_enabled && data.share_domain
+                    ? `当前已启用独立分享域名：${data.share_domain}。公开分享链接将自动切换到这个域名。`
                     : '当前未启用独立分享域名，公开分享页默认使用当前站点域名。';
             } catch (error) {
                 console.warn(error);

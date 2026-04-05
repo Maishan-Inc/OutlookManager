@@ -495,10 +495,23 @@
             flex-shrink: 0;
         }
 
+        .avatar.has-avatar {
+            background: transparent;
+        }
+
         .avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .avatar-fallback {
+            width: 100%;
+            height: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: inherit;
         }
 
         .email-row {
@@ -962,6 +975,34 @@
         let allEmails = [];
         let filteredEmails = [];
         let shareStatus = null;
+        const DOMAIN_LOGO_RULES = [
+            { keywords: ['microsoft.com', 'office.com', 'outlook.com', 'live.com', 'hotmail.com'], domain: 'microsoft.com' },
+            { keywords: ['google.com', 'gmail.com', 'googlemail.com'], domain: 'google.com' },
+            { keywords: ['openai.com', 'chatgpt.com'], domain: 'openai.com' },
+            { keywords: ['apple.com', 'icloud.com', 'me.com', 'mac.com'], domain: 'apple.com' },
+            { keywords: ['spotify.com'], domain: 'spotify.com' },
+            { keywords: ['music.youtube.com', 'youtube.com', 'ytimg.com'], domain: 'music.youtube.com' },
+            { keywords: ['soundcloud.com'], domain: 'soundcloud.com' },
+            { keywords: ['music.apple.com'], domain: 'music.apple.com' },
+            { keywords: ['amazon.com', 'amazonaws.com'], domain: 'amazon.com' },
+            { keywords: ['meta.com', 'facebook.com', 'instagram.com', 'whatsapp.com'], domain: 'meta.com' },
+            { keywords: ['x.com', 'twitter.com'], domain: 'x.com' },
+            { keywords: ['github.com'], domain: 'github.com' },
+            { keywords: ['gitlab.com'], domain: 'gitlab.com' },
+            { keywords: ['linkedin.com'], domain: 'linkedin.com' },
+            { keywords: ['discord.com'], domain: 'discord.com' },
+            { keywords: ['slack.com'], domain: 'slack.com' },
+            { keywords: ['telegram.org'], domain: 'telegram.org' },
+            { keywords: ['zoom.us'], domain: 'zoom.us' },
+            { keywords: ['adobe.com'], domain: 'adobe.com' },
+            { keywords: ['netflix.com'], domain: 'netflix.com' },
+            { keywords: ['tiktok.com', 'bytedance.com'], domain: 'tiktok.com' },
+            { keywords: ['bilibili.com'], domain: 'bilibili.com' },
+            { keywords: ['qq.com', 'y.qq.com'], domain: 'y.qq.com' },
+            { keywords: ['music.163.com', '163.com'], domain: 'music.163.com' },
+            { keywords: ['kugou.com'], domain: 'kugou.com' },
+            { keywords: ['kuwo.cn'], domain: 'kuwo.cn' }
+        ];
 
         function escapeHtml(value) {
             return String(value ?? '')
@@ -1029,11 +1070,31 @@
             return { email: email || raw || '未知发件人', displayName, initial };
         }
 
-        function renderAvatar(email, sender) {
-            if (email.sender_avatar_url) {
-                return `<div class="avatar"><img src="${escapeHtml(email.sender_avatar_url)}" alt="${escapeHtml(sender.displayName)}"></div>`;
+        function resolveSenderLogoUrl(emailAddress = '', fallbackUrl = '') {
+            const normalizedEmail = String(emailAddress || '').trim().toLowerCase();
+            const domain = normalizedEmail.includes('@') ? normalizedEmail.split('@').pop() : normalizedEmail;
+            if (!domain) {
+                return fallbackUrl || '';
             }
-            return `<div class="avatar">${escapeHtml(email.sender_initial || sender.initial || '?')}</div>`;
+
+            const matchedRule = DOMAIN_LOGO_RULES.find(rule => rule.keywords.some(keyword => domain.includes(keyword)));
+            const logoDomain = matchedRule ? matchedRule.domain : domain;
+            return fallbackUrl || `https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(`https://${logoDomain}`)}`;
+        }
+
+        function renderAvatar(email, sender) {
+            const avatarUrl = resolveSenderLogoUrl(sender.email, email.sender_avatar_url || '');
+            const safeInitial = escapeHtml(email.sender_initial || sender.initial || '?');
+            const safeAlt = escapeHtml(sender.displayName);
+            const safeUrl = avatarUrl ? escapeHtml(avatarUrl) : '';
+            const hasAvatar = Boolean(avatarUrl);
+            const avatarClassName = hasAvatar ? 'avatar has-avatar' : 'avatar';
+            const fallbackClass = hasAvatar ? 'avatar-fallback hidden' : 'avatar-fallback';
+            const imageMarkup = hasAvatar
+                ? `<img src="${safeUrl}" alt="${safeAlt}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove(); const fallback = this.parentElement.querySelector('.avatar-fallback'); if (fallback) fallback.classList.remove('hidden');">`
+                : '';
+
+            return `<div class="${avatarClassName}">${imageMarkup}<span class="${fallbackClass}">${safeInitial}</span></div>`;
         }
 
         async function loadShareStatus() {

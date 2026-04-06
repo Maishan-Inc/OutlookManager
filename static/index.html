@@ -1076,8 +1076,189 @@
         }
 
         /* API 文档样式 */
+        .api-docs-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 380px;
+            gap: 28px;
+            align-items: start;
+        }
+
         .api-docs {
-            max-width: 1000px;
+            max-width: none;
+        }
+
+        .api-docs-workbench {
+            position: sticky;
+            top: 24px;
+            padding-left: 28px;
+            border-left: 1px solid #dbe4ef;
+        }
+
+        .api-docs-panel {
+            border-radius: 22px;
+            padding: 22px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.98));
+            box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+        }
+
+        .api-docs-panel-title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .api-docs-panel-subtitle {
+            margin: 8px 0 0;
+            color: #64748b;
+            font-size: 0.84rem;
+            line-height: 1.6;
+        }
+
+        .api-docs-preview-card {
+            margin-top: 18px;
+            padding: 16px;
+            border-radius: 18px;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .api-docs-preview-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .api-docs-preview-path {
+            font-family: "IBM Plex Mono", Consolas, monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+
+        .api-docs-playground-group {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .api-docs-playground-group:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .api-docs-playground-group h4 {
+            margin: 0 0 10px;
+            color: #0f172a;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .api-docs-field {
+            margin-bottom: 14px;
+        }
+
+        .api-docs-field:last-child {
+            margin-bottom: 0;
+        }
+
+        .api-docs-field-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .api-docs-field-label {
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .api-docs-flag {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .api-docs-flag.required {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .api-docs-flag.optional {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .api-docs-field-hint {
+            margin-top: 6px;
+            color: #64748b;
+            font-size: 0.78rem;
+            line-height: 1.55;
+        }
+
+        .api-docs-help {
+            margin-top: 8px;
+            color: #475569;
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .api-docs-empty {
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+
+        .api-docs-request-box {
+            margin-top: 10px;
+        }
+
+        .api-docs-request-box .api-docs-code + .api-docs-code {
+            margin-top: 10px;
+        }
+
+        .api-docs-request-body {
+            white-space: pre-wrap;
+        }
+
+        .api-docs-response-box {
+            margin-top: 18px;
+            padding: 16px;
+            border-radius: 18px;
+            background: #f8fafc;
+            border: 1px solid #dbe4ef;
+        }
+
+        .api-docs-response-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .api-docs-response-status {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            background: #e2e8f0;
+            color: #334155;
         }
 
         .api-endpoint {
@@ -3930,10 +4111,19 @@
                 min-height: auto;
             }
 
+            .api-docs-layout,
             .api-key-grid,
             .api-docs-auth-grid,
             .api-key-form-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .api-docs-workbench {
+                position: static;
+                padding-left: 0;
+                padding-top: 22px;
+                border-left: none;
+                border-top: 1px solid #dbe4ef;
             }
         }
     </style>
@@ -4572,7 +4762,8 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
                             </div>
                         </div>
 
-                        <div class="api-docs">
+                        <div class="api-docs-layout">
+                            <div class="api-docs">
                             <!-- API鍩虹淇℃伅 -->
                             <div class="api-endpoint">
                                 <div class="api-header">
@@ -4609,7 +4800,7 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
                                     </div>
                                     <div class="api-section">
                                         <h4>调试用 API Key</h4>
-                                        <input type="text" id="apiDocsAuthKey" class="form-input" placeholder="粘贴 API Key 后，试用接口会自动带上 Authorization 请求头">
+                                        <input type="text" id="apiDocsAuthKey" class="form-input" placeholder="粘贴 API Key 后，试用接口会自动带上 Authorization 请求头" oninput="renderApiDocsWorkbench()">
                                     </div>
                                 </div>
                             </div>
@@ -4965,6 +5156,75 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
                                     </div>
                                 </div>
                             </div>
+                            </div>
+
+                            <aside class="api-docs-workbench">
+                                <div class="api-docs-panel">
+                                    <h4 class="api-docs-panel-title">自定义请求参数</h4>
+                                    <p class="api-docs-panel-subtitle">右侧工作台支持可视化选择接口、修改路径参数、查询参数和请求体，并实时预览最终请求数据。</p>
+
+                                    <div class="api-docs-playground-group">
+                                        <h4>接口选择</h4>
+                                        <select id="apiDocsWorkbenchEndpoint" class="form-input" onchange="handleApiDocsEndpointChange(this.value)"></select>
+                                        <div id="apiDocsWorkbenchSummary" class="api-docs-help">请选择一个接口开始调试。</div>
+                                    </div>
+
+                                    <div class="api-docs-preview-card">
+                                        <div class="api-docs-preview-meta">
+                                            <span class="api-method get" id="apiDocsWorkbenchMethod">GET</span>
+                                            <span class="api-docs-response-status" id="apiDocsWorkbenchMode">实时预览</span>
+                                        </div>
+                                        <div class="api-docs-preview-path" id="apiDocsWorkbenchPathPreview">/accounts</div>
+                                    </div>
+
+                                    <div class="api-docs-playground-group" id="apiDocsWorkbenchPathGroup">
+                                        <h4>路径参数</h4>
+                                        <div id="apiDocsWorkbenchPathFields"></div>
+                                    </div>
+
+                                    <div class="api-docs-playground-group" id="apiDocsWorkbenchQueryGroup">
+                                        <h4>查询参数</h4>
+                                        <div id="apiDocsWorkbenchQueryFields"></div>
+                                    </div>
+
+                                    <div class="api-docs-playground-group" id="apiDocsWorkbenchBodyGroup">
+                                        <h4>请求体</h4>
+                                        <div id="apiDocsWorkbenchBodyFields"></div>
+                                    </div>
+
+                                    <div class="api-docs-playground-group">
+                                        <h4>请求预览</h4>
+                                        <div class="api-docs-request-box">
+                                            <div class="api-docs-code" id="apiDocsWorkbenchRequestUrl"></div>
+                                            <div class="api-docs-code" id="apiDocsWorkbenchRequestHeaders"></div>
+                                            <div id="apiDocsWorkbenchRequestBodyWrap" class="api-example api-docs-request-body hidden"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="auth-actions" style="margin-top: 18px;">
+                                        <button class="btn btn-primary" type="button" id="apiDocsWorkbenchSendBtn" onclick="sendApiDocsWorkbenchRequest()">
+                                            <span></span>
+                                            发送请求
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" type="button" onclick="copyApiDocsWorkbenchRequest()">
+                                            <span></span>
+                                            复制请求
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" type="button" onclick="resetApiDocsWorkbench()">
+                                            <span></span>
+                                            重置参数
+                                        </button>
+                                    </div>
+
+                                    <div class="api-docs-response-box">
+                                        <div class="api-docs-response-head">
+                                            <h4 style="margin: 0; color: #0f172a;">响应结果</h4>
+                                            <span class="api-docs-response-status" id="apiDocsWorkbenchResponseStatus">未发送</span>
+                                        </div>
+                                        <pre id="apiDocsWorkbenchResponseData" style="margin: 0; color: #0f172a; white-space: pre-wrap; word-break: break-word;">选择参数后即可发送请求。</pre>
+                                    </div>
+                                </div>
+                            </aside>
                         </div>
                     </div>
                 </div>
@@ -5418,6 +5678,9 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
         let latestCreatedApiKey = '';
         const SIDEBAR_STORAGE_KEY = 'outlookmanager-sidebar-collapsed';
         let classifications = { categories: [], tags: [] };
+        let apiDocsAccounts = [];
+        let apiDocsWorkbenchEndpoint = 'accounts';
+        let apiDocsWorkbenchDrafts = {};
         let addAccountTagKeys = [];
         let batchTagKeys = [];
         let siteSettingsCache = null;
@@ -6186,6 +6449,9 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
 
             setButtonIcon(document.querySelector('#apiDocsPage .btn-secondary.btn-sm[onclick="downloadApiDocs()"]'), 'docs');
             setButtonIcon(document.querySelector('#apiDocsPage .btn-secondary.btn-sm[onclick="copyApiBaseUrl()"]'), 'copy');
+            setButtonIcon(document.getElementById('apiDocsWorkbenchSendBtn'), 'open');
+            setButtonIcon(document.querySelector('#apiDocsPage .btn.btn-secondary.btn-sm[onclick="copyApiDocsWorkbenchRequest()"]'), 'copy');
+            setButtonIcon(document.querySelector('#apiDocsPage .btn.btn-secondary.btn-sm[onclick="resetApiDocsWorkbench()"]'), 'refresh');
             setButtonIcon(document.querySelector('#settingsPage .btn-secondary.btn-sm[onclick="loadSiteSettings(true)"]'), 'refresh');
             setButtonIcon(document.querySelector('#settingsPage .btn-secondary.btn-sm[onclick="copySiteSettingValue(\'siteSettingsAdminUrl\', \'管理员入口\')"]'), 'copy');
             setButtonIcon(document.getElementById('siteSettingsSaveBtn'), 'settings');
@@ -7437,6 +7703,598 @@ example3@live.com----refresh_token3----client_id3`;
             return { Authorization: `Bearer ${key}` };
         }
 
+        function cloneApiDocsState(state) {
+            return JSON.parse(JSON.stringify(state || { path: {}, query: {}, body: {} }));
+        }
+
+        function getApiDocsEndpointConfigs() {
+            return {
+                accounts: {
+                    label: 'GET /accounts',
+                    method: 'GET',
+                    pathTemplate: '/accounts',
+                    description: '获取全部邮箱账户，适合做分页、搜索和标签筛选。',
+                    responseBoxId: 'accountsResponse',
+                    pathFields: [],
+                    queryFields: [
+                        { key: 'page', label: '页码', kind: 'number', typeLabel: 'integer', required: false, defaultValue: 1, min: 1, hint: '从 1 开始。' },
+                        { key: 'page_size', label: '每页数量', kind: 'number', typeLabel: 'integer', required: false, defaultValue: 10, min: 1, max: 100, hint: '范围 1-100。' },
+                        { key: 'email_search', label: '邮箱搜索', kind: 'text', typeLabel: 'string', placeholder: 'example@outlook.com', hint: '按邮箱地址模糊搜索。' },
+                        { key: 'tag_search', label: '标签搜索', kind: 'text', typeLabel: 'string', placeholder: '已注册CHATGPT', hint: '按标签中文、英文或 key 模糊搜索。' },
+                        { key: 'category_search', label: '分类搜索', kind: 'text', typeLabel: 'string', placeholder: 'mregister', hint: '按分类 key / 中文 / 英文模糊搜索。' },
+                        { key: 'category_key', label: '分类 Key', kind: 'select', typeLabel: 'string', placeholder: '全部分类', options: () => [{ value: '', label: '全部分类' }, ...getApiDocsCategoryChoices(false)] },
+                        { key: 'tag_key', label: '标签 Key', kind: 'select', typeLabel: 'string', placeholder: '全部标签', options: () => [{ value: '', label: '全部标签' }, ...getApiDocsTagChoices(false)] }
+                    ],
+                    bodyFields: []
+                },
+                classifications: {
+                    label: 'GET /classifications',
+                    method: 'GET',
+                    pathTemplate: '/classifications',
+                    description: '读取当前所有分类与标签配置，适合初始化下拉框和快捷标签。',
+                    pathFields: [],
+                    queryFields: [],
+                    bodyFields: []
+                },
+                createCategory: {
+                    label: 'POST /classifications/categories',
+                    method: 'POST',
+                    pathTemplate: '/classifications/categories',
+                    description: '创建账户分类，英文名会自动转成小写 key。',
+                    pathFields: [],
+                    queryFields: [],
+                    bodyFields: [
+                        { key: 'name_zh', label: '中文名', kind: 'text', typeLabel: 'string', required: true, defaultValue: 'MREGISTER', hint: '展示给用户看的分类名称。' },
+                        { key: 'name_en', label: '英文名', kind: 'text', typeLabel: 'string', required: true, defaultValue: 'mregister_demo', hint: '系统会规范化为 API key。' },
+                        { key: 'remark', label: '备注', kind: 'text', typeLabel: 'string', defaultValue: '此分类此标签为适配MREGISTER开源项目', hint: '可选，用于后台说明。' }
+                    ]
+                },
+                createTag: {
+                    label: 'POST /classifications/tags',
+                    method: 'POST',
+                    pathTemplate: '/classifications/tags',
+                    description: '创建快捷标签，可用于账户和邮件详情的一键打标。',
+                    pathFields: [],
+                    queryFields: [],
+                    bodyFields: [
+                        { key: 'name_zh', label: '中文名', kind: 'text', typeLabel: 'string', required: true, defaultValue: '已注册CHATGPT', hint: '展示给用户看的标签名称。' },
+                        { key: 'name_en', label: '英文名', kind: 'text', typeLabel: 'string', required: true, defaultValue: 'chatgpt_registered_demo', hint: '系统会规范化为 API key。' },
+                        { key: 'remark', label: '备注', kind: 'text', typeLabel: 'string', defaultValue: '此分类此标签为适配MREGISTER开源项目', hint: '可选，用于后台说明。' }
+                    ]
+                },
+                updateClassification: {
+                    label: 'PUT /accounts/{email_id}/classification',
+                    method: 'PUT',
+                    pathTemplate: '/accounts/{email_id}/classification',
+                    description: '修改某个邮箱账户的分类和标签。',
+                    pathFields: [
+                        { key: 'email_id', label: '邮箱账户', kind: 'select', typeLabel: 'string', required: true, options: () => getApiDocsAccountChoices(), placeholder: '请选择邮箱账户', fallbackPlaceholder: 'example@outlook.com', hint: '优先从现有账户中选择，没有时可手动输入。' }
+                    ],
+                    queryFields: [],
+                    bodyFields: [
+                        { key: 'category_key', label: '分类', kind: 'select', typeLabel: 'string', defaultValue: '', options: () => [{ value: '', label: '不分类' }, ...getApiDocsCategoryChoices(false)], hint: '留空会清空当前分类。' },
+                        { key: 'tag_keys', label: '账户标签', kind: 'multiselect', typeLabel: 'array', defaultValue: [], options: () => getApiDocsTagChoices(false), hint: '可多选，提交时会覆盖原有标签。' }
+                    ]
+                },
+                emails: {
+                    label: 'GET /emails/{email_id}',
+                    method: 'GET',
+                    pathTemplate: '/emails/{email_id}',
+                    description: '拉取指定邮箱的邮件列表，支持文件夹、分页和刷新控制。',
+                    responseBoxId: 'emailsResponse',
+                    pathFields: [
+                        { key: 'email_id', label: '邮箱账户', kind: 'select', typeLabel: 'string', required: true, options: () => getApiDocsAccountChoices(), placeholder: '请选择邮箱账户', fallbackPlaceholder: 'example@outlook.com', hint: '优先从现有账户中选择，没有时可手动输入。' }
+                    ],
+                    queryFields: [
+                        { key: 'folder', label: '文件夹', kind: 'select', typeLabel: 'string', required: false, defaultValue: 'all', options: [{ value: 'all', label: '全部邮件 all' }, { value: 'inbox', label: '收件箱 inbox' }, { value: 'junk', label: '垃圾箱 junk' }], hint: '控制读取哪个文件夹。' },
+                        { key: 'page', label: '页码', kind: 'number', typeLabel: 'integer', required: false, defaultValue: 1, min: 1 },
+                        { key: 'page_size', label: '每页数量', kind: 'number', typeLabel: 'integer', required: false, defaultValue: 20, min: 1, max: 500 },
+                        { key: 'refresh', label: '强制刷新', kind: 'boolean', typeLabel: 'boolean', required: false, defaultValue: false, hint: '开启后会跳过缓存重新拉取。' }
+                    ],
+                    bodyFields: []
+                },
+                emailDetail: {
+                    label: 'GET /emails/{email_id}/{message_id}',
+                    method: 'GET',
+                    pathTemplate: '/emails/{email_id}/{message_id}',
+                    description: '读取单封邮件详情。通常先通过邮件列表接口拿到 message_id。',
+                    responseBoxId: 'emailDetailResponse',
+                    pathFields: [
+                        { key: 'email_id', label: '邮箱账户', kind: 'select', typeLabel: 'string', required: true, options: () => getApiDocsAccountChoices(), placeholder: '请选择邮箱账户', fallbackPlaceholder: 'example@outlook.com' },
+                        { key: 'message_id', label: '邮件 ID', kind: 'text', typeLabel: 'string', required: true, defaultValue: 'INBOX-1', placeholder: 'INBOX-1', hint: '格式通常是 {folder}-{id}，例如 INBOX-1。' }
+                    ],
+                    queryFields: [],
+                    bodyFields: []
+                },
+                emailTags: {
+                    label: 'PUT /emails/{email_id}/{message_id}/tags',
+                    method: 'PUT',
+                    pathTemplate: '/emails/{email_id}/{message_id}/tags',
+                    description: '批量更新单封邮件的标签。',
+                    pathFields: [
+                        { key: 'email_id', label: '邮箱账户', kind: 'select', typeLabel: 'string', required: true, options: () => getApiDocsAccountChoices(), placeholder: '请选择邮箱账户', fallbackPlaceholder: 'example@outlook.com' },
+                        { key: 'message_id', label: '邮件 ID', kind: 'text', typeLabel: 'string', required: true, defaultValue: 'INBOX-1', placeholder: 'INBOX-1', hint: '先从邮件列表响应中复制 message_id。' }
+                    ],
+                    queryFields: [],
+                    bodyFields: [
+                        { key: 'tag_keys', label: '邮件标签', kind: 'multiselect', typeLabel: 'array', defaultValue: [], options: () => getApiDocsTagChoices(false), hint: '多选提交，提交后会覆盖当前邮件标签。' }
+                    ]
+                }
+            };
+        }
+
+        function getApiDocsAccountChoices() {
+            return (Array.isArray(apiDocsAccounts) ? apiDocsAccounts : []).map(account => ({
+                value: account.email_id,
+                label: account.email_id,
+                help: account.status ? `状态：${account.status}` : ''
+            }));
+        }
+
+        function getApiDocsCategoryChoices(includeKeyInLabel = true) {
+            return (Array.isArray(classifications.categories) ? classifications.categories : []).map(category => ({
+                value: normalizeKey(category.key),
+                label: includeKeyInLabel ? `${getCategoryLabel(category)} (${normalizeKey(category.key)})` : getCategoryLabel(category),
+                help: category.remark || ''
+            }));
+        }
+
+        function getApiDocsTagChoices(includeKeyInLabel = true) {
+            return (Array.isArray(classifications.tags) ? classifications.tags : []).map(tag => ({
+                value: normalizeKey(tag.key),
+                label: includeKeyInLabel ? `${getTagLabel(tag)} (${normalizeKey(tag.key)})` : getTagLabel(tag),
+                help: tag.remark || ''
+            }));
+        }
+
+        function buildApiDocsDefaultState(endpointKey) {
+            const config = getApiDocsEndpointConfigs()[endpointKey];
+            const buildValues = (fields = []) => fields.reduce((acc, field) => {
+                if (field.kind === 'multiselect') {
+                    acc[field.key] = Array.isArray(field.defaultValue) ? [...field.defaultValue] : [];
+                } else if (field.kind === 'boolean') {
+                    acc[field.key] = Boolean(field.defaultValue);
+                } else if (field.defaultValue !== undefined) {
+                    acc[field.key] = field.defaultValue;
+                } else {
+                    acc[field.key] = '';
+                }
+                return acc;
+            }, {});
+
+            return {
+                path: buildValues(config.pathFields),
+                query: buildValues(config.queryFields),
+                body: buildValues(config.bodyFields)
+            };
+        }
+
+        function getApiDocsCurrentConfig() {
+            const configs = getApiDocsEndpointConfigs();
+            return configs[apiDocsWorkbenchEndpoint] || configs.accounts;
+        }
+
+        function ensureApiDocsDraft(endpointKey) {
+            if (!apiDocsWorkbenchDrafts[endpointKey]) {
+                apiDocsWorkbenchDrafts[endpointKey] = buildApiDocsDefaultState(endpointKey);
+            }
+            return apiDocsWorkbenchDrafts[endpointKey];
+        }
+
+        function getApiDocsDraftValue(scope, key) {
+            const draft = ensureApiDocsDraft(apiDocsWorkbenchEndpoint);
+            return draft[scope] ? draft[scope][key] : '';
+        }
+
+        function setApiDocsDraftValue(scope, key, value) {
+            const draft = ensureApiDocsDraft(apiDocsWorkbenchEndpoint);
+            draft[scope] = draft[scope] || {};
+            draft[scope][key] = value;
+        }
+
+        function renderApiDocsField(field, scope) {
+            const currentValue = getApiDocsDraftValue(scope, field.key);
+            const options = typeof field.options === 'function' ? field.options() : (Array.isArray(field.options) ? field.options : []);
+            const optionList = Array.isArray(options) ? options : [];
+            const fieldTypeClass = field.required ? 'required' : 'optional';
+            let controlHtml = '';
+
+            if (field.kind === 'multiselect') {
+                if (!optionList.length) {
+                    controlHtml = `<div class="api-docs-empty">当前没有可选项，请先在“分类编辑”中创建数据，或稍后重新加载。</div>`;
+                } else {
+                    const selectedValues = Array.isArray(currentValue) ? currentValue.map(normalizeKey) : [];
+                    controlHtml = `
+                        <div class="option-grid">
+                            ${optionList.map(option => {
+                                const value = normalizeKey(option.value);
+                                const selected = selectedValues.includes(value);
+                                return `
+                                    <label class="option-chip ${selected ? 'is-selected' : ''}" onclick="toggleApiDocsMultiValue('${scope}', '${escapeHtml(field.key)}', '${escapeHtml(value)}')">
+                                        <input type="checkbox" ${selected ? 'checked' : ''}>
+                                        <span class="option-chip-title">${escapeHtml(option.label || value)}</span>
+                                        <span class="option-chip-subtitle">${escapeHtml(option.help || value)}</span>
+                                    </label>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                }
+            } else if (field.kind === 'select' && optionList.length) {
+                controlHtml = `
+                    <select class="form-input" onchange="updateApiDocsFieldValue('${scope}', '${escapeHtml(field.key)}', this.value)">
+                        ${!field.required ? `<option value="">${escapeHtml(field.placeholder || '未设置')}</option>` : ''}
+                        ${optionList.map(option => {
+                            const value = String(option.value ?? '');
+                            const selected = String(currentValue ?? '') === value ? ' selected' : '';
+                            return `<option value="${escapeHtml(value)}"${selected}>${escapeHtml(option.label || value)}</option>`;
+                        }).join('')}
+                    </select>
+                `;
+            } else if (field.kind === 'boolean') {
+                controlHtml = `
+                    <label class="option-chip ${currentValue ? 'is-selected' : ''}" style="min-width: 100%; display: flex; align-items: center; justify-content: space-between;">
+                        <span>
+                            <span class="option-chip-title">${currentValue ? '已启用' : '未启用'}</span>
+                            <span class="option-chip-subtitle">${escapeHtml(field.placeholder || '切换此布尔参数')}</span>
+                        </span>
+                        <input type="checkbox" ${currentValue ? 'checked' : ''} onchange="updateApiDocsBooleanValue('${scope}', '${escapeHtml(field.key)}', this.checked)">
+                    </label>
+                `;
+            } else {
+                const inputType = field.kind === 'number' ? 'number' : 'text';
+                const min = field.min != null ? ` min="${field.min}"` : '';
+                const max = field.max != null ? ` max="${field.max}"` : '';
+                const value = currentValue == null ? '' : currentValue;
+                controlHtml = `
+                    <input
+                        type="${inputType}"
+                        class="form-input"
+                        value="${escapeHtml(value)}"
+                        placeholder="${escapeHtml(field.placeholder || field.fallbackPlaceholder || '')}"
+                        ${min}${max}
+                        oninput="updateApiDocsFieldValue('${scope}', '${escapeHtml(field.key)}', this.value)"
+                    >
+                `;
+            }
+
+            return `
+                <div class="api-docs-field">
+                    <div class="api-docs-field-head">
+                        <span class="api-docs-field-label">${escapeHtml(field.label)}</span>
+                        <span class="api-param-type">${escapeHtml(field.typeLabel || 'string')}</span>
+                        <span class="api-docs-flag ${fieldTypeClass}">${field.required ? '必填' : '可选'}</span>
+                    </div>
+                    ${controlHtml}
+                    ${field.hint ? `<div class="api-docs-field-hint">${escapeHtml(field.hint)}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function renderApiDocsWorkbenchFields() {
+            const config = getApiDocsCurrentConfig();
+            const pathWrap = document.getElementById('apiDocsWorkbenchPathGroup');
+            const queryWrap = document.getElementById('apiDocsWorkbenchQueryGroup');
+            const bodyWrap = document.getElementById('apiDocsWorkbenchBodyGroup');
+
+            const renderGroup = (wrap, containerId, fields) => {
+                if (!wrap) return;
+                wrap.classList.toggle('hidden', !fields.length);
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                container.innerHTML = fields.length
+                    ? fields.map(field => renderApiDocsField(field, containerId.includes('Path') ? 'path' : containerId.includes('Query') ? 'query' : 'body')).join('')
+                    : '<div class="api-docs-empty">当前接口没有这类参数。</div>';
+            };
+
+            renderGroup(pathWrap, 'apiDocsWorkbenchPathFields', config.pathFields || []);
+            renderGroup(queryWrap, 'apiDocsWorkbenchQueryFields', config.queryFields || []);
+            renderGroup(bodyWrap, 'apiDocsWorkbenchBodyFields', config.bodyFields || []);
+        }
+
+        function updateApiDocsFieldValue(scope, key, rawValue) {
+            const config = getApiDocsCurrentConfig();
+            const fields = scope === 'path' ? config.pathFields : scope === 'query' ? config.queryFields : config.bodyFields;
+            const field = (fields || []).find(item => item.key === key);
+            if (!field) return;
+
+            let nextValue = rawValue;
+            if (field.kind === 'number') {
+                nextValue = rawValue === '' ? '' : Number(rawValue);
+            } else if (field.kind === 'select' && typeof rawValue === 'string') {
+                nextValue = rawValue;
+            }
+            setApiDocsDraftValue(scope, key, nextValue);
+            refreshApiDocsWorkbenchPreviewOnly();
+        }
+
+        function updateApiDocsBooleanValue(scope, key, checked) {
+            setApiDocsDraftValue(scope, key, !!checked);
+            renderApiDocsWorkbench();
+        }
+
+        function toggleApiDocsMultiValue(scope, key, value) {
+            const currentValue = getApiDocsDraftValue(scope, key);
+            const nextValue = toggleKeyInList(Array.isArray(currentValue) ? currentValue : [], value);
+            setApiDocsDraftValue(scope, key, nextValue);
+            renderApiDocsWorkbench();
+        }
+
+        function buildApiDocsRequestData(config = getApiDocsCurrentConfig()) {
+            const draft = ensureApiDocsDraft(apiDocsWorkbenchEndpoint);
+            let path = config.pathTemplate;
+            const missingRequired = [];
+
+            (config.pathFields || []).forEach(field => {
+                const value = draft.path[field.key];
+                if (field.required && !String(value || '').trim()) {
+                    missingRequired.push(field.label);
+                    return;
+                }
+                path = path.replace(`{${field.key}}`, encodeURIComponent(String(value || '').trim()));
+            });
+
+            const queryParams = new URLSearchParams();
+            (config.queryFields || []).forEach(field => {
+                const value = draft.query[field.key];
+                if (field.kind === 'boolean') {
+                    if (value || field.defaultValue === true) {
+                        queryParams.set(field.key, String(Boolean(value)));
+                    } else if (value === false && field.defaultValue !== undefined) {
+                        queryParams.set(field.key, 'false');
+                    }
+                    return;
+                }
+                if (value === '' || value == null) return;
+                queryParams.set(field.key, String(value));
+            });
+
+            const bodyPayload = {};
+            (config.bodyFields || []).forEach(field => {
+                const value = draft.body[field.key];
+                if (field.kind === 'multiselect') {
+                    if (Array.isArray(value) && value.length) {
+                        bodyPayload[field.key] = value;
+                    } else if (field.required) {
+                        bodyPayload[field.key] = [];
+                    }
+                    return;
+                }
+                if (field.required && (value === '' || value == null)) {
+                    missingRequired.push(field.label);
+                    return;
+                }
+                if (field.key === 'category_key') {
+                    bodyPayload[field.key] = value === '' ? null : value;
+                    return;
+                }
+                if (value !== '' && value != null) {
+                    bodyPayload[field.key] = value;
+                }
+            });
+
+            const queryString = queryParams.toString();
+            return {
+                method: config.method,
+                path,
+                url: `${window.location.origin}${path}${queryString ? `?${queryString}` : ''}`,
+                headers: getApiDocsAuthHeaders(),
+                body: (config.bodyFields || []).length ? bodyPayload : null,
+                missingRequired
+            };
+        }
+
+        function renderApiDocsWorkbenchRequestPreview(requestData, config) {
+            document.getElementById('apiDocsWorkbenchMethod').textContent = config.method;
+            document.getElementById('apiDocsWorkbenchMethod').className = `api-method ${config.method.toLowerCase()}`;
+            document.getElementById('apiDocsWorkbenchPathPreview').textContent = `${requestData.path}${requestData.url.includes('?') ? requestData.url.slice(requestData.url.indexOf('?')) : ''}`;
+            document.getElementById('apiDocsWorkbenchRequestUrl').textContent = `${config.method} ${requestData.url}`;
+
+            const headerEntries = Object.entries(requestData.headers || {});
+            document.getElementById('apiDocsWorkbenchRequestHeaders').textContent = headerEntries.length
+                ? headerEntries.map(([key, value]) => `${key}: ${value}`).join('\n')
+                : '当前未填写 API Key，将使用管理员登录态发起同源请求。';
+
+            const bodyWrap = document.getElementById('apiDocsWorkbenchRequestBodyWrap');
+            if (bodyWrap) {
+                const hasBody = requestData.body && Object.keys(requestData.body).length > 0;
+                bodyWrap.classList.toggle('hidden', !hasBody);
+                bodyWrap.textContent = hasBody ? JSON.stringify(requestData.body, null, 2) : '';
+            }
+        }
+
+        function renderApiDocsWorkbench() {
+            const config = getApiDocsCurrentConfig();
+            const select = document.getElementById('apiDocsWorkbenchEndpoint');
+            if (select && select.value !== apiDocsWorkbenchEndpoint) {
+                select.value = apiDocsWorkbenchEndpoint;
+            }
+            const summary = document.getElementById('apiDocsWorkbenchSummary');
+            if (summary) {
+                summary.textContent = config.description || '';
+            }
+            renderApiDocsWorkbenchFields();
+            const requestData = buildApiDocsRequestData(config);
+            renderApiDocsWorkbenchRequestPreview(requestData, config);
+        }
+
+        function refreshApiDocsWorkbenchPreviewOnly() {
+            const config = getApiDocsCurrentConfig();
+            const requestData = buildApiDocsRequestData(config);
+            renderApiDocsWorkbenchRequestPreview(requestData, config);
+        }
+
+        async function loadApiDocsContext(force = false) {
+            try {
+                if (force || !apiDocsAccounts.length) {
+                    const accountsData = await apiRequest('/accounts?page=1&page_size=500');
+                    apiDocsAccounts = Array.isArray(accountsData.accounts) ? accountsData.accounts : [];
+                }
+            } catch (error) {
+                console.warn('Unable to load API docs accounts', error);
+                apiDocsAccounts = [];
+            }
+
+            try {
+                await loadClassifications(force);
+            } catch (error) {
+                console.warn('Unable to load API docs classifications', error);
+            }
+        }
+
+        function populateApiDocsEndpointSelect() {
+            const select = document.getElementById('apiDocsWorkbenchEndpoint');
+            if (!select) return;
+            const configs = getApiDocsEndpointConfigs();
+            select.innerHTML = Object.entries(configs).map(([key, config]) => {
+                const selected = key === apiDocsWorkbenchEndpoint ? ' selected' : '';
+                return `<option value="${escapeHtml(key)}"${selected}>${escapeHtml(config.label)}</option>`;
+            }).join('');
+        }
+
+        function handleApiDocsEndpointChange(endpointKey) {
+            apiDocsWorkbenchEndpoint = endpointKey || 'accounts';
+            ensureApiDocsDraft(apiDocsWorkbenchEndpoint);
+            renderApiDocsWorkbench();
+        }
+
+        function resetApiDocsWorkbench() {
+            apiDocsWorkbenchDrafts[apiDocsWorkbenchEndpoint] = buildApiDocsDefaultState(apiDocsWorkbenchEndpoint);
+            renderApiDocsWorkbench();
+            showNotification('请求参数已重置', 'success');
+        }
+
+        async function copyApiDocsWorkbenchRequest() {
+            const config = getApiDocsCurrentConfig();
+            const requestData = buildApiDocsRequestData(config);
+            const parts = [`${config.method} ${requestData.url}`];
+            const headerEntries = Object.entries(requestData.headers || {});
+            if (headerEntries.length) {
+                parts.push(headerEntries.map(([key, value]) => `${key}: ${value}`).join('\n'));
+            }
+            if (requestData.body && Object.keys(requestData.body).length) {
+                parts.push(JSON.stringify(requestData.body, null, 2));
+            }
+
+            try {
+                await navigator.clipboard.writeText(parts.join('\n\n'));
+                showNotification('请求预览已复制到剪贴板', 'success');
+            } catch (error) {
+                showNotification('复制请求失败: ' + error.message, 'error');
+            }
+        }
+
+        function updateApiDocsResponseBox(responseBoxId, payload, ok, statusLabel) {
+            if (!responseBoxId) return;
+            const responseElement = document.getElementById(responseBoxId);
+            const responseDataElement = document.getElementById(responseBoxId.replace('Response', 'ResponseData'));
+            if (!responseElement || !responseDataElement) return;
+            responseDataElement.textContent = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
+            responseDataElement.style.color = ok ? '#15803d' : '#b91c1c';
+            responseElement.classList.add('show');
+            const title = responseElement.querySelector('h4');
+            if (title) {
+                title.textContent = ok ? `响应结果 (${statusLabel})` : `请求失败 (${statusLabel})`;
+                title.style.color = ok ? '#15803d' : '#b91c1c';
+            }
+        }
+
+        async function prepareApiDocsQuickTry(endpointKey) {
+            await loadApiDocsContext();
+            const draft = ensureApiDocsDraft(endpointKey);
+            if (['emails', 'emailDetail', 'emailTags', 'updateClassification'].includes(endpointKey) && !draft.path.email_id) {
+                const firstAccount = Array.isArray(apiDocsAccounts) ? apiDocsAccounts[0] : null;
+                if (!firstAccount || !firstAccount.email_id) {
+                    throw new Error('没有可用的邮箱账户，请先添加账户');
+                }
+                draft.path.email_id = firstAccount.email_id;
+            }
+
+            if (['emailDetail', 'emailTags'].includes(endpointKey)) {
+                const emailId = draft.path.email_id;
+                const shouldFetchMessage = !draft.path.message_id || draft.path.message_id === 'INBOX-1';
+                if (emailId && shouldFetchMessage) {
+                    const emailsData = await apiRequest(`/emails/${encodeURIComponent(emailId)}?folder=all&page=1&page_size=1`);
+                    if (!Array.isArray(emailsData.emails) || !emailsData.emails.length) {
+                        throw new Error('该邮箱没有可用邮件，请先确认邮箱中已有邮件');
+                    }
+                    draft.path.message_id = emailsData.emails[0].message_id || draft.path.message_id;
+                }
+            }
+        }
+
+        async function sendApiDocsWorkbenchRequest(targetEndpointKey = '') {
+            const endpointKey = targetEndpointKey || apiDocsWorkbenchEndpoint;
+            if (endpointKey !== apiDocsWorkbenchEndpoint) {
+                apiDocsWorkbenchEndpoint = endpointKey;
+                ensureApiDocsDraft(endpointKey);
+                renderApiDocsWorkbench();
+            }
+
+            const config = getApiDocsCurrentConfig();
+            const requestData = buildApiDocsRequestData(config);
+            if (requestData.missingRequired.length) {
+                showNotification(`请先填写必填参数：${requestData.missingRequired.join('、')}`, 'warning');
+                return;
+            }
+
+            const sendBtn = document.getElementById('apiDocsWorkbenchSendBtn');
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                sendBtn.innerHTML = buttonLabel('loading', '发送中...', 'spinning');
+            }
+
+            const responseStatus = document.getElementById('apiDocsWorkbenchResponseStatus');
+            const responseData = document.getElementById('apiDocsWorkbenchResponseData');
+            if (responseStatus) responseStatus.textContent = '请求中';
+            if (responseData) responseData.textContent = '正在发送请求...';
+
+            try {
+                const headers = { ...requestData.headers };
+                const fetchOptions = {
+                    method: config.method,
+                    credentials: 'same-origin',
+                    headers
+                };
+
+                if (requestData.body && Object.keys(requestData.body).length) {
+                    fetchOptions.headers['Content-Type'] = 'application/json';
+                    fetchOptions.body = JSON.stringify(requestData.body);
+                }
+
+                const response = await fetch(requestData.url, fetchOptions);
+                const rawText = await response.text();
+                let parsed;
+                try {
+                    parsed = rawText ? JSON.parse(rawText) : {};
+                } catch (error) {
+                    parsed = rawText || '';
+                }
+
+                const statusLabel = `${response.status} ${response.statusText}`;
+                if (!response.ok) {
+                    throw { payload: parsed, statusLabel };
+                }
+
+                if (responseStatus) responseStatus.textContent = statusLabel;
+                if (responseData) responseData.textContent = typeof parsed === 'string' ? parsed : JSON.stringify(parsed, null, 2);
+                updateApiDocsResponseBox(config.responseBoxId, parsed, true, statusLabel);
+                showNotification('API 请求成功', 'success');
+            } catch (error) {
+                const payload = error && error.payload !== undefined ? error.payload : { detail: error.message || '请求失败' };
+                const statusLabel = error && error.statusLabel ? error.statusLabel : '请求失败';
+                if (responseStatus) responseStatus.textContent = statusLabel;
+                if (responseData) responseData.textContent = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
+                updateApiDocsResponseBox(config.responseBoxId, payload, false, statusLabel);
+                showNotification('API 调用失败: ' + (typeof payload === 'string' ? payload : payload.detail || error.message || '未知错误'), 'error');
+            } finally {
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                    sendBtn.innerHTML = buttonLabel('open', '发送请求');
+                }
+            }
+        }
+
         // API 文档相关函数
         function initApiDocs() {
             // 更新 Base URL
@@ -7450,6 +8308,14 @@ example3@live.com----refresh_token3----client_id3`;
             if (authHeaderExample) {
                 authHeaderExample.textContent = 'Authorization: Bearer om_your_api_key';
             }
+            populateApiDocsEndpointSelect();
+            ensureApiDocsDraft(apiDocsWorkbenchEndpoint);
+            renderApiDocsWorkbench();
+            loadApiDocsContext().then(() => {
+                populateApiDocsEndpointSelect();
+                renderApiDocsWorkbench();
+            }).catch(error => console.warn('Unable to initialize API docs workbench', error));
+            setButtonIcon(document.getElementById('apiDocsWorkbenchSendBtn'), 'open');
         }
 
         function copyApiBaseUrl() {
@@ -7912,81 +8778,22 @@ Authorization: Bearer om_your_api_key
         }
 
         async function tryApi(apiType) {
-            const baseUrl = window.location.origin;
-            let url, responseElementId;
-
-            switch (apiType) {
-                case 'accounts':
-                    url = `${baseUrl}/accounts`;
-                    responseElementId = 'accountsResponse';
-                    break;
-                case 'emails':
+            const endpointMap = {
+                accounts: 'accounts',
+                emails: 'emails',
+                emailDetail: 'emailDetail'
+            };
+            const endpointKey = endpointMap[apiType];
+            if (!endpointKey) return;
             try {
-                        const accountsData = await apiRequest('/accounts');
-                        if (accountsData.accounts && accountsData.accounts.length > 0) {
-                            const emailId = encodeURIComponent(accountsData.accounts[0].email_id);
-                            url = `${baseUrl}/emails/${emailId}?folder=inbox&page=1&page_size=5`;
-                            responseElementId = 'emailsResponse';
-                        } else {
-                            showNotification('没有可用的邮箱账户，请先添加账户', 'warning');
-                            return;
-                        }
-                    } catch (error) {
-                        showNotification('获取邮箱账户失败: ' + error.message, 'error');
-                        return;
-                    }
-                    break;
-                case 'emailDetail':
-                    // 闇€瑕佸厛鑾峰彇涓€涓偖浠禝D
-                    try {
-                        const accountsData = await apiRequest('/accounts');
-                        if (accountsData.accounts && accountsData.accounts.length > 0) {
-                            const emailId = encodeURIComponent(accountsData.accounts[0].email_id);
-                            const emailsData = await apiRequest('/emails/' + emailId + '?folder=all&page=1&page_size=1');
-                            if (emailsData.emails && emailsData.emails.length > 0) {
-                                const messageId = emailsData.emails[0].message_id;
-                                url = `${baseUrl}/emails/${emailId}/${messageId}`;
-                                responseElementId = 'emailDetailResponse';
-                            } else {
-                                showNotification('该邮箱没有邮件', 'warning');
-                                return;
-                            }
-                        } else {
-                            showNotification('没有可用的邮箱账户，请先添加账户', 'warning');
-                            return;
-                        }
-                    } catch (error) {
-                        showNotification('获取邮件数据失败: ' + error.message, 'error');
-                        return;
-                    }
-                    break;
-                default:
-                    return;
-            }
-
-            try {
-                showNotification('正在调用 API...', 'info', '', 2000);
-                const response = await fetch(url, {
-                    credentials: 'same-origin',
-                    headers: getApiDocsAuthHeaders()
-                });
-                const data = await response.json();
-                if (!response.ok) {
-                    throw new Error(data.detail || `HTTP ${response.status}: ${response.statusText}`);
-                }
-
-                // 显示响应结果
-                const responseElement = document.getElementById(responseElementId);
-                const responseDataElement = document.getElementById(responseElementId.replace('Response', 'ResponseData'));
-
-                responseDataElement.textContent = JSON.stringify(data, null, 2);
-                responseElement.classList.add('show');
-
-                showNotification('API 调用成功', 'success');
-
+                await prepareApiDocsQuickTry(endpointKey);
             } catch (error) {
-                showNotification('API 调用失败: ' + error.message, 'error');
+                showNotification(error.message || '准备试用参数失败', 'warning');
+                handleApiDocsEndpointChange(endpointKey);
+                return;
             }
+            handleApiDocsEndpointChange(endpointKey);
+            await sendApiDocsWorkbenchRequest(endpointKey);
         }
 
         // 全局变量

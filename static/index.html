@@ -5958,6 +5958,7 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
         </div>
     </div>
 
+    <script src="/static/assets/js/email-view-state.js"></script>
     <script>
         // 全局变量
         const API_BASE = '';
@@ -9221,6 +9222,8 @@ Authorization: Bearer om_your_api_key
         const EMAIL_LIST_PAGE_SIZE = 100;
         const EMAIL_REFRESH_PROBE_SIZE = 12;
         let pendingInsertedEmailIds = [];
+        const emailViewSession = window.EmailViewState.createEmailViewSession();
+        let activeEmailLoadKey = '';
 
         function updateCurrentAccountHeader(accountId = currentAccount) {
             const accountLabel = document.getElementById('currentAccountEmail');
@@ -9228,9 +9231,47 @@ Authorization: Bearer om_your_api_key
             if (accountLabel) {
                 accountLabel.textContent = accountId || '';
             }
-            if (accountSelect && accountId) {
-                accountSelect.value = accountId;
+            if (accountSelect) {
+                accountSelect.value = accountId || '';
             }
+        }
+
+        function getEmailViewKey(accountId = currentAccount, folder = currentEmailFolder, page = currentEmailPage) {
+            return `${accountId || ''}::${folder || 'all'}::${page || 1}`;
+        }
+
+        function applyEmailViewState(nextState) {
+            allEmails = Array.isArray(nextState.allEmails) ? [...nextState.allEmails] : [];
+            filteredEmails = Array.isArray(nextState.filteredEmails) ? [...nextState.filteredEmails] : [];
+            pendingInsertedEmailIds = Array.isArray(nextState.pendingInsertedEmailIds) ? [...nextState.pendingInsertedEmailIds] : [];
+            currentEmailMessageId = nextState.currentEmailMessageId || null;
+            currentEmailTagKeys = Array.isArray(nextState.currentEmailTagKeys) ? [...nextState.currentEmailTagKeys] : [];
+        }
+
+        function resetEmailListState(showLoading = false) {
+            applyEmailViewState(window.EmailViewState.createEmptyEmailViewState());
+            updateEmailStats(allEmails);
+
+            const emailsList = document.getElementById('emailsList');
+            if (!emailsList) return;
+
+            if (showLoading) {
+                emailsList.innerHTML = '<div class="loading"><div class="loading-spinner"></div>正在加载邮件...</div>';
+                return;
+            }
+
+            emailsList.innerHTML = '<div class="text-center" style="padding: 40px; color: #64748b;">请选择邮箱账户</div>';
+        }
+
+        function primeEmailContext(emailId, folder = 'all', page = 1, showLoading = true) {
+            currentAccount = emailId || null;
+            currentEmailFolder = folder;
+            currentEmailPage = page;
+            emailViewSession.setContext(getEmailViewKey(emailId, folder, page));
+            activeEmailLoadKey = '';
+            isLoadingEmails = false;
+            updateCurrentAccountHeader(currentAccount);
+            resetEmailListState(showLoading);
         }
 
         async function populateAccountSwitcher(selectedAccount = currentAccount) {
@@ -9268,37 +9309,27 @@ Authorization: Bearer om_your_api_key
         function switchCurrentAccount(emailId) {
             if (!emailId || emailId === currentAccount) return;
             closeAccountBindMenu();
-            currentAccount = emailId;
-            currentEmailFolder = 'all';
-            currentEmailPage = 1;
-            updateCurrentAccountHeader(emailId);
-            clearFilters();
+            clearFilters(false);
             navigateAdmin('/emails/' + encodeURIComponent(emailId));
             syncAutoRefreshTimer();
         }
 
         // 邮件管理
         function viewAccountEmails(emailId) {
-            currentAccount = emailId;
-            currentEmailFolder = 'all';
-            currentEmailPage = 1;
-            updateCurrentAccountHeader(emailId);
-            populateAccountSwitcher(emailId);
+            clearFilters(false);
             navigateAdmin('/emails/' + encodeURIComponent(emailId));
-            clearFilters();
             syncAutoRefreshTimer();
         }
 
         function backToAccounts() {
             closeAccountBindMenu();
-            currentAccount = null;
+            primeEmailContext('', 'all', 1, false);
             navigateAdmin('/accounts');
             syncAutoRefreshTimer();
         }
 
         function switchEmailTab(folder, targetElement = null) {
-            currentEmailFolder = folder;
-            currentEmailPage = 1;
+            primeEmailContext(currentAccount, folder, 1);
 
             document.querySelectorAll('#emailsPage .tab').forEach(t => t.classList.remove('active'));
 
@@ -9316,15 +9347,24 @@ Authorization: Bearer om_your_api_key
         }
 
         async function loadEmails(forceRefresh = false) {
-            if (!currentAccount || isLoadingEmails) return;
+            if (!currentAccount) return;
 
             const emailsList = document.getElementById('emailsList');
             const refreshBtn = document.getElementById('refreshBtn');
             const autoRefreshBtn = document.getElementById('autoRefreshBtn');
-            updateCurrentAccountHeader(currentAccount);
-            isLoadingEmails = true;
-            const hasExistingEmails = Array.isArray(allEmails) && allEmails.length > 0;
+            const requestAccount = currentAccount;
+            const requestFolder = currentEmailFolder;
+            const requestPage = currentEmailPage;
+            const requestViewKey = getEmailViewKey(requestAccount, requestFolder, requestPage);
+
+            if (isLoadingEmails && requestViewKey === activeEmailLoadKey && !forceRefresh) return;
+
+            updateCurrentAccountHeader(requestAccount);
+            const hasExistingEmails = emailViewSession.getContextKey() === requestViewKey && Array.isArray(allEmails) && allEmails.length > 0;
             const shouldProbeLatest = hasExistingEmails && currentEmailPage === 1;
+            const requestToken = emailViewSession.beginLoad(requestViewKey);
+            activeEmailLoadKey = requestViewKey;
+            isLoadingEmails = true;
 
             if (!shouldProbeLatest) {
                 emailsList.innerHTML = '<div class="loading"><div class="loading-spinner"></div>正在加载邮件...</div>';
@@ -9337,10 +9377,13 @@ Authorization: Bearer om_your_api_key
 
             try {
                 const refreshParam = (forceRefresh || shouldProbeLatest) ? '&refresh=true' : '';
-                const requestPage = shouldProbeLatest ? 1 : currentEmailPage;
+                const requestPageNumber = shouldProbeLatest ? 1 : requestPage;
                 const requestPageSize = shouldProbeLatest ? EMAIL_REFRESH_PROBE_SIZE : EMAIL_LIST_PAGE_SIZE;
-                const url = `/emails/${currentAccount}?folder=${currentEmailFolder}&page=${requestPage}&page_size=${requestPageSize}${refreshParam}`;
+                const url = `/emails/${requestAccount}?folder=${requestFolder}&page=${requestPageNumber}&page_size=${requestPageSize}${refreshParam}`;
                 const data = await apiRequest(url);
+                if (!emailViewSession.shouldApply(requestToken)) {
+                    return;
+                }
                 const fetchedEmails = data.emails || [];
                 let insertedIds = [];
 
@@ -9372,13 +9415,20 @@ Authorization: Bearer om_your_api_key
                 }
 
             } catch (error) {
+                if (!emailViewSession.shouldApply(requestToken)) {
+                    return;
+                }
                 if (!shouldProbeLatest) {
                     emailsList.innerHTML = '<div class="error">加载失败: ' + error.message + '</div>';
                 }
                 showNotification('加载邮件失败: ' + error.message, 'error');
             } finally {
+                if (!emailViewSession.shouldApply(requestToken)) {
+                    return;
+                }
                 // Restore refresh button state
                 isLoadingEmails = false;
+                activeEmailLoadKey = '';
                 refreshBtn.disabled = false;
                 refreshBtn.innerHTML = buttonLabel('refresh', '刷新');
                 if (autoRefreshBtn) {
@@ -9532,7 +9582,7 @@ Authorization: Bearer om_your_api_key
             pendingInsertedEmailIds = [];
         }
 
-        function clearFilters() {
+        function clearFilters(renderList = true) {
             document.getElementById('mailSearchInput').value = '';
             document.getElementById('folderFilter').value = 'all';
             document.getElementById('statusFilter').value = 'all';
@@ -9542,8 +9592,10 @@ Authorization: Bearer om_your_api_key
             document.getElementById('dateToFilter').value = '';
             toggleCustomDateRange();
 
-            filteredEmails = [...allEmails];
-            renderFilteredEmails();
+            if (renderList) {
+                filteredEmails = [...allEmails];
+                renderFilteredEmails();
+            }
         }
 
         function toggleAccountBindMenu(forceOpen = null) {
@@ -9854,7 +9906,7 @@ Authorization: Bearer om_your_api_key
         }
 
         function changeEmailPage(page) {
-            currentEmailPage = page;
+            primeEmailContext(currentAccount, currentEmailFolder, page);
             loadEmails();
         }
 
@@ -10410,8 +10462,7 @@ Authorization: Bearer om_your_api_key
             if (relativePath.startsWith('/emails/')) {
                 const emailId = decodeURIComponent(relativePath.replace('/emails/', ''));
                 if (emailId) {
-                    currentAccount = emailId;
-                    updateCurrentAccountHeader(emailId);
+                    primeEmailContext(emailId);
                     populateAccountSwitcher(emailId);
                     showPage('emails', null, false);
                     return;

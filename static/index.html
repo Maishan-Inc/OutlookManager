@@ -2010,18 +2010,20 @@
         .sidebar-toggle {
             width: 100%;
             min-width: 0;
-            height: 50px;
-            min-height: 50px;
-            border-radius: 16px;
+            min-height: 62px;
+            height: 62px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             gap: 16px;
             padding: 0 16px;
             justify-content: flex-start;
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(241, 245, 249, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(226, 232, 240, 0.84);
+            border: 1px solid transparent;
+            transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease, padding 0.18s ease;
+            text-align: left;
+            box-sizing: border-box;
         }
 
         .sidebar-utility:hover,
@@ -2060,6 +2062,8 @@
             width: 38px;
             height: 38px;
             flex: 0 0 38px;
+            margin-left: 0;
+            margin-right: 0;
         }
 
         .nav-item .icon svg,
@@ -2121,6 +2125,11 @@
         .sidebar-toggle {
             width: 100%;
             margin-top: 0;
+        }
+
+        .sidebar-toggle,
+        .sidebar-logout {
+            position: relative;
         }
 
         .sidebar.is-collapsed {
@@ -2198,25 +2207,26 @@
         .sidebar.is-collapsed .sidebar-toggle {
             width: 100%;
             min-width: 0;
-            height: 46px;
-            min-height: 46px;
+            height: 62px;
+            min-height: 62px;
             margin: 0;
-            padding: 0 10px;
-            gap: 10px;
+            padding: 0 16px;
+            gap: 16px;
+            justify-content: flex-start;
         }
 
         .sidebar.is-collapsed .sidebar-utility .ui-icon,
         .sidebar.is-collapsed .sidebar-toggle .ui-icon {
-            width: 34px;
-            height: 34px;
-            flex: 0 0 34px;
+            width: 38px;
+            height: 38px;
+            flex: 0 0 38px;
         }
 
         .sidebar.is-collapsed .sidebar-utility .ui-icon svg,
         .sidebar.is-collapsed .sidebar-toggle .ui-icon svg {
-            width: 20px;
-            height: 20px;
-            flex: 0 0 20px;
+            width: 24px;
+            height: 24px;
+            flex: 0 0 24px;
         }
 
         .sidebar.is-collapsed .sidebar-footer {
@@ -3010,6 +3020,176 @@
             padding: 18px 24px 22px;
         }
 
+        .account-filter-layout {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .account-filter-grid {
+            flex: 1 1 720px;
+            display: grid;
+            grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .account-filter-field {
+            min-width: 0;
+        }
+
+        .account-filter-field-wide {
+            min-width: 0;
+        }
+
+        .account-filter-actions {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .account-selection-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.96), rgba(241, 245, 249, 0.88));
+            margin-bottom: 4px;
+        }
+
+        .account-selection-summary {
+            flex: 1;
+            min-width: 240px;
+            color: #475569;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .account-selection-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .account-bulk-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 38px;
+            padding: 0 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            background: rgba(255, 255, 255, 0.88);
+            color: #334155;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .account-bulk-toggle input {
+            width: 16px;
+            height: 16px;
+            accent-color: #16a34a;
+        }
+
+        .account-settings-modal-footer {
+            justify-content: space-between;
+        }
+
+        .page-size-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .page-size-option {
+            min-height: 84px;
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.92));
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
+        }
+
+        .page-size-option:hover {
+            border-color: rgba(14, 165, 233, 0.36);
+            box-shadow: 0 12px 24px rgba(14, 165, 233, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .page-size-option.is-active {
+            border-color: rgba(14, 165, 233, 0.48);
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.14), rgba(16, 185, 129, 0.12));
+            box-shadow: 0 16px 28px rgba(14, 165, 233, 0.16);
+        }
+
+        .account-settings-modal-help {
+            margin-top: 14px;
+            color: #64748b;
+            font-size: 0.82rem;
+            line-height: 1.7;
+        }
+
+        .account-list.is-bulk-mode .account-item {
+            cursor: crosshair;
+        }
+
+        .account-item.is-bulk-mode {
+            border-color: rgba(22, 163, 74, 0.18);
+        }
+
+        .account-item.is-bulk-mode:hover {
+            border-color: rgba(34, 197, 94, 0.34);
+            box-shadow: 0 10px 24px rgba(34, 197, 94, 0.12);
+        }
+
+        .account-item.is-selected {
+            border-color: rgba(34, 197, 94, 0.52);
+            background: linear-gradient(135deg, rgba(236, 253, 245, 0.96), rgba(240, 253, 244, 0.9));
+            box-shadow: 0 16px 28px rgba(34, 197, 94, 0.14);
+        }
+
+        .account-selection-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(22, 163, 74, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.22);
+            color: #166534;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            user-select: none;
+        }
+
+        .account-selection-chip::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            border: 1.5px solid rgba(22, 163, 74, 0.5);
+            background: rgba(255, 255, 255, 0.9);
+            box-sizing: border-box;
+        }
+
+        .account-item.is-selected .account-selection-chip::before {
+            background: #22c55e;
+            border-color: #16a34a;
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.85);
+        }
+
         .public-share-grid {
             display: grid;
             gap: 16px;
@@ -3481,6 +3661,21 @@
                 gap: 14px;
             }
 
+            .account-filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .account-filter-actions,
+            .account-selection-controls,
+            .account-selection-toolbar {
+                width: 100%;
+            }
+
+            .account-selection-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
             .account-info {
                 width: 100%;
                 min-width: 0;
@@ -3504,10 +3699,16 @@
             }
 
             .account-actions .btn,
-            .auth-actions .btn {
+            .auth-actions .btn,
+            .account-filter-actions .btn,
+            .account-selection-controls .btn {
                 flex: 1 1 calc(50% - 6px);
                 min-width: 132px;
                 max-width: 100%;
+            }
+
+            .page-size-options {
+                grid-template-columns: 1fr;
             }
 
             .btn,
@@ -4991,26 +5192,56 @@
                         
                         <!-- 搜索和过滤区域 -->
                         <div class="search-container">
-                            <div class="flex gap-3 mb-4">
-                                <div class="flex-1">
-                                    <input type="text" id="accountEmailSearch" class="form-control" placeholder="按邮箱地址搜索..." onkeypress="handleSearchKeyPress(event)">
+                            <div class="account-filter-layout">
+                                <div class="account-filter-grid">
+                                    <div class="account-filter-field account-filter-field-wide">
+                                        <input type="text" id="accountEmailSearch" class="form-control" placeholder="按邮箱前缀或完整地址搜索..." onkeypress="handleSearchKeyPress(event)">
+                                    </div>
+                                    <div class="account-filter-field">
+                                        <select id="accountEmailDomainFilter" class="form-control">
+                                            <option value="">全部后缀</option>
+                                        </select>
+                                    </div>
+                                    <div class="account-filter-field">
+                                        <select id="tagSearch" class="form-control">
+                                            <option value="">全部标签</option>
+                                        </select>
+                                    </div>
+                                    <div class="account-filter-field">
+                                        <select id="accountCategorySearch" class="form-control">
+                                            <option value="">全部分类</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="flex-1">
-                                    <input type="text" id="tagSearch" class="form-control" placeholder="按标签搜索..." onkeypress="handleSearchKeyPress(event)">
+                                <div class="account-filter-actions">
+                                    <button class="btn btn-primary" onclick="searchAccounts()">
+                                        <span></span>
+                                        搜索
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="clearSearch()">
+                                        <span></span>
+                                        清空
+                                    </button>
                                 </div>
-                                <div class="flex-1">
-                                    <select id="accountCategorySearch" class="form-control">
-                                        <option value="">全部分类</option>
-                                    </select>
+                            </div>
+                            <div class="account-selection-toolbar">
+                                <div id="accountsSelectionSummary" class="account-selection-summary">
+                                    当前未开启批量选择，点击卡片会直接进入邮箱页面。
                                 </div>
-                                <button class="btn btn-primary" onclick="searchAccounts()">
-                                    <span></span>
-                                    搜索
-                                </button>
-                                <button class="btn btn-secondary" onclick="clearSearch()">
-                                    <span></span>
-                                    清空
-                                </button>
+                                <div class="account-selection-controls">
+                                    <button id="accountsDisplaySettingsBtn" class="btn btn-secondary btn-sm" type="button" onclick="openAccountsDisplaySettingsModal()">
+                                        <span></span>
+                                        列表设置
+                                    </button>
+                                    <label class="account-bulk-toggle" for="accountsBulkModeToggle">
+                                        <input type="checkbox" id="accountsBulkModeToggle" onchange="toggleAccountsBulkMode(this.checked)">
+                                        <span>批量选择</span>
+                                    </label>
+                                    <button id="accountsSelectAllBtn" class="btn btn-secondary btn-sm" type="button" onclick="toggleSelectAllFilteredAccounts()">
+                                        <span></span>
+                                        全选筛选结果
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         
@@ -5020,6 +5251,7 @@
                                 <span>总数：<strong id="totalAccounts">0</strong></span>
                                 <span>当前页：<strong id="currentPage">1</strong></span>
                                 <span>每页：<strong id="pageSize">10</strong></span>
+                                <span>已选：<strong id="selectedAccountsCount">0</strong></span>
                             </div>
                         </div>
 
@@ -6293,6 +6525,33 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
         </div>
     </div>
 
+    <div id="accountsDisplaySettingsModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 560px;">
+            <div class="modal-header">
+                <h3>账户列表设置</h3>
+                <button class="modal-close" type="button" onclick="closeAccountsDisplaySettingsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">当前页面最多显示多少个账户</label>
+                    <div id="accountsPageSizeOptions" class="page-size-options">
+                        <button type="button" class="page-size-option" data-page-size="10" onclick="setPendingAccountsPageSize(10)">10 个</button>
+                        <button type="button" class="page-size-option" data-page-size="20" onclick="setPendingAccountsPageSize(20)">20 个</button>
+                        <button type="button" class="page-size-option" data-page-size="30" onclick="setPendingAccountsPageSize(30)">30 个</button>
+                        <button type="button" class="page-size-option" data-page-size="50" onclick="setPendingAccountsPageSize(50)">50 个</button>
+                    </div>
+                    <div class="account-settings-modal-help">
+                        默认推荐 10 个。数量越大，账户筛选、分页渲染和批量选择时越可能出现卡顿。
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer account-settings-modal-footer">
+                <button class="btn btn-secondary" type="button" onclick="closeAccountsDisplaySettingsModal()">取消</button>
+                <button class="btn btn-primary" type="button" onclick="applyAccountsDisplaySettings()">完成</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 右键菜单 -->
     <div id="contextMenu" class="context-menu">
         <div class="context-menu-item" onclick="openInNewTab()">
@@ -6353,6 +6612,9 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
         let currentEmailPage = 1;
         const AUTO_REFRESH_INTERVAL_MS = 5000;
         const AUTO_REFRESH_IDLE_TIMEOUT_MS = 5 * 60 * 1000;
+        const ACCOUNTS_PAGE_SIZE_STORAGE_KEY = 'outlookmanager-accounts-page-size';
+        const ACCOUNTS_BULK_MODE_STORAGE_KEY = 'outlookmanager-accounts-bulk-mode';
+        const ACCOUNT_PAGE_SIZE_OPTIONS = [10, 20, 30, 50];
         let autoRefreshEnabled = true;
         let autoRefreshInterval = null;
         let lastMouseActivityAt = Date.now();
@@ -6366,9 +6628,16 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
         let accountsPageSize = 10;
         let accountsTotalPages = 0;
         let accountsTotalCount = 0;
+        let availableEmailDomains = [];
         let currentEmailSearch = '';
+        let currentEmailDomainSearch = '';
         let currentTagSearch = '';
         let currentCategoryKeySearch = '';
+        let selectedAccountIds = new Set();
+        let bulkAccountSelectionEnabled = false;
+        let accountSelectionDragActive = false;
+        let accountSelectionDragValue = false;
+        let pendingAccountsPageSize = 10;
         let authState = null;
         let appBootstrapped = false;
         let setupAgreementComplete = false;
@@ -6400,6 +6669,300 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
         let selectedSetupMode = 'normal';
         let currentSetupStage = 'agreement';
         let isSetupStageAnimating = false;
+
+        function normalizeAccountsPageSize(value) {
+            const parsed = Number.parseInt(value, 10);
+            return ACCOUNT_PAGE_SIZE_OPTIONS.includes(parsed) ? parsed : 10;
+        }
+
+        function readStoredAccountsPageSize() {
+            try {
+                return normalizeAccountsPageSize(localStorage.getItem(ACCOUNTS_PAGE_SIZE_STORAGE_KEY));
+            } catch (error) {
+                return 10;
+            }
+        }
+
+        function writeStoredAccountsPageSize(value) {
+            const normalized = normalizeAccountsPageSize(value);
+            try {
+                localStorage.setItem(ACCOUNTS_PAGE_SIZE_STORAGE_KEY, String(normalized));
+            } catch (error) {
+                console.warn('Unable to persist accounts page size', error);
+            }
+            return normalized;
+        }
+
+        function readStoredAccountsBulkMode() {
+            try {
+                return localStorage.getItem(ACCOUNTS_BULK_MODE_STORAGE_KEY) === '1';
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function writeStoredAccountsBulkMode(enabled) {
+            try {
+                localStorage.setItem(ACCOUNTS_BULK_MODE_STORAGE_KEY, enabled ? '1' : '0');
+            } catch (error) {
+                console.warn('Unable to persist accounts bulk mode', error);
+            }
+        }
+
+        accountsPageSize = readStoredAccountsPageSize();
+        pendingAccountsPageSize = accountsPageSize;
+        bulkAccountSelectionEnabled = readStoredAccountsBulkMode();
+
+        function buildAccountsQueryParams(page = accountsCurrentPage, pageSize = accountsPageSize) {
+            const params = new URLSearchParams({
+                page: String(page),
+                page_size: String(pageSize)
+            });
+
+            if (currentEmailSearch) {
+                params.append('email_search', currentEmailSearch);
+            }
+            if (currentEmailDomainSearch) {
+                params.append('email_domain', currentEmailDomainSearch);
+            }
+            if (currentTagSearch) {
+                params.append('tag_key', currentTagSearch);
+            }
+            if (currentCategoryKeySearch) {
+                params.append('category_key', currentCategoryKeySearch);
+            }
+
+            return params;
+        }
+
+        function populateEmailDomainFilterSelect(selectedValue = currentEmailDomainSearch) {
+            const select = document.getElementById('accountEmailDomainFilter');
+            if (!select) return;
+
+            const options = ['<option value="">全部后缀</option>'];
+            const normalizedSelected = String(selectedValue || '').trim().toLowerCase();
+            const domains = Array.isArray(availableEmailDomains) ? [...availableEmailDomains] : [];
+            if (normalizedSelected && !domains.includes(normalizedSelected)) {
+                domains.unshift(normalizedSelected);
+            }
+
+            domains.forEach(domain => {
+                const value = String(domain || '').trim().toLowerCase();
+                if (!value) return;
+                const selected = value === normalizedSelected ? ' selected' : '';
+                options.push(`<option value="${escapeHtml(value)}"${selected}>${escapeHtml(value)}</option>`);
+            });
+
+            select.innerHTML = options.join('');
+        }
+
+        function populateTagFilterSelect(selectedKey = currentTagSearch) {
+            const select = document.getElementById('tagSearch');
+            if (!select) return;
+            const tags = Array.isArray(classifications.tags) ? classifications.tags : [];
+            const normalizedSelected = normalizeKey(selectedKey);
+            const options = ['<option value="">全部标签</option>'];
+            tags.forEach(tag => {
+                const key = normalizeKey(tag.key);
+                const selected = key === normalizedSelected ? ' selected' : '';
+                options.push(`<option value="${escapeHtml(key)}"${selected}>${escapeHtml(getTagLabel(tag))}</option>`);
+            });
+            select.innerHTML = options.join('');
+        }
+
+        function updateAccountsPageSizeOptionState() {
+            document.querySelectorAll('#accountsPageSizeOptions .page-size-option').forEach(button => {
+                const value = normalizeAccountsPageSize(button.dataset.pageSize);
+                button.classList.toggle('is-active', value === pendingAccountsPageSize);
+            });
+        }
+
+        function openAccountsDisplaySettingsModal() {
+            pendingAccountsPageSize = normalizeAccountsPageSize(accountsPageSize);
+            updateAccountsPageSizeOptionState();
+            document.getElementById('accountsDisplaySettingsModal')?.classList.remove('hidden');
+        }
+
+        function closeAccountsDisplaySettingsModal() {
+            document.getElementById('accountsDisplaySettingsModal')?.classList.add('hidden');
+        }
+
+        function setPendingAccountsPageSize(value) {
+            pendingAccountsPageSize = normalizeAccountsPageSize(value);
+            updateAccountsPageSizeOptionState();
+        }
+
+        function applyAccountsDisplaySettings() {
+            const nextPageSize = writeStoredAccountsPageSize(pendingAccountsPageSize);
+            if (nextPageSize !== accountsPageSize) {
+                accountsPageSize = nextPageSize;
+                closeAccountsDisplaySettingsModal();
+                loadAccounts(1);
+                showNotification(`账户列表已切换为每页 ${nextPageSize} 个`, 'success');
+                return;
+            }
+            closeAccountsDisplaySettingsModal();
+        }
+
+        function setAccountSelection(emailId, selected) {
+            if (!emailId) return;
+            if (selected) {
+                selectedAccountIds.add(emailId);
+            } else {
+                selectedAccountIds.delete(emailId);
+            }
+            renderAccountsSelectionState();
+        }
+
+        function toggleAccountSelection(emailId) {
+            if (!emailId) return;
+            setAccountSelection(emailId, !selectedAccountIds.has(emailId));
+        }
+
+        function stopAccountSelectionDrag() {
+            accountSelectionDragActive = false;
+        }
+
+        function handleAccountSelectionPointerDown(event, emailId) {
+            if (!bulkAccountSelectionEnabled) {
+                return;
+            }
+            if (event.target.closest('.account-actions')) {
+                return;
+            }
+            event.preventDefault();
+            accountSelectionDragActive = true;
+            accountSelectionDragValue = !selectedAccountIds.has(emailId);
+            setAccountSelection(emailId, accountSelectionDragValue);
+        }
+
+        function handleAccountSelectionPointerEnter(event, emailId) {
+            if (!bulkAccountSelectionEnabled || !accountSelectionDragActive) {
+                return;
+            }
+            if (event.buttons === 0) {
+                stopAccountSelectionDrag();
+                return;
+            }
+            setAccountSelection(emailId, accountSelectionDragValue);
+        }
+
+        function handleAccountCardClick(event, emailId) {
+            if (bulkAccountSelectionEnabled) {
+                event.preventDefault();
+                return;
+            }
+            viewAccountEmails(emailId);
+        }
+
+        function updateAccountsSelectionSummary() {
+            const summary = document.getElementById('accountsSelectionSummary');
+            const toggle = document.getElementById('accountsBulkModeToggle');
+            const selectAllButton = document.getElementById('accountsSelectAllBtn');
+            const selectedCount = selectedAccountIds.size;
+            const filteredCount = accountsTotalCount || 0;
+            const selectedCountElement = document.getElementById('selectedAccountsCount');
+
+            if (selectedCountElement) {
+                selectedCountElement.textContent = String(selectedCount);
+            }
+            if (toggle) {
+                toggle.checked = bulkAccountSelectionEnabled;
+            }
+            if (selectAllButton) {
+                selectAllButton.disabled = !bulkAccountSelectionEnabled || filteredCount === 0;
+            }
+            if (!summary) {
+                return;
+            }
+
+            if (!bulkAccountSelectionEnabled) {
+                summary.textContent = selectedCount > 0
+                    ? `当前未开启批量选择，已暂存 ${selectedCount} 个已选账户；重新开启后会继续保留。`
+                    : '当前未开启批量选择，点击卡片会直接进入邮箱页面。';
+                return;
+            }
+
+            summary.textContent = selectedCount > 0
+                ? `批量选择已开启，当前共选中 ${selectedCount} 个账户。支持点击卡片或按住鼠标从上到下拖拽连续选择。`
+                : `批量选择已开启，当前筛选结果共 ${filteredCount} 个账户。支持点击卡片或按住鼠标从上到下拖拽连续选择。`;
+        }
+
+        function renderAccountsSelectionState() {
+            const list = document.getElementById('accountsList');
+            if (list) {
+                list.classList.toggle('is-bulk-mode', bulkAccountSelectionEnabled);
+                list.querySelectorAll('.account-item[data-email-id]').forEach(item => {
+                    const emailId = item.getAttribute('data-email-id') || '';
+                    item.classList.toggle('is-bulk-mode', bulkAccountSelectionEnabled);
+                    item.classList.toggle('is-selected', selectedAccountIds.has(emailId));
+                    const chip = item.querySelector('.account-selection-chip');
+                    if (chip) {
+                        chip.textContent = selectedAccountIds.has(emailId) ? '已选中' : '点击或拖拽选择';
+                    }
+                });
+            }
+            updateAccountsSelectionSummary();
+        }
+
+        function toggleAccountsBulkMode(enabled) {
+            bulkAccountSelectionEnabled = !!enabled;
+            writeStoredAccountsBulkMode(bulkAccountSelectionEnabled);
+            stopAccountSelectionDrag();
+            renderAccountsList();
+        }
+
+        async function fetchAllFilteredAccountIds() {
+            if (!accountsTotalCount) {
+                return [];
+            }
+
+            const ids = [];
+            let page = 1;
+            let totalPages = 1;
+            do {
+                const params = buildAccountsQueryParams(page, 500);
+                const data = await apiRequest('/accounts?' + params.toString());
+                const pageAccounts = Array.isArray(data.accounts) ? data.accounts : [];
+                ids.push(...pageAccounts.map(account => account.email_id).filter(Boolean));
+                totalPages = Number.isFinite(data.total_pages) ? data.total_pages : 1;
+                page += 1;
+            } while (page <= totalPages);
+
+            return [...new Set(ids)];
+        }
+
+        async function toggleSelectAllFilteredAccounts() {
+            if (!bulkAccountSelectionEnabled) {
+                showNotification('请先开启批量选择，再使用全选', 'warning');
+                return;
+            }
+            if (!accountsTotalCount) {
+                showNotification('当前没有可选择的筛选结果', 'info');
+                return;
+            }
+
+            try {
+                const filteredIds = await fetchAllFilteredAccountIds();
+                if (!filteredIds.length) {
+                    showNotification('当前没有可选择的筛选结果', 'info');
+                    return;
+                }
+
+                const shouldClear = filteredIds.every(emailId => selectedAccountIds.has(emailId));
+                filteredIds.forEach(emailId => {
+                    if (shouldClear) {
+                        selectedAccountIds.delete(emailId);
+                    } else {
+                        selectedAccountIds.add(emailId);
+                    }
+                });
+                renderAccountsSelectionState();
+                showNotification(shouldClear ? `已取消 ${filteredIds.length} 个筛选结果的选择` : `已选中 ${filteredIds.length} 个筛选结果`, 'success');
+            } catch (error) {
+                showNotification('批量选择筛选结果失败: ' + error.message, 'error');
+            }
+        }
 
         // 页面管理
         function icon(name, extraClass = '') {
@@ -7291,10 +7854,14 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
             setButtonIcon(document.querySelector('#accountsPage .btn-secondary.btn-sm[onclick="showPage(\'batchAdd\')"]'), 'batch');
             setButtonIcon(document.querySelector('#accountsPage .btn-secondary.btn-sm[onclick="showPage(\'classifications\')"]'), 'classification');
             setButtonIcon(document.querySelector('#accountsPage .btn-secondary.btn-sm[onclick="loadAccounts()"]'), 'refresh');
+            setButtonIcon(document.getElementById('accountsDisplaySettingsBtn'), 'settings');
+            setButtonIcon(document.getElementById('accountsSelectAllBtn'), 'success');
             setButtonIcon(document.querySelector('#accountsPage .btn-primary[onclick="searchAccounts()"]'), 'search');
             setButtonIcon(document.querySelector('#accountsPage .btn-secondary[onclick="clearSearch()"]'), 'clear');
             setButtonIcon(document.getElementById('prevPageBtn'), 'arrow-left');
             setButtonIcon(document.getElementById('nextPageBtn'), 'arrow-right');
+            updateAccountsPageSizeOptionState();
+            renderAccountsSelectionState();
 
             setButtonIcon(document.querySelector('#addAccountPage .btn-secondary.btn-sm[onclick="showPage(\'accounts\')"]'), 'arrow-left');
             setButtonIcon(document.getElementById('addAccountBtn'), 'plus');
@@ -7488,6 +8055,7 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
             document.getElementById('pageTitle').textContent = titles[pageName] || '';
 
             if (pageName === 'accounts') {
+                loadClassifications().catch(error => console.warn('Unable to load classifications', error));
                 loadAccounts();
             } else if (pageName === 'addAccount') {
                 clearAddAccountForm();
@@ -7797,11 +8365,14 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
             const batchCategoryValue = document.getElementById('batchCategoryKey')?.value || '';
             const editCategoryValue = document.getElementById('editAccountCategoryKey')?.value || currentEditCategoryKey;
             const searchCategoryValue = document.getElementById('accountCategorySearch')?.value || currentCategoryKeySearch;
+            const searchTagValue = document.getElementById('tagSearch')?.value || currentTagSearch;
 
             populateCategorySelect('accountCategoryKey', addCategoryValue);
             populateCategorySelect('batchCategoryKey', batchCategoryValue);
             populateCategorySelect('editAccountCategoryKey', editCategoryValue);
             populateCategorySelect('accountCategorySearch', searchCategoryValue, true, '全部分类');
+            populateTagFilterSelect(searchTagValue);
+            populateEmailDomainFilterSelect();
             renderTagOptionGrid('addAccountTagsSelector', 'addAccountTagsEmpty', addAccountTagKeys, 'toggleAddAccountTag');
             renderTagOptionGrid('batchTagsSelector', 'batchTagsEmpty', batchTagKeys, 'toggleBatchTag');
             renderTagOptionGrid('currentTagsList', 'editAccountTagsEmpty', currentEditTags, 'toggleEditAccountTag', currentEditTagDetails);
@@ -8121,111 +8692,110 @@ example3@live.com----refresh_token3----client_id3`;
             }
         }
 
+        function renderAccountsList() {
+            const accountsList = document.getElementById('accountsList');
+            if (!accountsList) return;
+
+            if (!accounts.length) {
+                accountsList.innerHTML = '<div class="text-center" style="padding: 40px; color: #64748b;">暂无符合条件的账户</div>';
+                renderAccountsSelectionState();
+                return;
+            }
+
+            accountsList.innerHTML = accounts.map(account => {
+                const health = getAccountHealthDisplay(account);
+                const authMethodLabel = account.auth_method === 'graph' ? 'Graph' : 'IMAP';
+                const categoryHtml = account.category
+                    ? `<span class="account-tag category">${escapeHtml(getCategoryLabel(account.category))}</span>`
+                    : '<span class="account-tag category">未分类</span>';
+                const tagDetails = Array.isArray(account.tag_details) ? account.tag_details : [];
+                const tagsHtml = tagDetails.length > 0
+                    ? `<div class="account-tags">${tagDetails.map(tag =>
+                        `<span class="account-tag">${escapeHtml(getTagLabel(tag))}</span>`).join('')}</div>`
+                    : '';
+                const isSelected = selectedAccountIds.has(account.email_id);
+                const cardClasses = [
+                    'account-item',
+                    bulkAccountSelectionEnabled ? 'is-bulk-mode' : '',
+                    isSelected ? 'is-selected' : ''
+                ].filter(Boolean).join(' ');
+
+                return `
+                    <div class="${cardClasses}" data-email-id="${escapeHtml(account.email_id)}" onclick="handleAccountCardClick(event, '${account.email_id}')" onpointerdown="handleAccountSelectionPointerDown(event, '${account.email_id}')" onpointerenter="handleAccountSelectionPointerEnter(event, '${account.email_id}')" oncontextmenu="showAccountContextMenu(event, '${account.email_id}')">
+                        ${bulkAccountSelectionEnabled ? `<div class="account-selection-chip">${isSelected ? '已选中' : '点击或拖拽选择'}</div>` : ''}
+                        <div class="account-info">
+                            ${renderSenderAvatar(account.email_id.charAt(0).toUpperCase(), '', 'account-avatar')}
+                            <div class="account-details">
+                                <h4>${account.email_id}</h4>
+                                <p>接入方式: <strong>${authMethodLabel}</strong> · 健康状态: <strong style="color: ${health.color};">${health.label}</strong> · ${health.score} 分</p>
+                                <p style="color: #64748b;">${escapeHtml(health.summary)} · 上次检查：${escapeHtml(health.checkedAt)}</p>
+                                <div class="account-tags">${categoryHtml}</div>
+                                ${tagsHtml}
+                            </div>
+                        </div>
+                        <div class="account-actions" onclick="event.stopPropagation()">
+                            <button class="btn btn-primary btn-sm" onclick="viewAccountEmails('${account.email_id}')">
+                                <span></span>
+                                查看邮件
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="openPublicShareModal('${account.email_id}')">
+                                <span></span>
+                                公开页面
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="editAccountTags('${account.email_id}')">
+                                <span></span>
+                                管理分类
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteAccount('${account.email_id}')">
+                                <span></span>
+                                删除
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            decorateAccountList(accountsList);
+            renderAccountsSelectionState();
+        }
+
         async function loadAccounts(page = 1, resetSearch = false) {
             if (resetSearch) {
-                // 重置搜索条件
                 currentEmailSearch = '';
+                currentEmailDomainSearch = '';
                 currentTagSearch = '';
                 currentCategoryKeySearch = '';
                 document.getElementById('accountEmailSearch').value = '';
+                document.getElementById('accountEmailDomainFilter').value = '';
                 document.getElementById('tagSearch').value = '';
                 document.getElementById('accountCategorySearch').value = '';
                 page = 1;
             }
-            
+
             accountsCurrentPage = page;
-            
+
             const accountsList = document.getElementById('accountsList');
             const accountsStats = document.getElementById('accountsStats');
             const accountsPagination = document.getElementById('accountsPagination');
-            
+
             accountsList.innerHTML = '<div class="loading"><div class="loading-spinner"></div>正在加载账户列表...</div>';
             accountsStats.style.display = 'none';
             accountsPagination.style.display = 'none';
+            updateAccountsSelectionSummary();
 
             try {
-                // 鏋勫缓璇锋眰鍙傛暟
-                const params = new URLSearchParams({
-                    page: accountsCurrentPage,
-                    page_size: accountsPageSize
-                });
-                
-                if (currentEmailSearch) {
-                    params.append('email_search', currentEmailSearch);
-                }
-                
-                if (currentTagSearch) {
-                    params.append('tag_search', currentTagSearch);
-                }
-
-                if (currentCategoryKeySearch) {
-                    params.append('category_key', currentCategoryKeySearch);
-                }
-                
+                const params = buildAccountsQueryParams(accountsCurrentPage, accountsPageSize);
                 const data = await apiRequest('/accounts?' + params.toString());
-                
-                accounts = data.accounts || [];
-                accountsTotalCount = data.total_accounts || 0;
-                accountsTotalPages = data.total_pages || 0;
-                
-                // 更新统计信息
+
+                accounts = Array.isArray(data.accounts) ? data.accounts : [];
+                accountsTotalCount = Number.isFinite(data.total_accounts) ? data.total_accounts : 0;
+                accountsTotalPages = Number.isFinite(data.total_pages) ? data.total_pages : 0;
+                availableEmailDomains = Array.isArray(data.available_email_domains) ? data.available_email_domains : [];
+
+                populateEmailDomainFilterSelect();
                 updateAccountsStats();
-                
-                if (accounts.length === 0) {
-                    accountsList.innerHTML = '<div class="text-center" style="padding: 40px; color: #64748b;">暂无符合条件的账户</div>';
-                    return;
-                }
-
-                accountsList.innerHTML = accounts.map(account => {
-                    const health = getAccountHealthDisplay(account);
-                    const authMethodLabel = account.auth_method === 'graph' ? 'Graph' : 'IMAP';
-                    const categoryHtml = account.category
-                        ? `<span class="account-tag category">${escapeHtml(getCategoryLabel(account.category))}</span>`
-                        : '<span class="account-tag category">未分类</span>';
-                    const tagDetails = Array.isArray(account.tag_details) ? account.tag_details : [];
-                    const tagsHtml = tagDetails.length > 0
-                        ? `<div class="account-tags">${tagDetails.map(tag =>
-                            `<span class="account-tag">${escapeHtml(getTagLabel(tag))}</span>`).join('')}</div>`
-                        : '';
-                        
-                    return `
-                        <div class="account-item" onclick="viewAccountEmails('${account.email_id}')" oncontextmenu="showAccountContextMenu(event, '${account.email_id}')">
-                            <div class="account-info">
-                                ${renderSenderAvatar(account.email_id.charAt(0).toUpperCase(), '', 'account-avatar')}
-                                <div class="account-details">
-                                    <h4>${account.email_id}</h4>
-                                    <p>接入方式: <strong>${authMethodLabel}</strong> · 健康状态: <strong style="color: ${health.color};">${health.label}</strong> · ${health.score} 分</p>
-                                    <p style="color: #64748b;">${escapeHtml(health.summary)} · 上次检查：${escapeHtml(health.checkedAt)}</p>
-                                    <div class="account-tags">${categoryHtml}</div>
-                                    ${tagsHtml}
-                                </div>
-                            </div>
-                            <div class="account-actions" onclick="event.stopPropagation()">
-                                <button class="btn btn-primary btn-sm" onclick="viewAccountEmails('${account.email_id}')">
-                                    <span></span>
-                                    查看邮件
-                                </button>
-                                <button class="btn btn-secondary btn-sm" onclick="openPublicShareModal('${account.email_id}')">
-                                    <span></span>
-                                    公开页面
-                                </button>
-                                <button class="btn btn-secondary btn-sm" onclick="editAccountTags('${account.email_id}')">
-                                    <span></span>
-                                    管理分类
-                                </button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteAccount('${account.email_id}')">
-                                    <span></span>
-                                    删除
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-                decorateAccountList(accountsList);
-                
-                // 更新分页控件
+                renderAccountsList();
                 updateAccountsPagination();
-
             } catch (error) {
                 accountsList.innerHTML = '<div class="error">加载失败: ' + error.message + '</div>';
             }
@@ -10726,6 +11296,7 @@ Authorization: Bearer om_your_api_key
             document.getElementById('totalAccounts').textContent = accountsTotalCount;
             document.getElementById('currentPage').textContent = accountsCurrentPage;
             document.getElementById('pageSize').textContent = accountsPageSize;
+            document.getElementById('selectedAccountsCount').textContent = String(selectedAccountIds.size);
             accountsStats.style.display = accountsTotalCount > 0 ? 'block' : 'none';
         }
         
@@ -10801,6 +11372,7 @@ Authorization: Bearer om_your_api_key
         
         function searchAccounts() {
             currentEmailSearch = document.getElementById('accountEmailSearch').value.trim();
+            currentEmailDomainSearch = document.getElementById('accountEmailDomainFilter').value.trim().toLowerCase();
             currentTagSearch = document.getElementById('tagSearch').value.trim();
             currentCategoryKeySearch = document.getElementById('accountCategorySearch').value.trim();
             loadAccounts(1);
@@ -10808,9 +11380,11 @@ Authorization: Bearer om_your_api_key
 
         function clearSearch() {
             document.getElementById('accountEmailSearch').value = '';
+            document.getElementById('accountEmailDomainFilter').value = '';
             document.getElementById('tagSearch').value = '';
             document.getElementById('accountCategorySearch').value = '';
             currentEmailSearch = '';
+            currentEmailDomainSearch = '';
             currentTagSearch = '';
             currentCategoryKeySearch = '';
             loadAccounts(1);
@@ -10829,6 +11403,7 @@ Authorization: Bearer om_your_api_key
 
             try {
                 await apiRequest('/accounts/' + emailId, { method: 'DELETE' });
+                selectedAccountIds.delete(emailId);
                 showSuccess('账户删除成功');
                 loadAccounts(accountsCurrentPage); // 淇濇寔褰撳墠椤电爜
             } catch (error) {
@@ -10957,6 +11532,15 @@ Authorization: Bearer om_your_api_key
             }
         });
 
+        document.getElementById('accountsDisplaySettingsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAccountsDisplaySettingsModal();
+            }
+        });
+
+        document.addEventListener('pointerup', stopAccountSelectionDrag);
+        document.addEventListener('pointercancel', stopAccountSelectionDrag);
+
         document.addEventListener('click', function(e) {
             const accountMenu = document.querySelector('.email-account-menu');
             if (accountMenu && !accountMenu.contains(e.target)) {
@@ -10981,6 +11565,8 @@ Authorization: Bearer om_your_api_key
             if (e.key === 'Escape') {
                 closeEmailModal();
                 closeApiKeyActionModal();
+                closeAccountsDisplaySettingsModal();
+                stopAccountSelectionDrag();
             }
 
             if ((e.ctrlKey || e.metaKey) && e.key === 'f' && document.getElementById('mailSearchInput') && !document.getElementById('emailsPage').classList.contains('hidden')) {

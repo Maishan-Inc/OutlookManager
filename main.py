@@ -296,6 +296,7 @@ class AccountListResponse(BaseModel):
     page_size: int
     total_pages: int
     accounts: List[AccountInfo]
+    available_email_domains: List[str] = Field(default_factory=list)
 
 
 class UpdateAccountClassificationRequest(BaseModel):
@@ -1158,6 +1159,7 @@ async def get_all_accounts(
     page: int = 1, 
     page_size: int = 10, 
     email_search: Optional[str] = None,
+    email_domain: Optional[str] = None,
     tag_search: Optional[str] = None,
     category_search: Optional[str] = None,
     category_key: Optional[str] = None,
@@ -1172,13 +1174,22 @@ async def get_all_accounts(
                 page=page, 
                 page_size=page_size, 
                 total_pages=0, 
-                accounts=[]
+                accounts=[],
+                available_email_domains=[],
             )
         health_data = load_account_health_data().get("accounts", {})
         catalog = load_account_classifications_data()
+        available_email_domains: set[str] = set()
 
         all_accounts = []
         for email_id, account_info in accounts_data.items():
+            email_id_normalized = str(email_id or "").strip()
+            email_domain_value = ""
+            if "@" in email_id_normalized:
+                email_domain_value = email_id_normalized.rsplit("@", 1)[-1].strip().lower()
+            if email_domain_value:
+                available_email_domains.add(email_domain_value)
+
             health_record = health_data.get(email_id, {})
             if not isinstance(health_record, dict):
                 health_record = build_account_health_record("unchecked", 0, "未检查")
@@ -1213,6 +1224,13 @@ async def get_all_accounts(
             filtered_accounts = [
                 acc for acc in filtered_accounts 
                 if email_search_lower in acc.email_id.lower()
+            ]
+
+        if email_domain:
+            email_domain_lower = str(email_domain or "").strip().lower()
+            filtered_accounts = [
+                acc for acc in filtered_accounts
+                if acc.email_id.lower().endswith("@" + email_domain_lower)
             ]
 
         if category_key:
@@ -1267,7 +1285,8 @@ async def get_all_accounts(
             page=page,
             page_size=page_size,
             total_pages=total_pages,
-            accounts=paginated_accounts
+            accounts=paginated_accounts,
+            available_email_domains=sorted(available_email_domains),
         )
 
     except json.JSONDecodeError:
@@ -3637,6 +3656,7 @@ async def get_accounts(
     page: int = Query(1, ge=1, description="页码，从1开始"),
     page_size: int = Query(10, ge=1, le=500, description="每页数量，范围1-500"),
     email_search: Optional[str] = Query(None, description="邮箱账号模糊搜索"),
+    email_domain: Optional[str] = Query(None, description="按邮箱后缀精确过滤，例如 outlook.com"),
     tag_search: Optional[str] = Query(None, description="标签模糊搜索"),
     category_search: Optional[str] = Query(None, description="分类模糊搜索，可匹配中英文名称和 key"),
     category_key: Optional[str] = Query(None, description="按分类 key 精确过滤"),
@@ -3644,7 +3664,7 @@ async def get_accounts(
 ):
     """获取所有已加载的邮箱账户列表，支持分页和搜索"""
     require_authenticated(request, allow_api_key=True)
-    return await get_all_accounts(page, page_size, email_search, tag_search, category_search, category_key, tag_key)
+    return await get_all_accounts(page, page_size, email_search, email_domain, tag_search, category_search, category_key, tag_key)
 
 
 @app.get("/classifications", response_model=ClassificationCatalogResponse)

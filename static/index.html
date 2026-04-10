@@ -4715,7 +4715,9 @@
             display: flex;
             width: min(100%, 520px);
             margin: 0 auto;
-            flex-direction: row-reverse;
+            align-items: center;
+            justify-content: center;
+            flex-direction: row;
         }
 
         .auth-shell.auth-login-mode .auth-panel {
@@ -4724,9 +4726,15 @@
         }
 
         .auth-shell.auth-login-mode .auth-login-brand-copy {
-            justify-items: end;
-            text-align: right;
+            justify-items: start;
+            text-align: left;
             flex: 1;
+            min-width: 0;
+        }
+
+        .auth-shell.auth-login-mode .auth-login-brand-copy h1 {
+            line-height: 1.08;
+            overflow-wrap: anywhere;
         }
 
         .auth-shell.auth-login-mode .auth-brand-logo.auth-brand-logo-lg {
@@ -10232,57 +10240,66 @@ example3@live.com----refresh_token3----client_id3`;
             });
         }
 
-        function copyEmailAddress(emailAddress) {
-            // 清理邮箱地址（去除可能的空格和特殊字符）
-            const cleanEmail = emailAddress.trim();
+        async function copyTextWithFallback(text) {
+            const value = String(text || '');
+            if (!value) return false;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(value);
+                    return true;
+                } catch (error) {
+                    console.warn('Clipboard API copy failed', error);
+                }
+            }
+
+            try {
+                const textArea = document.createElement('textarea');
+                textArea.value = value;
+                textArea.setAttribute('readonly', '');
+                textArea.style.position = 'fixed';
+                textArea.style.top = '0';
+                textArea.style.left = '0';
+                textArea.style.opacity = '0';
+                textArea.style.pointerEvents = 'none';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                textArea.setSelectionRange(0, value.length);
+                const copied = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                return copied;
+            } catch (error) {
+                console.warn('execCommand copy failed', error);
+                return false;
+            }
+        }
+
+        function flashEmailCopyButton() {
+            const copyButton = document.querySelector('.email-account-copy-btn');
+            if (!copyButton) return;
+            copyButton.classList.add('copy-success');
+            setTimeout(() => {
+                copyButton.classList.remove('copy-success');
+            }, 300);
+        }
+
+        async function copyEmailAddress(emailAddress) {
+            const cleanEmail = String(emailAddress || '').trim();
 
             if (!cleanEmail) {
                 showNotification('邮箱地址为空', 'error');
                 return;
             }
 
-            // 复制到剪贴板
-            navigator.clipboard.writeText(cleanEmail).then(() => {
-                // 显示成功通知
+            const copied = await copyTextWithFallback(cleanEmail);
+            if (copied) {
+                flashEmailCopyButton();
                 showNotification('邮箱地址已复制到剪贴板', 'success');
+                return;
+            }
 
-                // 添加视觉反馈
-                const emailElement = document.getElementById('currentAccountEmail');
-                if (emailElement) {
-                    emailElement.classList.add('copy-success');
-                    setTimeout(() => {
-                        emailElement.classList.remove('copy-success');
-                    }, 300);
-                }
-            }).catch((error) => {
-                console.error('复制失败:', error);
-
-            try {
-                    const textArea = document.createElement('textarea');
-                    textArea.value = cleanEmail;
-                    textArea.style.position = 'fixed';
-                    textArea.style.opacity = '0';
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-
-                    showNotification('邮箱地址已复制到剪贴板', 'success');
-                } catch (fallbackError) {
-                    console.error('Fallback copy failed:', fallbackError);
-                    showNotification('复制失败，请手动复制邮箱地址', 'error');
-
-                    // 选中文本以便用户手动复制
-                    const emailElement = document.getElementById('currentAccountEmail');
-                    if (emailElement && window.getSelection) {
-                        const selection = window.getSelection();
-                        const range = document.createRange();
-                        range.selectNodeContents(emailElement);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                    }
-                }
-            });
+            showNotification(`复制失败，请手动复制：${cleanEmail}`, 'error');
         }
 
         function downloadApiDocs() {

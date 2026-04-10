@@ -3754,7 +3754,7 @@
         }
 
         .auth-panel {
-            padding: 32px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -3912,10 +3912,6 @@
             margin-top: 4px;
         }
 
-        .auth-actions.auth-setup-password-actions {
-            justify-content: space-between;
-        }
-
         .auth-actions.auth-step-split-actions,
         .auth-actions.auth-setup-password-actions {
             margin-top: auto;
@@ -3961,9 +3957,10 @@
         .auth-panel {
             width: min(760px, 100%);
             margin: 0 auto;
-            padding: 40px 40px 36px;
-            border-radius: 32px;
-            background: rgba(255, 255, 255, 0.9);
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
         }
 
         .auth-shell:not(.auth-login-mode) .auth-panel {
@@ -4019,30 +4016,65 @@
 
         .auth-stage {
             display: grid;
-            gap: 18px;
+            gap: 20px;
+            height: 100%;
         }
 
         .auth-stage-fill {
-            min-height: 100%;
+            min-height: 680px;
+            height: 100%;
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr) auto;
+            gap: 20px;
+            padding: 38px 38px 34px;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+            backdrop-filter: blur(18px);
+        }
+
+        .auth-stage-body {
+            min-height: 0;
             display: flex;
             flex-direction: column;
+            gap: 16px;
+        }
+
+        .auth-stage-body .auth-setup-form {
+            flex: 1 1 auto;
+            height: 100%;
         }
 
         .auth-setup-flow {
             position: relative;
             overflow: hidden;
             width: 100%;
-            min-height: 636px;
+            min-height: 680px;
+            border-radius: 32px;
         }
 
         #authSetupView {
             width: 100%;
-            display: flex;
+            min-height: 760px;
+            display: grid;
+            grid-template-rows: minmax(0, 1fr) auto;
+            gap: 18px;
+        }
+
+        .auth-setup-footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.82rem;
+            line-height: 1.7;
         }
 
         .auth-mode-grid {
             display: grid;
             gap: 14px;
+            flex: 1 1 auto;
+            min-height: 390px;
+            grid-auto-rows: minmax(0, 1fr);
         }
 
         .auth-mode-card {
@@ -4053,6 +4085,7 @@
             padding: 18px 18px 16px;
             display: grid;
             gap: 10px;
+            align-content: start;
             text-align: left;
             color: #0f172a;
             transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
@@ -4150,6 +4183,8 @@
             text-align: center;
             display: grid;
             gap: 10px;
+            align-content: start;
+            min-height: 92px;
         }
 
         .auth-stage-header p {
@@ -4164,6 +4199,8 @@
         .auth-agreement-scroll {
             flex: 1 1 auto;
             min-height: 0;
+            height: 100%;
+            min-height: 390px;
             max-height: none;
             overflow: auto;
             padding: 22px 20px;
@@ -4201,6 +4238,12 @@
         .auth-login-view {
             display: grid;
             gap: 18px;
+            padding: 40px 40px 36px;
+            border-radius: 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+            backdrop-filter: blur(18px);
         }
 
         .auth-login-intro {
@@ -4313,7 +4356,7 @@
 
         .auth-shell.auth-login-mode .auth-panel {
             width: min(100%, 520px);
-            padding: 34px 28px 30px;
+            padding: 0;
         }
 
         .auth-shell.auth-login-mode .auth-login-brand-copy {
@@ -4332,6 +4375,25 @@
             }
 
             .auth-setup-flow {
+                min-height: auto;
+            }
+
+            #authSetupView {
+                min-height: auto;
+            }
+
+            .auth-stage-fill,
+            .auth-login-view {
+                padding: 28px 18px 24px;
+                border-radius: 28px;
+            }
+
+            .auth-stage-fill {
+                min-height: auto;
+            }
+
+            .auth-agreement-scroll,
+            .auth-mode-grid {
                 min-height: auto;
             }
 
@@ -4592,11 +4654,11 @@
             }
 
             .auth-panel {
-                padding: 28px 18px 24px;
+                padding: 0;
             }
 
             .auth-shell.auth-login-mode .auth-panel {
-                padding: 28px 18px 24px;
+                padding: 0;
             }
         }
     </style>
@@ -4642,17 +4704,19 @@
                                 <h3>阅读并同意使用协议</h3>
                                 <p>请先把协议完整滑动到底部，随后才能点击同意并继续。</p>
                             </div>
-                            <div id="authAgreementScroll" class="auth-agreement-scroll">
-                                <h4>Maishan Inc. 开源软件署名 4.0 国际版</h4>
-                                <p>1. 本程序由 Maishan Inc. 发布，官方网址为 www.maishanzero.com。该程序为开源软件，仅限合法、授权、合规的学习、研究、测试、内部运维与自主管理场景使用。</p>
-                                <p>2. 你应自行保管管理员密码、Refresh Token、Client ID、API Key 等敏感信息，并对全部登录、接入、导出、接口调用、自动化操作及其结果承担责任。</p>
-                                <p>3. 你必须保留 Maishan Inc. 的开源署名、版权说明、协议说明与来源信息，不得删除、隐藏、伪造或冒充原始发布主体。</p>
-                                <p>4. 未经 Maishan Inc. 书面授权，不得将本程序用于收费销售、SaaS 托管、二次打包分发、代运营交付、商业获利、商业引流或其他商业化用途。</p>
-                                <p>5. 如需商业化使用、再分发、OEM、白标、企业授权或其他商业合作，必须通过 Maishan Inc. 的商业化方案取得授权后方可进行。</p>
-                                <p>6. 若你将本程序暴露在公网环境中，应自行完成 HTTPS、访问控制、最小权限、日志审计、漏洞修复、备份恢复与密钥轮换等安全措施；因部署不当、权限缺失、密钥泄露或违规接入造成的后果，由部署者自行承担。</p>
-                                <p>7. 点击同意并继续，即表示你已阅读、理解并接受以上条款，并确认你有权管理当前部署环境及相关微软邮箱数据。</p>
+                            <div class="auth-stage-body">
+                                <div id="authAgreementScroll" class="auth-agreement-scroll">
+                                    <h4>Maishan Inc. 开源软件署名 4.0 国际版</h4>
+                                    <p>1. 本程序由 Maishan Inc. 发布，官方网址为 www.maishanzero.com。该程序为开源软件，仅限合法、授权、合规的学习、研究、测试、内部运维与自主管理场景使用。</p>
+                                    <p>2. 你应自行保管管理员密码、Refresh Token、Client ID、API Key 等敏感信息，并对全部登录、接入、导出、接口调用、自动化操作及其结果承担责任。</p>
+                                    <p>3. 你必须保留 Maishan Inc. 的开源署名、版权说明、协议说明与来源信息，不得删除、隐藏、伪造或冒充原始发布主体。</p>
+                                    <p>4. 未经 Maishan Inc. 书面授权，不得将本程序用于收费销售、SaaS 托管、二次打包分发、代运营交付、商业获利、商业引流或其他商业化用途。</p>
+                                    <p>5. 如需商业化使用、再分发、OEM、白标、企业授权或其他商业合作，必须通过 Maishan Inc. 的商业化方案取得授权后方可进行。</p>
+                                    <p>6. 若你将本程序暴露在公网环境中，应自行完成 HTTPS、访问控制、最小权限、日志审计、漏洞修复、备份恢复与密钥轮换等安全措施；因部署不当、权限缺失、密钥泄露或违规接入造成的后果，由部署者自行承担。</p>
+                                    <p>7. 点击同意并继续，即表示你已阅读、理解并接受以上条款，并确认你有权管理当前部署环境及相关微软邮箱数据。</p>
+                                </div>
+                                <div id="authAgreementStatus" class="auth-scroll-status">请先滚动到协议底部</div>
                             </div>
-                            <div id="authAgreementStatus" class="auth-scroll-status">请先滚动到协议底部</div>
                             <div class="auth-actions center full-width">
                                 <button type="button" id="authAgreementContinue" class="btn btn-primary" onclick="goToSetupModeStep()" disabled>同意并继续</button>
                             </div>
@@ -4663,39 +4727,41 @@
                                 <h3>选择安装模式</h3>
                                 <p>不同模式只影响初始化时是否预置适配分类与标签，后续仍可在后台自行增删调整。</p>
                             </div>
-                            <div class="auth-mode-grid">
-                                <button type="button" class="auth-mode-card" data-setup-mode="mregister" onclick="selectSetupMode('mregister')">
-                                    <div class="auth-mode-card-header">
-                                        <div class="auth-mode-card-title">
-                                            <strong>MREGISTER适配模式</strong>
-                                            <span>预置适配项目常用分类与标签</span>
+                            <div class="auth-stage-body">
+                                <div class="auth-mode-grid">
+                                    <button type="button" class="auth-mode-card" data-setup-mode="mregister" onclick="selectSetupMode('mregister')">
+                                        <div class="auth-mode-card-header">
+                                            <div class="auth-mode-card-title">
+                                                <strong>MREGISTER适配模式</strong>
+                                                <span>预置适配项目常用分类与标签</span>
+                                            </div>
+                                            <span class="auth-mode-badge">适配模式</span>
                                         </div>
-                                        <span class="auth-mode-badge">适配模式</span>
-                                    </div>
-                                    <div class="auth-mode-card-copy">自动预置账户分类 <strong>MREGISTER</strong> 与快捷标签 <strong>已注册CHATGPT</strong>，适合直接对接 MREGISTER 工作流。</div>
-                                </button>
-                                <button type="button" class="auth-mode-card" data-setup-mode="normal" onclick="selectSetupMode('normal')">
-                                    <div class="auth-mode-card-header">
-                                        <div class="auth-mode-card-title">
-                                            <strong>普通模式</strong>
-                                            <span>纯净版本</span>
+                                        <div class="auth-mode-card-copy">自动预置账户分类 <strong>MREGISTER</strong> 与快捷标签 <strong>已注册CHATGPT</strong>，适合直接对接 MREGISTER 工作流。</div>
+                                    </button>
+                                    <button type="button" class="auth-mode-card" data-setup-mode="normal" onclick="selectSetupMode('normal')">
+                                        <div class="auth-mode-card-header">
+                                            <div class="auth-mode-card-title">
+                                                <strong>普通模式</strong>
+                                                <span>纯净版本</span>
+                                            </div>
+                                            <span class="auth-mode-badge">推荐</span>
                                         </div>
-                                        <span class="auth-mode-badge">推荐</span>
-                                    </div>
-                                    <div class="auth-mode-card-copy">不预置额外账户分类与快捷标签，初始化后从纯净后台开始使用，分类体系完全由你自行决定。</div>
-                                </button>
-                                <button type="button" class="auth-mode-card is-disabled" data-setup-mode="commercial" disabled>
-                                    <div class="auth-mode-card-header">
-                                        <div class="auth-mode-card-title">
-                                            <strong>商业授权版本</strong>
-                                            <span>正在开发中</span>
+                                        <div class="auth-mode-card-copy">不预置额外账户分类与快捷标签，初始化后从纯净后台开始使用，分类体系完全由你自行决定。</div>
+                                    </button>
+                                    <button type="button" class="auth-mode-card is-disabled" data-setup-mode="commercial" disabled>
+                                        <div class="auth-mode-card-header">
+                                            <div class="auth-mode-card-title">
+                                                <strong>商业授权版本</strong>
+                                                <span>正在开发中</span>
+                                            </div>
+                                            <span class="auth-mode-badge">敬请期待</span>
                                         </div>
-                                        <span class="auth-mode-badge">敬请期待</span>
-                                    </div>
-                                    <div class="auth-mode-card-copy">用户管理与注册支付一体化的新架构，后续将作为商业授权版本提供。</div>
-                                </button>
+                                        <div class="auth-mode-card-copy">用户管理与注册支付一体化的新架构，后续将作为商业授权版本提供。</div>
+                                    </button>
+                                </div>
+                                <div class="auth-mode-note">普通模式与 MREGISTER 适配模式的区别，仅在于初始化时是否自动带上这 2 个默认分类配置。</div>
                             </div>
-                            <div class="auth-mode-note">普通模式与 MREGISTER 适配模式的区别，仅在于初始化时是否自动带上这 2 个默认分类配置。</div>
                             <div class="auth-actions auth-step-split-actions">
                                 <button type="button" class="btn btn-secondary" onclick="backToAgreementStep()">返回协议</button>
                                 <button type="button" id="authModeContinue" class="btn btn-primary" onclick="goToSetupPasswordStep()" disabled>确认模式并继续</button>
@@ -4707,20 +4773,23 @@
                                 <h3>设置管理员账户与后台登录地址</h3>
                                 <p>模式已确认。现在请设置管理员密码，并指定后台登录地址，完成后将直接进入后台。</p>
                             </div>
-                            <div class="auth-step-note">管理员密码只会保存为本地哈希值，长度至少 8 位。请妥善保管，后续登录需要使用该密码。</div>
-                            <form id="authSetupForm" class="auth-form auth-setup-form">
-                                <input type="password" id="authSetupPassword" class="form-input" placeholder="设置管理员密码，至少 8 位" autocomplete="new-password">
-                                <input type="password" id="authSetupPasswordConfirm" class="form-input" placeholder="再次输入管理员密码" autocomplete="new-password">
-                                <input type="text" id="authSetupAdminPath" class="form-input" placeholder="设置管理员后台登录地址，例如 /admin-enter" autocomplete="off">
-                                <div class="auth-step-note" style="margin-top: -4px;">后续管理员后台只会在这个地址打开。根路径 <code>/</code> 会作为网站主页使用，这个地址后面也可以在“设置”页面修改。</div>
-                                <div id="authSetupError" class="auth-error"></div>
-                                <div class="auth-actions auth-setup-password-actions">
-                                    <button type="button" class="btn btn-secondary" onclick="backToSetupModeStep()">返回上一步</button>
-                                    <button type="submit" id="authSetupSubmit" class="btn btn-primary">完成初始化</button>
-                                </div>
-                            </form>
+                            <div class="auth-stage-body">
+                                <div class="auth-step-note">管理员密码只会保存为本地哈希值，长度至少 8 位。请妥善保管，后续登录需要使用该密码。</div>
+                                <form id="authSetupForm" class="auth-form auth-setup-form">
+                                    <input type="password" id="authSetupPassword" class="form-input" placeholder="设置管理员密码，至少 8 位" autocomplete="new-password">
+                                    <input type="password" id="authSetupPasswordConfirm" class="form-input" placeholder="再次输入管理员密码" autocomplete="new-password">
+                                    <input type="text" id="authSetupAdminPath" class="form-input" placeholder="设置管理员后台登录地址，例如 /admin-enter" autocomplete="off">
+                                    <div class="auth-step-note" style="margin-top: -4px;">后续管理员后台只会在这个地址打开。根路径 <code>/</code> 会作为网站主页使用，这个地址后面也可以在“设置”页面修改。</div>
+                                    <div id="authSetupError" class="auth-error"></div>
+                                </form>
+                            </div>
+                            <div class="auth-actions auth-setup-password-actions">
+                                <button type="button" class="btn btn-secondary" onclick="backToSetupModeStep()">返回上一步</button>
+                                <button type="submit" id="authSetupSubmit" class="btn btn-primary" form="authSetupForm">完成初始化</button>
+                            </div>
                         </div>
                     </div>
+                    <div class="auth-setup-footer">The final right of interpretation Maishan Inc. Copyright 2026 Microsoft-Email-Manager</div>
                 </div>
 
                 <div id="authLoginView" class="hidden auth-login-view">
@@ -6267,7 +6336,7 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
         let authTurnstileWidgetId = null;
         let authTurnstileSiteKey = '';
         let authTurnstileScriptPromise = null;
-        let selectedSetupMode = '';
+        let selectedSetupMode = 'normal';
         let currentSetupStage = 'agreement';
         let isSetupStageAnimating = false;
 
@@ -6745,7 +6814,7 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
             }
 
             isSetupStageAnimating = true;
-            const enterOffset = direction === 'forward' ? 72 : -72;
+            const enterOffset = direction === 'forward' ? 96 : -96;
             const exitOffset = -enterOffset;
             const targetHeight = Math.max(currentStage.offsetHeight, nextStage.offsetHeight);
 
@@ -6759,29 +6828,29 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
             });
 
             nextStage.style.opacity = '0';
-            nextStage.style.transform = `translateX(${enterOffset}px)`;
+            nextStage.style.transform = `translateX(${enterOffset}px) scale(0.985)`;
 
             try {
                 await Promise.all([
                     currentStage.animate(
                         [
-                            { opacity: 1, transform: 'translateX(0)' },
-                            { opacity: 0, transform: `translateX(${exitOffset}px)` }
+                            { opacity: 1, transform: 'translateX(0) scale(1)' },
+                            { opacity: 0, transform: `translateX(${exitOffset}px) scale(0.985)` }
                         ],
                         {
-                            duration: 320,
-                            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                            duration: 380,
+                            easing: 'cubic-bezier(0.2, 0.85, 0.2, 1)',
                             fill: 'forwards'
                         }
                     ).finished,
                     nextStage.animate(
                         [
-                            { opacity: 0, transform: `translateX(${enterOffset}px)` },
-                            { opacity: 1, transform: 'translateX(0)' }
+                            { opacity: 0, transform: `translateX(${enterOffset}px) scale(0.985)` },
+                            { opacity: 1, transform: 'translateX(0) scale(1)' }
                         ],
                         {
-                            duration: 320,
-                            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                            duration: 380,
+                            easing: 'cubic-bezier(0.2, 0.85, 0.2, 1)',
                             fill: 'forwards'
                         }
                     ).finished
@@ -6851,7 +6920,7 @@ example3@outlook.com----refresh_token3----client_id3"></textarea>
 
         function resetSetupFlow() {
             setupAgreementComplete = false;
-            selectedSetupMode = '';
+            selectedSetupMode = 'normal';
             const setupPassword = document.getElementById('authSetupPassword');
             const setupPasswordConfirm = document.getElementById('authSetupPasswordConfirm');
             const setupAdminPath = document.getElementById('authSetupAdminPath');
